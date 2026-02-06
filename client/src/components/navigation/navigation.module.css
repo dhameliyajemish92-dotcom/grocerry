@@ -1,0 +1,139 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 35px;
+  background: linear-gradient(90deg,#ffffff,#fafafa);
+  border-bottom: 1px solid #eaeaea;
+  box-shadow: 0 2px 10px rgba(0,0,0,.04);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* LOGO */
+.logo img {
+  height: 42px;
+  transition: transform .3s ease;
+}
+
+.logo img:hover {
+  transform: scale(1.05);
+}
+
+/* NAV LINKS */
+.nav {
+  display: flex;
+  gap: 28px;
+}
+
+.nav a {
+  text-decoration: none;
+  font-weight: 500;
+  color: #222;
+  position: relative;
+  padding-bottom: 4px;
+}
+
+.nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0%;
+  height: 2px;
+  background: #ff6b00;
+  transition: .3s ease;
+}
+
+.nav a:hover::after {
+  width: 100%;
+}
+
+.nav a:hover {
+  color: #ff6b00;
+}
+
+/* ACTION AREA */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+/* SEARCH */
+.search {
+  padding: 7px 14px;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  outline: none;
+  transition: .3s;
+}
+
+.search:focus {
+  border-color: #ff6b00;
+  box-shadow: 0 0 6px rgba(255,107,0,.3);
+}
+
+/* CART */
+.cart {
+  text-decoration: none;
+  font-size: 20px;
+  position: relative;
+}
+
+/* LOGIN ICON */
+.loginIcon {
+  font-size: 22px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* USER NAME */
+.userBox {
+  position: relative;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: #f3f3f3;
+  transition: .3s ease;
+}
+
+.userBox:hover {
+  background: #ff6b00;
+  color: white;
+}
+
+/* DROPDOWN */
+.dropdown {
+  position: absolute;
+  top: 48px;
+  right: 0;
+  background: white;
+  border-radius: 12px;
+  min-width: 170px;
+  box-shadow: 0 8px 25px rgba(0,0,0,.15);
+  overflow: hidden;
+  animation: fadeIn .25s ease;
+}
+
+@keyframes fadeIn {
+  from {opacity: 0; transform: translateY(-8px);}
+  to {opacity: 1; transform: translateY(0);}
+}
+
+.dropdown a,
+.dropdown div {
+  padding: 12px 15px;
+  text-decoration: none;
+  color: #222;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.dropdown a:hover,
+.dropdown div:hover {
+  background: #f7f7f7;
+  color: #ff6b00;
+}
