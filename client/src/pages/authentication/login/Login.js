@@ -1,59 +1,77 @@
-import styles from '../form.module.css'
-import { Link, useNavigate } from "react-router-dom"
-import Authentication from "../Authentication"
-import { useState } from "react"
-import axios from "axios"
-
-const API = process.env.REACT_APP_API_URL || "http://localhost:5000";
+import styles from '../form.module.css';
+import {Link, useNavigate} from "react-router-dom";
+import Authentication from "../Authentication";
+import {useState} from "react";
+import Error from "../../../components/feedback/error/Error";
+import {authLogin} from "../../../actions/auth";
+import {useDispatch} from "react-redux";
 
 const Login = () => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-  const navigate = useNavigate()
+    const [data, setData] = useState({
+        email: "",
+        password: ""
+    });
 
-  const [data, setData] = useState({
-    email: "",
-    password: ""
-  })
+    const [error, setError] = useState("");
 
-  const handleChange = (e) => {
-    setData({ ...data, [e.target.name]: e.target.value })
-  }
-
-  const handleLogin = async (e) => {
-    e.preventDefault()
-
-    try {
-      const res = await axios.post(`${API}/me/login`, data)
-
-      // ✅ Save JWT token
-      localStorage.setItem("token", res.data.token)
-      localStorage.setItem("user", JSON.stringify(res.data.user))
-
-      navigate("/products")
-
-    } catch (err) {
-      alert(err.response?.data?.message || "Login failed")
+    const handleChange = (e) => {
+        setData({...data, [e.target.name]: e.target.value});
     }
-  }
 
-  return (
-    <Authentication data={
-      <div className={styles.wrapper}>
-        <div className={styles.header}>
-          <div className={styles.title}>Login</div>
-          <div className={styles.login}>
-            New user? <Link to="/signup">Sign Up</Link>
-          </div>
+    const handleLogin = () => {
+        const {email, password} = data;
+
+        if (!email)
+            return setError("Enter an email address");
+
+        if (!password)
+            return setError("Enter a password");
+
+        if (!validateEmail(email))
+            return setError("Enter a valid email address");
+
+        if (password.length < 6)
+            return setError("Your password must be at least 6 characters long.");
+
+        const onSuccess = () => {
+            navigate('/');
+        }
+
+        const onError = (e) => {
+            setError(e.message);
+        }
+
+        dispatch(authLogin(email, password, onSuccess, onError));
+    }
+
+    const validateEmail = (email) => {
+        return String(email)
+            .toLowerCase()
+            .match(
+                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            );
+    };
+
+    const form =
+        <div className={styles['wrapper']}>
+            {error && <Error error={error} setError={setError}/>}
+            <div className={styles['header']}>
+                <div className={styles['title']}>Login with your email</div>
+                <div className={styles['login']}>New to Rabbit Mart? <Link to={'/signup'}>Sign Up</Link></div>
+            </div>
+            <div className={styles['form']}>
+                <input onChange={(e) => handleChange(e)} name={'email'} value={data.email} placeholder={'Email'}
+                       type={'email'}/>
+                <input onChange={(e) => handleChange(e)} name={'password'} value={data.password}
+                       placeholder={'Password'} type={'password'}/>
+                <button onClick={handleLogin} className={'btn1'}>Login</button>
+            </div>
         </div>
 
-        <form className={styles.form} onSubmit={handleLogin}>
-          <input name="email" placeholder="Email" onChange={handleChange} required />
-          <input name="password" type="password" placeholder="Password" onChange={handleChange} required />
-          <button className="btn1">Login</button>
-        </form>
-      </div>
-    }/>
-  )
+    return <Authentication data={form}/>
 }
 
-export default Login
+export default Login;

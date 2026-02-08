@@ -1,97 +1,78 @@
-import styles from "../form.module.css";
+import styles from '../form.module.css';
 import Authentication from "../Authentication";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import axios from "axios";
-
-const API = process.env.REACT_APP_API_URL || "http://localhost:5000";
+import { useDispatch } from "react-redux";
+import { authSignup, verifyOtp } from "../../../actions/auth";
 
 const Signup = () => {
+    const [formData, setFormData] = useState({
+        first_name: '',
+        last_name: '',
+        email: '',
+        password: ''
+    });
+    const [otp, setOtp] = useState('');
+    const [step, setStep] = useState('signup'); // signup, verify
+    const [message, setMessage] = useState('');
+    const [error, setError] = useState('');
 
-  const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-  const [showOTP, setShowOTP] = useState(false);
-
-  const [formData, setFormData] = useState({
-    first_name: "",
-    last_name: "",
-    email: "",
-    password: "",
-    otp: ""
-  });
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      await axios.post(`${API}/me/signup`, {
-        first_name: formData.first_name,
-        last_name: formData.last_name,
-        email: formData.email,
-        password: formData.password
-      });
-
-      alert("OTP sent to your email 📧");
-      setShowOTP(true);
-
-    } catch (err) {
-      alert(JSON.stringify(err.response?.data || err.message))
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
     }
-  };
 
-  const verifyOTP = async () => {
-    try {
-      await axios.post(`${API}/me/verify-otp`, {
-        email: formData.email,
-        otp: formData.otp
-      });
-
-      alert("Account verified successfully ✅");
-      navigate("/login");
-
-    } catch (err) {
-      alert(err.response?.data?.message || "Invalid OTP");
+    const handleSignup = () => {
+        setError('');
+        dispatch(authSignup(formData, (data) => {
+            setMessage(data.message);
+            setStep('verify');
+        }, (err) => {
+            setError(err.message);
+        }));
     }
-  };
 
-  return (
-    <Authentication data={
-      <div className={styles.wrapper}>
+    const handleVerify = () => {
+        setError('');
+        dispatch(verifyOtp(formData.email, otp, () => {
+            navigate('/');
+        }, (err) => {
+            setError(err.message);
+        }));
+    }
 
-        <div className={styles.header}>
-          <div className={styles.title}>Create Account</div>
-          <div className={styles.login}>
-            Already have account? <Link to="/login">Login</Link>
-          </div>
+    const form =
+        <div className={styles['wrapper']}>
+            <div className={styles['header']}>
+                <div className={styles['title']}>
+                    {step === 'signup' ? 'Sign up with your email' : 'Verify Email'}
+                </div>
+                {step === 'signup' && <div className={styles['login']}>Already have an account? <Link to={'/login'}>Login</Link></div>}
+            </div>
+            {message && <div style={{ color: 'green', marginBottom: '10px' }}>{message}</div>}
+            {error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
+
+            {step === 'signup' && (
+                <div className={styles['form']}>
+                    <input name="first_name" placeholder={'First Name'} onChange={handleChange} value={formData.first_name} />
+                    <input name="last_name" placeholder={'Last Name'} onChange={handleChange} value={formData.last_name} />
+                    <input name="email" placeholder={'Email'} onChange={handleChange} value={formData.email} />
+                    <input name="password" placeholder={'Password'} type={'password'} onChange={handleChange} value={formData.password} />
+                    <button className={'btn1'} onClick={handleSignup}>Sign Up</button>
+                </div>
+            )}
+
+            {step === 'verify' && (
+                <div className={styles['form']}>
+                    <input placeholder={'Enter OTP'} onChange={(e) => setOtp(e.target.value)} value={otp} />
+                    <button className={'btn1'} onClick={handleVerify}>Verify OTP</button>
+                </div>
+            )}
         </div>
 
-        <form className={styles.form} onSubmit={handleSubmit}>
-          <input name="first_name" placeholder="First Name" onChange={handleChange} required />
-          <input name="last_name" placeholder="Last Name" onChange={handleChange} />
-          <input type="email" name="email" placeholder="Email" onChange={handleChange} required />
-          <input type="password" name="password" placeholder="Password" onChange={handleChange} required />
-          <button className="btn1">Sign Up</button>
-        </form>
-
-        {showOTP && (
-          <>
-            <input
-              name="otp"
-              placeholder="Enter OTP"
-              onChange={handleChange}
-              className={styles.otp}
-            />
-            <button onClick={verifyOTP}>Verify OTP</button>
-          </>
-        )}
-
-      </div>
-    }/>
-  );
-};
+    return <Authentication data={form} />
+}
 
 export default Signup;

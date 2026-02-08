@@ -1,182 +1,65 @@
-import dotenv from "dotenv";
-dotenv.config();
-
 import express from "express";
-import mongoose from "mongoose";
-import cors from "cors";
-import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
-
-import meRoutes from "./routes/me.js";
-import Users from "./model/Users.js";
-import Orders from "./model/Orders.js";
-import Products from "./model/Products.js";
+import dns from 'dns';
+import bodyParser from 'body-parser';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import products from "./routes/products.js";
+import shipping from "./routes/shipping.js"
+import orders from './routes/orders.js';
+import payments from './routes/payments.js';
+import notifications from "./routes/notifications.js";
+import cart from "./routes/cart.js";
+// import sgMail from '@sendgrid/mail';
+import me from "./routes/me.js";
+import Stripe from "stripe";
 
 const app = express();
+dotenv.config();
 
-/* ===== MIDDLEWARE ===== */
+// sgMail.setApiKey(process.env.SENDGRID_KEY);
+export const stripe = Stripe(process.env.STRIPE_PRIVATE_KEY);
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
+app.use('/product_downloads', express.static('product_downloads'));
+app.use('/Grocery_Images', express.static('../client/product-image/Grocery_Images'));
 
-app.use(cors({
-  origin: process.env.CLIENT_URL,
-  credentials: true
-}));
-
-app.use("/me", meRoutes);
-
-/* ===== JWT MIDDLEWARE ===== */
-
-const auth = (req, res, next) => {
-  try {
-    const header = req.headers.authorization;
-    if (!header) return res.status(401).json({ message: "No token" });
-
-    const token = header.split(" ")[1];
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    req.userId = decoded.id;
-    req.role = decoded.role;
-
+app.use((req, res, next) => {
+    console.log(`Incoming Request: ${req.method} ${req.url}`);
     next();
-  } catch (e) {
-    res.status(401).json({ message: e.message });
-  }
-};
-
-/* ===== AUTH ===== */
-
-app.post("/auth/login", async (req, res) => {
-  const { email, password } = req.body;
-
-  const user = await Users.findOne({ email });
-  if (!user) return res.status(404).json({ message: "User not found" });
-
-  const match = await bcrypt.compare(password, user.password);
-  if (!match) return res.status(400).json({ message: "Wrong password" });
-
-  const token = jwt.sign(
-    { id: user._id, role: user.role },
-    process.env.JWT_SECRET,
-    { expiresIn: "7d" }
-  );
-
-  res.json({ token, user });
 });
 
-/* ================================
-          PRODUCTS
-================================ */
+app.use('/orders', orders);
+app.use('/payments', payments);
+app.use('/products', products);
+app.use('/shipping', shipping);
+app.use('/notifications', notifications);
+app.use('/cart', cart);
+app.use('/me', me);
 
-
-// GET ALL PRODUCTS
-app.get("/products", async (req, res) => {
-  try {
-    const products = await Products.find({});
-    res.json({
-      total_pages: 1,
-      products
-    });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
+app.get('/', (req, res) => {
+    res.status(200).json({
+        team_name: "Curious Monkeys",
+        dev_team: ["Baraa A.", "Eman S.", "Sary N.", "Youssef S."].sort()
+    })
 });
 
-// SEARCH PRODUCTS
-app.get("/products/search", async (req, res) => {
-  try {
-    const search = req.query.search || "";
+const PORT = process.env.PORT || 5000;
 
-    const products = await Products.find({
-      name: { $regex: search, $options: "i" }
-    });
+const mongooseOptions = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}
 
-    res.json({
-      total_pages: 1,
-      products
-    });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
+mongoose.set('strictQuery', false);
+dns.setServers(['8.8.8.8']); // Use Google DNS for MongoDB SRV lookup
+mongoose.connect(process.env.MONGO_URI, mongooseOptions)
+    .then(() => {
+        app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
+        console.log("Database Connected Successfully");
+    })
+    .catch((error) => console.log("Database connection failed:", error.message));
 
-
-// ✅ SEARCH PRODUCTS  (THIS WAS MISSING)
-app.get("/products/search", async (req, res) => {
-  try {
-    const search = req.query.search || "";
-
-    const products = await Products.find({
-      name: { $regex: search, $options: "i" }
-    });
-
-    res.json(products);
-  } catch (err) {
-    console.error("SEARCH ERROR:", err);
-    res.status(500).json({ message: err.message });
-  }
-});
-
-
-// ✅ ADD PRODUCT (BUG FIXED)
-app.post("/products", async (req, res) => {
-  try {
-    const product = await Products.create(req.body);
-    res.json(product);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
-
-/* ================================
-           ORDERS
-================================ */
-
-app.get("/orders", auth, async (req, res) => {
-  const orders = await Orders.find({ user: req.userId }).sort({ createdAt: -1 });
-  res.json(orders);
-});
-
-app.post("/orders", auth, async (req, res) => {
-
-  const newOrder = {
-    ...req.body,
-    user: req.userId,
-    orderId: "ORD" + Date.now() + Math.floor(Math.random() * 10000),
-    payment_status: "paid",
-    status: "paid"
-  };
-
-  const order = await Orders.create(newOrder);
-  res.json(order);
-});
-
-/* ================================
-         SHIPPING & PAYMENTS
-================================ */
-
-app.get("/shipping", auth, (req, res) => {
-  res.json({ message: "Shipping working" });
-});
-
-app.post("/payments", auth, (req, res) => {
-  res.json({ success: true });
-});
-
-/* ===== ROOT ===== */
-
-app.get("/", (req, res) => {
-  res.json({ success: true });
-});
-
-/* ================================
-        DB + SERVER
-================================ */
-
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => {
-    console.log("Mongo connected");
-    app.listen(5000, () => console.log("Server running on 5000"));
-  })
-  .catch(console.log);
+export default app

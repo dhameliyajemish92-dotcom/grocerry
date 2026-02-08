@@ -1,4 +1,4 @@
-import sgMail from '@sendgrid/mail';
+// import sgMail from '@sendgrid/mail';
 import OrderConfirmationTemplate from "./templates/OrderConfirmationTemplate.js";
 
 const defaults = {
@@ -9,8 +9,8 @@ const defaults = {
 }
 
 export const orderConfirmation = async (req, res) => {
-    const {to, order} = req.body;
-    
+    const { to, order } = req.body;
+
     const email = {
         ...defaults,
         to,
@@ -24,9 +24,10 @@ export const orderConfirmation = async (req, res) => {
 
 const sendEmail = async (email, res) => {
     try {
-        await sgMail.send(email);
-        res.status(200).json({email, result: 'Sent Successfully'});
+        // await sgMail.send(email);
+        console.log("Email simulation:", email);
+        res.status(200).json({ email, result: 'Sent Successfully (Simulated)' });
     } catch (e) {
-        res.status(400).json({message: e.message});
+        res.status(400).json({ message: e.message });
     }
 }

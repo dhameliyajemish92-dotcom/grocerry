@@ -1,13 +1,13 @@
 import styles from './footer.module.css';
 import Logo from '../../shared/assets/logo.png';
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
     return (
         <div className={styles['wrapper']}>
             <div className={styles['top-wrapper']}>
                 <div className={styles['logo-wrapper']}>
-                    <img src={Logo} alt={'Rabbit Mart'}/>
+                    <img src={Logo} alt={'Rabbit Mart'} />
                 </div>
                 <div className={styles['pages-wrapper']}>
                     <div className={styles['pages']}>
@@ -29,13 +29,13 @@ const Footer = () => {
                     <div className={styles['pages']}>
                         <div className={styles['page-title']}>Development</div>
                         <div className={styles['pages-list']}>
-                            <a href={'https://github.com/skittlesaur/rabbitmart'} target={'_blank'} rel={'noreferrer'}>GitHub Repository</a>
+                            {/* <a href={'https://github.com/skittlesaur/rabbitmart'} target={'_blank'} rel={'noreferrer'}>GitHub Repository</a> */}
                         </div>
                     </div>
                 </div>
             </div>
             <div className={styles['credits']}>
-                made jemish dhameliya 2026 
+                made by jemish dhameliya.
             </div>
         </div>
     );

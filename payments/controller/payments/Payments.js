@@ -1,50 +1,80 @@
-import Order from "../../model/Orders.js";
+import {stripe} from "../../index.js";
+import axios from "axios";
 import jwt from "jsonwebtoken";
 import generateId from "../../utils/generateId.js";
+import {ORDERS_BASEURL, WEBSITE_BASE_URL} from "../../services/BaseURLs.js";
 
 export const createCheckoutSession = async (req, res) => {
-  try {
-    console.log("🔥 API HIT");
-
-    let decoded;
-
     try {
-      decoded = jwt.verify(req.body.token, process.env.JWT_SECRET);
-    } catch (err) {
-      console.log("❌ JWT FAILED", err.message);
-      return res.status(401).json({ message: "Session expired" });
+        const {products, total} = jwt.verify(
+            req.body.token,
+            process.env.JWT_SECRET_KEY
+        );
+        const {data} = req.body;
+        const order_id = generateId();
+
+        const session = await stripe.checkout.sessions.create({
+            payment_method_types: ["card"],
+            mode: "payment",
+            line_items: products.map((product) => {
+                return {
+                    price_data: {
+                        currency: "egp",
+                        product_data: {
+                            name: product.name,
+                        },
+                        unit_amount: parseInt(product.price * 100),
+                    },
+                    quantity: product.quantity || 1,
+                };
+            }),
+            payment_intent_data: {
+                metadata: {
+                    order_id: order_id,
+                    firstName: data.name.first,
+                    lastName: data.name.last,
+                    email: data.email,
+                    phone_number: data.phone_number,
+                    address: JSON.stringify({
+                        country: data.address.country,
+                        city: data.address.city,
+                        area: data.address.area,
+                        street: data.address.street,
+                        building_number: data.address.building_number,
+                        floor: data.floor,
+                        apartment_number: data.address.apartment_number,
+                    }),
+                    products: JSON.stringify(
+                        products.map((product) => {
+                            return {
+                                product_id: product.product_id,
+                                name: product.name,
+                                quantity: product.quantity,
+                            };
+                        })
+                    ),
+                    total: total,
+                },
+            },
+            success_url: `${WEBSITE_BASE_URL}/checkout/success?order=${order_id}`,
+            cancel_url: `${WEBSITE_BASE_URL}/cart`,
+        });
+
+        res.status(201).json({url: session.url});
+    } catch (error) {
+        res.status(500).json({message: error.message});
     }
+};
 
-    console.log("📦 USER:", decoded.id);
-
-    // ⬇️ products & total frontend mathi aavse
-    const { total, products } = req.body;
-
-    if (!products || products.length === 0) {
-      return res.status(400).json({ message: "Cart is empty" });
+export const webhook = async (req, res) => {
+    const eventType = req.body.type;
+    const {metadata} = req.body.data.object;
+    try {
+        if (eventType === "charge.succeeded") {
+            await axios.post(ORDERS_BASEURL, {data: metadata});
+        }
+        res.status(200).json(metadata);
+    } catch (error) {
+        res.status(404).json({message: error.message});
     }
-
-    if (Number(total) < 30) {
-      return res.status(400).json({ message: "Minimum order value is ₹30" });
-    }
-
-    const order = await Order.create({
-      user: decoded.id,        // ✅ VERY IMPORTANT
-      products,
-      total,
-      orderId: generateId(),  // ✅ model field match
-      status: "CREATED"
-    });
-
-    console.log("✅ ORDER SAVED:", order._id);
-
-    res.json({
-      success: true,
-      order
-    });
-
-  } catch (err) {
-    console.log("❗ SAVE ERROR:", err);
-    res.status(500).json({ message: err.message });
-  }
 };

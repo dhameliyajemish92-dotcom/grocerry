@@ -2,7 +2,7 @@ import styles from './wishlist.module.css';
 import {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import {useDispatch} from "react-redux";
-import {getWishlist} from "../../actions/wishlist";
+import {getWishlist} from "../../actions/auth";
 import Loading from "../../components/loading/Loading";
 import ProductCard from "../../components/product-card/ProductCard";
 import Error from "../../components/feedback/error/Error";
@@ -34,7 +34,7 @@ const Wishlist = ({addProductToCart}) => {
         <div className={styles['wrapper']}>
             {error && <Error error={error} setError={setError}/>}
             <div className={'heading'}>
-                <h1>wishlist</h1>
+                <h1>Wishlist</h1>
             </div>
             {!products?.length ?
                 <div className={styles['no-products']}>

@@ -1,23 +1,73 @@
 import mongoose from "mongoose";
-const {Schema} = mongoose;
+const { Schema } = mongoose;
 
-const productSchema = new Schema({
-    product_id: {type: String, unique:true},
-    name: String,
-    price: Number,
-    weight: Number,
-    measurement: String,
-    category: String,
-    image:
+const productSchema = new Schema(
     {
-        type: String,
-        default: 'https://res.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_256,w_256,f_auto,q_auto:eco,dpr_1/lqcm8z8qwhi42efm2lue'
-    },
-    stock: {
-        type: Number,
-        default: 0
-    }
-});
+        id: {
+            type: String,
+            required: true,
+            unique: true,
+            trim: true
+        },
 
-const Products = mongoose.model('Products',productSchema);
-export default Products;
+        name: {
+            type: String,
+            required: true,
+            trim: true
+        },
+
+        brand: {
+            type: String,
+            required: true,
+            trim: true
+        },
+
+        category: {
+            type: String,
+            required: true,
+            trim: true
+        },
+
+        pricing: {
+            mrp: {
+                type: Number,
+                required: true
+            },
+            selling_price: {
+                type: Number,
+                required: true
+            }
+        },
+
+        packaging: {
+            quantity: {
+                type: String,   // "5"
+                required: true
+            },
+            unit: {
+                type: String,   // "kg"
+                required: true
+            }
+        },
+
+        availability: {
+            in_stock: {
+                type: Boolean,
+                default: true
+            }
+        },
+
+        image: {
+            type: String,
+            required: true,
+            trim: true
+        }
+    },
+    {
+        timestamps: true,
+        strict: true
+    }
+);
+
+const Product = mongoose.model("Product", productSchema);
+export default Product;

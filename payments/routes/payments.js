@@ -4,7 +4,6 @@ import { createCheckoutSession, webhook } from "../controller/payments/Payments.
 const router = express.Router();
 
 router.post('/', createCheckoutSession);
-router.post("/create", createCheckoutSession);
-
+router.post('/webhook', webhook);
 
 export default router;

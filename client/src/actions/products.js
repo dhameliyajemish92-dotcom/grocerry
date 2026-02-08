@@ -1,70 +1,63 @@
-import axios from "axios";
-
-const API = axios.create({
-  baseURL: "http://localhost:5000"
-});
-
-/* =======================
-   GET PRODUCTS
-======================= */
+import * as api from '../api';
+import { FETCH_RECOMMENDATIONS, UPDATE_DATABASE, VALIDATE_CART, VALIDATE_CART_ERR } from "../constants/actions/products";
 
 export const getProductsPerPage = (page, category, onSuccess) => async () => {
-  try {
-    let url = "/products";
-
-    if (category) {
-      url += `?category=${category}`;
+    try {
+        const products = await api.getProductsPerPage(page, category).then(res => res.data);
+        onSuccess(products);
+    } catch (error) {
+        console.log(error);
     }
-
-    const res = await API.get(url);
-    onSuccess(res.data);
-  } catch (err) {
-    console.log(err);
-  }
-};
+}
 
 export const productsSearch = (search, page, onSuccess) => async () => {
-  try {
-    const res = await API.get(`/products/search?search=${search}`);
-    onSuccess(res.data);
-  } catch (err) {
-    console.log(err);
-  }
-};
+    try {
+        const products = await api.productsSearch(search, page).then(res => res.data);
+        onSuccess(products);
+    } catch (error) {
+        console.log(error);
+    }
+}
 
-/* =======================
-   ADMIN – ADD PRODUCT
-======================= */
+export const getRecommendations = (onSuccess) => async (dispatch) => {
+    try {
+        const data = await api.getRecommendations().then(res => res.data);
+        dispatch({ type: FETCH_RECOMMENDATIONS, data })
+        onSuccess(data);
+    } catch (e) {
+        console.log(e)
+        onSuccess([]); // Ensure loading state is turned off even on error
+    }
+}
 
-export const postProduct = (product) => async () => {
-  try {
-    await API.post("/products", product);
-  } catch (err) {
-    console.log(err);
-  }
-};
+export const postProduct = (product, onSuccess, onError) => async () => {
+    try {
+        const data = await api.postProduct(product).then(res => res.data);
+        onSuccess(data);
+    } catch (e) {
+        const { data } = e.response;
+        onError(data);
+    }
+}
 
-/* =======================
-   ADMIN – UPDATE DATABASE
-======================= */
+export const validateCart = (cart, onSuccess, onError) => async (dispatch) => {
+    try {
+        const cartData = await api.validateCart(cart).then(res => res.data);
+        dispatch({ type: VALIDATE_CART, data: cartData });
+        onSuccess(cartData.token?.split('.')[1]);
+    } catch (e) {
+        const { data } = e.response;
+        dispatch({ type: VALIDATE_CART_ERR, data });
+        onError(data);
+    }
+}
 
-export const adminUpdateDatabase = (data) => async () => {
-  try {
-    await API.post("/admin/products", data);
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-/* =======================
-   CART VALIDATION
-======================= */
-
-export const validateCart = (cart, onSuccess, onError) => async () => {
-  try {
-    const res = await API.post("/products/validate", { cart });
-    onSuccess(res.data);
-  } catch (err) {
-    if (onError) onError(err.response?.data);
-  }
-};
+export const adminUpdateDatabase = (csv, mode, onSuccess, onError) => async (dispatch) => {
+    try {
+        const updatedData = await api.adminUpdateDatabase(csv, mode).then(res => res.data);
+        dispatch({ type: UPDATE_DATABASE, data: updatedData });
+        onSuccess(updatedData);
+    } catch (e) {
+        onError(e);
+    }
+}

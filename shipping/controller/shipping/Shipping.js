@@ -1,4 +1,4 @@
-import Shipments from '../../models/Shipments.js';
+import Shipments from '../../model/Shipments.js';
 import Pagination from "../../utils/pagination.js";
 import axios from "axios";
 import {USER_BASEURL} from "../../services/BaseURLs.js";
@@ -60,8 +60,7 @@ export const postShipments = async (req, res) => {
         total: total,
         ordered_at: ordered_at,
         address: address,
-        order_id:orderId
-
+        order_id: order_id
     });
 
     try {

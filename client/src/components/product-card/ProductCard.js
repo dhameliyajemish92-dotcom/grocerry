@@ -1,134 +1,98 @@
 import styles from './productCard.module.css';
 import { useRef, useState } from "react";
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useDispatch, useSelector } from "react-redux";
-import { updateWishlist } from "../../actions/wishlist";
+import { updateWishlist } from "../../actions/auth";
 import { useNavigate } from "react-router-dom";
 
 const ProductCard = ({ product, addProductToCart, productsPage = false }) => {
 
-  const [flyImage, setFlyImage] = useState(false);
-  const wrapperRef = useRef(null);
+    const [addToCart, setAddToCart] = useState(false);
+    console.log("ProductCard Image:", product.name, product.image);
+    const wrapperRef = useRef();
+    const wishlist = useSelector(state => state.authentication.user?.wishlist) || [];
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-  const wishlist = useSelector(
-    state => state.authentication.user?.wishlist || []
-  );
+    const handleWishlist = () => {
+        const onError = () => {
+            navigate('/login');
+        }
 
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+        dispatch(updateWishlist(product.product_id || product.id, onError));
+    }
 
-  const handleWishlist = () => {
-    const onError = () => navigate('/login');
-    dispatch(updateWishlist(product.product_id, onError));
-  };
+    const handleAddToCart = () => {
+        setAddToCart(true);
 
-  const handleAddToCart = () => {
-    setFlyImage(true);
+        setTimeout(() => {
+            setAddToCart(false);
+            addProductToCart(product);
+        }, 600)
+    }
 
-    setTimeout(() => {
-      addProductToCart(product);
-      setFlyImage(false);
-    }, 700);
-  };
+    const getXi = () => {
+        const elementData = wrapperRef.current.getBoundingClientRect();
+        return elementData.x;
+    }
 
-  const rect = wrapperRef.current?.getBoundingClientRect();
+    const getXf = () => {
+        const windowWidth = window.innerWidth;
+        if (windowWidth > 1024)
+            return windowWidth - 11 * 16;
+        return windowWidth - 5 * 16
+    }
 
-  const startX = rect?.left || 0;
-  const startY = rect?.top || 0;
+    const getYi = () => {
+        const elementData = wrapperRef.current.getBoundingClientRect();
+        return elementData.y;
+    }
 
-  const endX = window.innerWidth - 80;
-  const endY = 20;
-
-  const sellingPrice = Number(product.price);
-  const mrp = product.mrp || Math.round(sellingPrice * 1.25);
-  const discount = Math.round(((mrp - sellingPrice) / mrp) * 100);
-
-  return (
-    <div
-      ref={wrapperRef}
-      className={`${styles.wrapper} 
-      ${productsPage ? styles['products-page'] : ''} 
-      ${!product.stock ? styles['out-of-stock'] : ''}`}
-    >
-
-      <AnimatePresence>
-        {flyImage && (
-          <motion.img
-            src={product.image}
-            className={styles['cart-img']}
-            style={{ position: "fixed", zIndex: 9999 }}
-            initial={{
-              x: startX,
-              y: startY,
-              width: 120,
-              height: 120,
-              borderRadius: 12,
-              opacity: 1
-            }}
-            animate={{
-              x: endX,
-              y: endY,
-              width: 30,
-              height: 30,
-              opacity: 0.7,
-              borderRadius: "50%"
-            }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.7, ease: "easeInOut" }}
-          />
-        )}
-      </AnimatePresence>
-
-      <div className={styles['image-wrapper']}>
-        <img src={product.image} alt={product.name} />
-
-        <span
-          onClick={handleWishlist}
-          className={`material-symbols-outlined 
-          ${styles.wishlist} 
-          ${wishlist.includes(product.product_id) ? styles.wishlisted : ''}`}
-        >
-          favorite
-        </span>
-      </div>
-
-      <div className={styles.content}>
-        <p className={styles.name}>{product.name}</p>
-
-        <div className={styles.footer}>
-          <div className={styles.details}>
-            <p className={styles.weight}>
-              {product.weight}{product.measurement}
-            </p>
-
-            <div className={styles['price-box']}>
-              <span className={styles['selling-price']}>
-                ₹ {sellingPrice.toLocaleString('en-IN')}
-              </span>
-
-              <span className={styles.mrp}>
-                ₹ {mrp.toLocaleString('en-IN')}
-              </span>
-
-              <span className={styles.discount}>
-                {discount}% OFF
-              </span>
+    return (
+        <div ref={wrapperRef}
+            className={`${styles['wrapper']} ${productsPage ? styles['products-page'] : ''} ${!(product.availability?.in_stock ?? product.stock) && styles['out-of-stock']}`}>
+            {addToCart &&
+                <motion.img initial={{
+                    x: getXi(),
+                    y: getYi(),
+                    padding: '1em',
+                    borderRadius: '10px'
+                }}
+                    animate={{
+                        x: getXf(),
+                        y: 0,
+                        width: 24,
+                        height: 24,
+                        opacity: .8,
+                        borderRadius: '50%',
+                        padding: '.5em'
+                    }}
+                    transition={{ type: "spring", stiffness: 40, bounce: 0 }}
+                    className={styles['cart-img']}
+                    src={product.image}
+                    onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/600x400?text=No+Image'; }}
+                    alt={product.name} />}
+            <div className={styles['image-wrapper']}>
+                <img src={product.image} alt={product.name} onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/600x400?text=No+Image'; }} />
+                <span onClick={handleWishlist}
+                    className={`material-symbols-outlined ${styles['wishlist']} ${wishlist.includes(product.product_id || product.id) && styles['wishlisted']}`}>favorite</span>
             </div>
-          </div>
-
-          {product.stock ? (
-            <div onClick={handleAddToCart} className={styles['add-to-cart']}>
-              Add to Cart
+            <div className={styles['content']}>
+                <p className={styles['name']}>{product.name}</p>
+                <div className={styles['footer']}>
+                    <div className={styles['details']}>
+                        <p className={styles['weight']}>{product.packaging ? `${product.packaging.quantity}${product.packaging.unit}` : `${product.weight}${product.measurement}`}</p>
+                        <p className={styles['price']}>
+                            {product.pricing ? Number(product.pricing.selling_price).toFixed(2) : (product.price ? Number(product.price).toFixed(2) : '0.00')} ₹
+                        </p>
+                    </div>
+                    {(product.availability?.in_stock ?? product.stock) ?
+                        <div onClick={handleAddToCart} className={styles['add-to-cart']}>Add to Cart</div> :
+                        <div className={styles['unavailable']}>Out of Stock</div>}
+                </div>
             </div>
-          ) : (
-            <div className={styles.unavailable}>
-              Out of Stock
-            </div>
-          )}
         </div>
-      </div>
-    </div>
-  );
-};
+    );
+}
 
 export default ProductCard;

@@ -1,6 +1,6 @@
 import styles from './orderSummary.module.css';
 
-const OrderSummary = ({order}) => {
+const OrderSummary = ({ order }) => {
     return (
         <div className={styles['wrapper']}>
             <div className={styles['header']}>
@@ -14,9 +14,9 @@ const OrderSummary = ({order}) => {
                 {order.products.map((product, i) =>
                     <div key={i} className={styles['product-wrapper']}>
                         <div className={styles['product-img']}>
-                            <img src={product.image} alt={product.name}/>
+                            <img src={product.image} alt={product.name} />
                         </div>
-                        <div className={styles['quantity']}>{product.price}EGP x{product.quantity || 1}</div>
+                        <div className={styles['quantity']}>{product.price}₹ x{product.quantity || 1}</div>
                         <div className={styles['product-name']}>{product.name}</div>
                     </div>
                 )}
@@ -24,7 +24,7 @@ const OrderSummary = ({order}) => {
             <div className={styles['footer']}>
                 <div className={styles['total-wrapper']}>
                     <div className={styles['total-txt']}>Total</div>
-                    <div className={styles['total']}>{order.total} EGP</div>
+                    <div className={styles['total']}>{order.total} ₹</div>
                 </div>
             </div>
         </div>

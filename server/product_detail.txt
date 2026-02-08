@@ -1,0 +1,256 @@
+Product ID: 10000203
+Description: Tomato - Local
+Weight: 1 kg
+Pack Desc: 
+Pricing Object:
+{
+  "available_offer_type": "offer",
+  "offer_badge_text": "",
+  "emi_offers": {},
+  "bank_offers": {},
+  "discount": {
+    "deal_type": null,
+    "deal_score": null,
+    "mrp": "42",
+    "mrp_per_pack": null,
+    "d_text": "31% OFF",
+    "d_avail": "true",
+    "prim_price": {
+      "sp": "29",
+      "sp_per_pack": null,
+      "icon": {
+        "base_url": null,
+        "image": null,
+        "format": null
+      },
+      "desc": "",
+      "base_price": null,
+      "base_unit": null
+    },
+    "sec_price": {
+      "sp": null,
+      "icon": null,
+      "desc": null,
+      "background": null
+    },
+    "subscription_price": "29",
+    "camp_detail": {
+      "c": [
+        3007600,
+        3668643
+      ],
+      "c_f": 13,
+      "d_t": "percent",
+      "d_v": 30.95,
+      "dual_pricing": true,
+      "m_f": 0,
+      "narq": 2,
+      "r_c": [
+        3007600
+      ],
+      "v_f": 0
+    },
+    "offer_entry_text": "Har Din Sasta!",
+    "offer_available": "true"
+  },
+  "promo": null,
+  "subscribe": {
+    "desc": null,
+    "desc_label": null,
+    "subs_c": [],
+    "subs_sp": null
+  },
+  "offer": {
+    "arrow_image": "https://www.bbassets.com/media/uploads/arrow_image_G.png",
+    "background": {
+      "direction": "LEFT_RIGHT",
+      "gradient": [
+        {
+          "a": 1,
+          "b": 255,
+          "g": 255,
+          "r": 255
+        },
+        {
+          "a": 1,
+          "b": 204,
+          "g": 241,
+          "r": 228
+        }
+      ]
+    },
+    "background_border": {
+      "direction": "LEFT_RIGHT",
+      "gradient": [
+        {
+          "a": 1,
+          "b": 102,
+          "g": 213,
+          "r": 173
+        },
+        {
+          "a": 1,
+          "b": 51,
+          "g": 199,
+          "r": 145
+        }
+      ]
+    },
+    "campaign_type": "",
+    "campaign_type_icon": null,
+    "campaign_type_slug": "",
+    "entry_achieved_image": "https://www.bbassets.com/media/uploads/super_saver_tick_green.json",
+    "offer_available": "true",
+    "offer_ent_txt": "Har Din Sasta!",
+    "offer_entry_text": "Har Din Sasta!",
+    "offer_logo": "",
+    "offer_sp": 29,
+    "offer_type": "discount",
+    "progress_background": {
+      "direction": "LEFT_RIGHT",
+      "gradient": [
+        {
+          "a": 1,
+          "b": 255,
+          "g": 255,
+          "r": 255
+        },
+        {
+          "a": 1,
+          "b": 102,
+          "g": 213,
+          "r": 173
+        }
+      ]
+    },
+    "text": "Har Din Sasta!",
+    "text_color": "#476F00"
+  }
+}
+Images Object:
+[
+  {
+    "s": "https://www.bbassets.com/media/uploads/p/s/10000203_19-fresho-tomato-local.jpg",
+    "m": "https://www.bbassets.com/media/uploads/p/m/10000203_19-fresho-tomato-local.jpg",
+    "l": "https://www.bbassets.com/media/uploads/p/l/10000203_19-fresho-tomato-local.jpg"
+  },
+  {
+    "s": "https://www.bbassets.com/media/uploads/p/s/10000203-2_5-fresho-tomato-local.jpg",
+    "m": "https://www.bbassets.com/media/uploads/p/m/10000203-2_5-fresho-tomato-local.jpg",
+    "l": "https://www.bbassets.com/media/uploads/p/l/10000203-2_5-fresho-tomato-local.jpg"
+  },
+  {
+    "s": "https://www.bbassets.com/media/uploads/p/s/10000203-3_6-fresho-tomato-local.jpg",
+    "m": "https://www.bbassets.com/media/uploads/p/m/10000203-3_6-fresho-tomato-local.jpg",
+    "l": "https://www.bbassets.com/media/uploads/p/l/10000203-3_6-fresho-tomato-local.jpg"
+  },
+  {
+    "s": "https://www.bbassets.com/media/uploads/p/s/10000203-4_2-fresho-tomato-local.jpg",
+    "m": "https://www.bbassets.com/media/uploads/p/m/10000203-4_2-fresho-tomato-local.jpg",
+    "l": "https://www.bbassets.com/media/uploads/p/l/10000203-4_2-fresho-tomato-local.jpg"
+  },
+  {
+    "s": "https://www.bbassets.com/media/uploads/p/s/10000203-5_2-fresho-tomato-local.jpg",
+    "m": "https://www.bbassets.com/media/uploads/p/m/10000203-5_2-fresho-tomato-local.jpg",
+    "l": "https://www.bbassets.com/media/uploads/p/l/10000203-5_2-fresho-tomato-local.jpg"
+  },
+  {
+    "s": "https://www.bbassets.com/media/uploads/p/s/10000203-6_2-fresho-tomato-local.jpg",
+    "m": "https://www.bbassets.com/media/uploads/p/m/10000203-6_2-fresho-tomato-local.jpg",
+    "l": "https://www.bbassets.com/media/uploads/p/l/10000203-6_2-fresho-tomato-local.jpg"
+  }
+]
+First Child (Variant):
+Child ID: 40312601
+Child Pricing:
+{
+  "available_offer_type": "offer",
+  "offer_badge_text": "",
+  "emi_offers": {},
+  "bank_offers": {},
+  "discount": {
+    "deal_type": null,
+    "deal_score": null,
+    "mrp": "9.59",
+    "mrp_per_pack": null,
+    "d_text": "24% OFF",
+    "d_avail": "true",
+    "prim_price": {
+      "sp": "7.29",
+      "sp_per_pack": null,
+      "icon": {
+        "base_url": null,
+        "image": null,
+        "format": null
+      },
+      "desc": "",
+      "base_price": null,
+      "base_unit": null
+    },
+    "sec_price": {
+      "sp": null,
+      "icon": null,
+      "desc": null,
+      "background": null
+    },
+    "subscription_price": "7.29",
+    "camp_detail": {
+      "c": [
+        3007600
+      ],
+      "c_f": 2.3,
+      "d_t": "percent",
+      "d_v": 23.98,
+      "dual_pricing": false,
+      "m_f": 0,
+      "narq": 9999999,
+      "r_c": [
+        3007600
+      ],
+      "v_f": 0
+    },
+    "offer_entry_text": "",
+    "offer_available": "false"
+  },
+  "promo": null,
+  "subscribe": {
+    "desc": null,
+    "desc_label": null,
+    "subs_c": [],
+    "subs_sp": null
+  },
+  "offer": {}
+}
+Child Images:
+[
+  {
+    "s": "https://www.bbassets.com/media/uploads/p/s/40312601_3-fresho-tomato-local.jpg",
+    "m": "https://www.bbassets.com/media/uploads/p/m/40312601_3-fresho-tomato-local.jpg",
+    "l": "https://www.bbassets.com/media/uploads/p/l/40312601_3-fresho-tomato-local.jpg"
+  },
+  {
+    "s": "https://www.bbassets.com/media/uploads/p/s/40312601-2_2-fresho-tomato-local.jpg",
+    "m": "https://www.bbassets.com/media/uploads/p/m/40312601-2_2-fresho-tomato-local.jpg",
+    "l": "https://www.bbassets.com/media/uploads/p/l/40312601-2_2-fresho-tomato-local.jpg"
+  },
+  {
+    "s": "https://www.bbassets.com/media/uploads/p/s/40312601-3_1-fresho-tomato-local.jpg",
+    "m": "https://www.bbassets.com/media/uploads/p/m/40312601-3_1-fresho-tomato-local.jpg",
+    "l": "https://www.bbassets.com/media/uploads/p/l/40312601-3_1-fresho-tomato-local.jpg"
+  },
+  {
+    "s": "https://www.bbassets.com/media/uploads/p/s/40312601-4_1-fresho-tomato-local.jpg",
+    "m": "https://www.bbassets.com/media/uploads/p/m/40312601-4_1-fresho-tomato-local.jpg",
+    "l": "https://www.bbassets.com/media/uploads/p/l/40312601-4_1-fresho-tomato-local.jpg"
+  },
+  {
+    "s": "https://www.bbassets.com/media/uploads/p/s/40312601-5_1-fresho-tomato-local.jpg",
+    "m": "https://www.bbassets.com/media/uploads/p/m/40312601-5_1-fresho-tomato-local.jpg",
+    "l": "https://www.bbassets.com/media/uploads/p/l/40312601-5_1-fresho-tomato-local.jpg"
+  },
+  {
+    "s": "https://www.bbassets.com/media/uploads/p/s/40312601-6_1-fresho-tomato-local.jpg",
+    "m": "https://www.bbassets.com/media/uploads/p/m/40312601-6_1-fresho-tomato-local.jpg",
+    "l": "https://www.bbassets.com/media/uploads/p/l/40312601-6_1-fresho-tomato-local.jpg"
+  }
+]

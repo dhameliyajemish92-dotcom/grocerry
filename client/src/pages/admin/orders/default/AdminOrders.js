@@ -23,12 +23,7 @@ const AdminOrders = () => {
         const page = query.get('page') || 1;
         setPage(Number(page));
 
-     dispatch(fetchOrders(
-  page,
-  () => setLoading(false),
-  () => setLoading(false)
-))
-
+        dispatch(fetchOrders(page, () => setLoading(false)))
         window.scrollTo(0, 0);
     }, [dispatch, location.search])
 

@@ -1,140 +1,184 @@
 import styles from './checkout.module.css';
-import '../../shared/css/master.css';
-import { useState, useRef } from "react";
+import '../.././shared/css/master.css';
+import { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Error from "../../components/feedback/error/Error";
-import { postOrder } from "../../actions/orders";
-import QRCode from "react-qr-code";
+import { postOrder, postOrderCOD } from "../../actions/orders";
 
 const Checkout = () => {
+    const [error, setError] = useState('');
+    const [paymentMethod, setPaymentMethod] = useState('ONLINE'); // 'ONLINE' or 'COD'
 
-  const [error, setError] = useState('');
-  const [showQR, setShowQR] = useState(false);
-  const [upiLink, setUpiLink] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState("upi");
+    const fname = useRef();
+    const lname = useRef();
+    const email = useRef();
+    const phone = useRef();
+    const street = useRef();
+    const area = useRef();
+    const city = useRef();
+    const state = useRef();
+    const pincode = useRef();
 
-  const dispatch = useDispatch();
-  const cart = useSelector(state => state.products.cart_validation || {});
+    const dispatch = useDispatch();
 
-  const fname = useRef();
-  const lname = useRef();
-  const email = useRef();
-  const phone = useRef();
-  const city = useRef();
-  const area = useRef();
-  const street = useRef();
+    const cart = useSelector(state => state.products.cart_validation);
 
-  const formatINR = amt => `₹ ${Number(amt || 0).toLocaleString("en-IN")}`;
+    useEffect(() => {
+        if (!cart) {
+            window.location.href = '/cart';
+        }
+    }, [cart]);
 
-  const validatePhone = p => /^[6-9]\d{9}$/.test(p);
-  const validateEmail = e => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+    const handleCheckout = () => {
+        if (!cart) return;
 
-  const startUPI = amount => {
-    if (amount < 30) return setError("Minimum payment allowed is ₹30");
+        if (!fname.current.value) return setError("Enter a first name");
+        if (!lname.current.value) return setError("Enter a last name");
+        if (!email.current.value) return setError("Enter an email address");
+        if (!validateEmail(email.current.value)) return setError("Enter a valid email address");
+        if (!phone.current.value) return setError("Enter a phone number");
+        if (!validatePhone(phone.current.value)) return setError("Enter a valid phone number");
 
-    const link = `upi://pay?pa=takshilnakrani@okaxis&pn=RabbitMart&am=${amount}&cu=INR&tn=Order`;
+        if (!street.current.value) return setError("Enter a street address");
+        if (!area.current.value) return setError("Enter an area/locality");
+        if (!city.current.value) return setError("Enter a city");
+        if (!state.current.value) return setError("Enter a state");
+        if (!pincode.current.value) return setError("Enter a pincode");
+        if (!validatePincode(pincode.current.value)) return setError("Enter a valid 6-digit pincode");
 
-    if (/Android|iPhone/i.test(navigator.userAgent)) {
-      window.location.href = link;
-    } else {
-      setUpiLink(link);
-      setShowQR(true);
+
+        const onSuccess = (url) => {
+            window.location.href = url;
+        }
+
+        const onCODSuccess = (order_id) => {
+            window.location.href = `/checkout/success?order=${order_id}`;
+        }
+
+        const onError = (e) => {
+            console.error("Order Creation Error:", e);
+            setError(e.message || "An unknown error occurred.");
+        }
+
+        const data = {
+            name: {
+                first: fname.current.value,
+                last: lname.current.value,
+            },
+            email: email.current.value,
+            phone_number: phone.current.value,
+            address: {
+                country: 'India',
+                street: street.current.value,
+                area: area.current.value,
+                city: city.current.value,
+                state: state.current.value,
+                pincode: pincode.current.value,
+            },
+            payment_method: paymentMethod
+        };
+
+        if (paymentMethod === 'ONLINE') {
+            dispatch(postOrder(cart.token, data, onSuccess, onError));
+        } else {
+            // For COD, we pass the data directly
+            dispatch(postOrderCOD(cart.token, data, onCODSuccess, onError));
+        }
+
     }
-  };
-
-  const handleCheckout = () => {
-
-    const token = localStorage.getItem("token");
-    if (!token) return setError("Please login again");
-
-    if (!fname.current.value) return setError("Enter first name");
-    if (!lname.current.value) return setError("Enter last name");
-    if (!validateEmail(email.current.value)) return setError("Invalid email");
-    if (!validatePhone(phone.current.value)) return setError("Invalid mobile");
-
-    const data = {
-      products: cart.items,
-      total: cart.total,
-      address: {
-        country: "India",
-        city: city.current.value,
-        area: area.current.value,
-        street: street.current.value
-      },
-      payment_method: paymentMethod
+    const validatePhone = (phone) => {
+        return String(phone)
+            .toLowerCase()
+            .match(
+                /^[6-9]\d{9}$/
+            );
     };
 
-    // ✅ SUCCESS HANDLER (paid → success page)
-    const onSuccess = (order) => {
-
-      if (order.payment_status === "paid" && order.status === "paid") {
-        window.location.href = "/success";
-        return;
-      }
-
-      if (paymentMethod === "upi") startUPI(cart.total);
-
-      if (paymentMethod === "cod")
-        alert("Order placed successfully");
+    const validateEmail = (email) => {
+        return String(email)
+            .toLowerCase()
+            .match(
+                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            );
     };
 
-    const onError = e => setError(e.message || "Order failed");
+    const validatePincode = (pin) => {
+        return String(pin).match(/^[1-9][0-9]{5}$/);
+    };
 
-    dispatch(postOrder(token, data, onSuccess, onError));
-  };
+    if (!cart) {
+        return (
+            <div className={styles['wrapper']}>
+                <div className={'heading-wrapper'}>
+                    <h1 className={'heading'}>Loading Checkout...</h1>
+                </div>
+            </div>
+        )
+    }
 
-  if (!cart.total && !showQR) return <h2>Loading checkout...</h2>;
+    return (
+        <div className={styles['wrapper']}>
+            {error && <Error error={error} setError={setError} />}
+            <div className={'heading-wrapper'}>
+                <h1 className={'heading'}>Checkout</h1>
+            </div>
 
-  return (
-    <div className={styles.wrapper}>
+            <div className={styles['form']}>
+                <input ref={fname} type="text" placeholder="First Name" />
+                <input ref={lname} type="text" placeholder="Last Name" />
 
-      {error && <Error error={error} setError={setError} />}
+                <input ref={email} type="text" placeholder="Email" className={styles['full-width']} />
+                <input ref={phone} type="text" placeholder="Phone (e.g., 9012345678)" className={styles['full-width']} />
 
-      {!showQR && (
-        <>
-          <h1 className="heading">Checkout</h1>
+                <input ref={street} type="text" placeholder="Street Address / Flat / Building" className={styles['full-width']} />
+                <input ref={area} type="text" placeholder="Area / Locality" className={styles['full-width']} />
 
-          <div className={styles.form}>
-            <input ref={fname} placeholder="First Name" />
-            <input ref={lname} placeholder="Last Name" />
-            <input ref={email} placeholder="Email" />
-            <input ref={phone} placeholder="Mobile" />
-            <input ref={city} placeholder="City" />
-            <input ref={area} placeholder="Area" />
-            <input ref={street} placeholder="Street" />
-          </div>
+                <input ref={city} type="text" placeholder="City" />
+                <input ref={state} type="text" placeholder="State" />
 
-          <div className={styles.paymentBox}>
-            <label>
-              <input type="radio" checked={paymentMethod==="upi"} onChange={()=>setPaymentMethod("upi")} />
-              UPI
-            </label>
+                <input ref={pincode} type="text" placeholder="Pincode" className={styles['full-width']} />
+            </div>
 
-            <label>
-              <input type="radio" checked={paymentMethod==="cod"} onChange={()=>setPaymentMethod("cod")} />
-              COD
-            </label>
-          </div>
+            <div className={`${styles['payment-section']} ${styles['full-width']}`}>
+                <h3>Payment Method</h3>
+                <div style={{ marginTop: '10px' }}>
+                    <label style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', cursor: 'pointer' }}>
+                        <input
+                            type="radio"
+                            name="paymentMethod"
+                            value="ONLINE"
+                            checked={paymentMethod === 'ONLINE'}
+                            onChange={(e) => setPaymentMethod(e.target.value)}
+                            style={{ marginRight: '10px', width: 'auto' }}
+                        />
+                        Online Payment (Card / UPI)
+                    </label>
+                    <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                        <input
+                            type="radio"
+                            name="paymentMethod"
+                            value="COD"
+                            checked={paymentMethod === 'COD'}
+                            onChange={(e) => setPaymentMethod(e.target.value)}
+                            style={{ marginRight: '10px', width: 'auto' }}
+                        />
+                        Cash on Delivery (COD)
+                    </label>
+                </div>
+            </div>
 
-          <div className={styles.total}>
-            Total: <b>{formatINR(cart.total)}</b>
-          </div>
+            <div className={styles['total']}>
+                <div className={styles["total-text"]}>Total Price:</div>
+                <div className={styles['total-amount']}>{cart.total} ₹</div>
+            </div>
 
-          <button onClick={handleCheckout} className="btn1">
-            Place Order
-          </button>
-        </>
-      )}
+            <div className={styles['total-wrapper']}>
+                <button onClick={handleCheckout} className={'btn1'}>
+                    {paymentMethod === 'ONLINE' ? 'Pay Now' : 'Place Order'}
+                </button>
+            </div>
 
-      {showQR && (
-        <div style={{ textAlign: "center", padding: 40 }}>
-          <h2>Scan & Pay</h2>
-          <QRCode value={upiLink} size={260} />
         </div>
-      )}
-
-    </div>
-  );
-};
-
+    )
+}
 export default Checkout;

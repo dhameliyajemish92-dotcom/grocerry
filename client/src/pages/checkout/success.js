@@ -1,28 +1,30 @@
-import { Link, useSearchParams } from "react-router-dom";
-import styles from "./checkout.module.css";
+import {useNavigate, useSearchParams} from "react-router-dom";
+import Loading from "../../components/loading/Loading";
+import {useEffect} from "react";
+import {useDispatch} from "react-redux";
+import {fetchOrder} from "../../actions/orders";
 
-const Success = () => {
+const Success = ({setCart}) => {
 
-  const [params] = useSearchParams();
-  const orderId = params.get("order");
+    const order_id = useSearchParams()[0].get('order');
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
-  return (
-    <div className={styles.wrapper} style={{ textAlign: "center" }}>
-      <h1>✅ Payment Successful</h1>
+    useEffect(() => {
+        const onSuccess = () => {
+            navigate(`/orders/${order_id}`);
+            setCart([]);
+            localStorage.removeItem('cart');
+        }
 
-      <p>Your order has been placed successfully</p>
+        const onError = () => {
+            window.location.reload();
+        }
 
-      {orderId && (
-        <p><b>Order ID:</b> {orderId}</p>
-      )}
+        dispatch(fetchOrder(order_id, onSuccess, onError));
+    }, [dispatch, navigate, order_id, setCart])
 
-      <div style={{ marginTop: 30 }}>
-        <Link className="btn1" to="/orders">My Orders</Link>
-        <br/><br/>
-        <Link to="/products">Continue Shopping</Link>
-      </div>
-    </div>
-  );
-};
+    return <Loading text={'Processing'}/>
+}
 
 export default Success;

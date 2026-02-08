@@ -1,97 +1,98 @@
 import Shipments from '../../model/Shipments.js';
 import Pagination from "../../utils/pagination.js";
 import axios from "axios";
-import { USER_BASEURL } from "../../services/BaseURLs.js";
+import {USER_BASEURL} from "../../services/BaseURLs.js";
 
 export const getShipmentId = async (req, res) => {
-  const { id } = req.params;
+    const {id} = req.params;
+    try {
+        const your_shipment = await Shipments.findOne({"order_id": id});
 
-  try {
-    const your_shipment = await Shipments.findOne({ orderId: id });
+        if (!your_shipment)
+            return res.status(400).json({message: 'Invalid order id'});
 
-    if (!your_shipment)
-      return res.status(400).json({ message: 'Invalid order id' });
+        return res.status(200).json({
+            order_id: your_shipment.order_id,
+            total: your_shipment.total,
+            address: your_shipment.address,
+            status: your_shipment.status,
+            ordered_at: your_shipment.ordered_at
+        });
+    } catch (e) {
+        return res.status(400).json({message: e.message});
+    }
 
-    return res.status(200).json({
-      orderId: your_shipment.orderId,
-      total: your_shipment.total,
-      address: your_shipment.address,
-      status: your_shipment.status,
-      ordered_at: your_shipment.ordered_at
-    });
+}
 
-  } catch (e) {
-    return res.status(400).json({ message: e.message });
-  }
-};
 
 export const updateShipments = async (req, res) => {
-  try {
-
-    const { status } = req.body;
-
     try {
-      await axios.post(`${USER_BASEURL}/role`, { id: req.body.id, role: 'ADMIN' })
+        const {status, id} = req.body;
+
+        // verify the user's role by calling the `User` service
+        try {
+            await axios.post(`${USER_BASEURL}/role`, {id, role: 'ADMIN'})
+        } catch (e) {
+            const {response} = e;
+            return res.status(response.status).json(response.data);
+        }
+
+        if (!status)
+            return res.status(400).json({message: "Please provide the new status"});
+
+        if (status !== 'CREATED' && status !== 'SHIPPED' && status !== 'DELIVERED' && status !== 'RETURNED')
+            return res.status(400).json({message: "Please re-type the status correctly "});
+
+        const order_id = req.params.id;
+
+        const shipmentResponse = await Shipments.findOneAndUpdate({order_id}, {status});
+
+        return res.status(200).json(shipmentResponse);
     } catch (e) {
-      return res.status(e.response.status).json(e.response.data);
+        return res.status(400).json({message: e.message});
     }
-
-    if (!status)
-      return res.status(400).json({ message: "Please provide new status" });
-
-    const orderId = req.params.id;
-
-    const shipmentResponse = await Shipments.findOneAndUpdate(
-      { orderId },
-      { status },
-      { new: true }
-    );
-
-    return res.status(200).json(shipmentResponse);
-
-  } catch (e) {
-    return res.status(400).json({ message: e.message });
-  }
-};
+}
 
 export const postShipments = async (req, res) => {
+    const {ordered_at, order_id, address, total} = req.body;
 
-  const { ordered_at, orderId, address, total } = req.body;
-
-  const newShipment = new Shipments({
-    total,
-    ordered_at,
-    address,
-    orderId
-  });
-
-  try {
-    await newShipment.save();
-    res.status(200).json(newShipment);
-  } catch (e) {
-    res.status(409).json({ message: e.message });
-  }
-};
-
-export const getShipments = async (req, res) => {
-  try {
+    const newShippment = new Shipments({
+        total: total,
+        ordered_at: ordered_at,
+        address: address,
+        order_id: order_id
+    });
 
     try {
-      await axios.post(`${USER_BASEURL}/role`, { id: req.body.id, role: 'ADMIN' })
+        await newShippment.save();
+        res.status(200).json(newShippment);
     } catch (e) {
-      return res.status(e.response.status).json(e.response.data);
+        res.status(409).json({message: e.message});
     }
+}
 
-    const { page } = req.query;
+export const getShipments = async (req, res) => {
+    try {
+        const id = req.body.id;
 
-    const shipments = await Shipments.find().sort({ ordered_at: -1 });
+        // verify the user's role by calling the `User` service
+        try {
+            await axios.post(`${USER_BASEURL}/role`, {id, role: 'ADMIN'})
+        } catch (e) {
+            const {response} = e;
+            return res.status(response.status).json(response.data);
+        }
 
-    const total_pages = Math.ceil(shipments.length / 20);
-    const pagedShipments = Pagination(page, shipments, 20);
+        const {page} = req.query;
 
-    res.status(200).json({ total_pages, shipments: pagedShipments });
+        const shipments = await Shipments.find().sort({ordered_at: -1});
 
-  } catch (e) {
-    res.status(400).json({ message: e.message });
-  }
-};
+        const total_pages = Math.ceil(shipments.length / 20);
+
+        const pagedShipments = Pagination(page, shipments, 20);
+
+        res.status(200).json({total_pages, shipments: pagedShipments});
+    } catch (e) {
+        res.status(400).json({message: e.message});
+    }
+}

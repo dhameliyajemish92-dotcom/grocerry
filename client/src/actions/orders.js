@@ -1,58 +1,58 @@
-import axios from "axios";
+import * as api from '../api/index';
+import { ORDERS_FETCH, ORDERS_FETCH_ALL } from "../constants/actions/orders";
 
-const API = process.env.REACT_APP_API_URL || "http://localhost:5000";
+export const fetchOrderHistory = (onSuccess, onError) => async (dispatch) => {
+    try {
+        const orders = await api.fetchOrderHistory().then(res => res.data);
+        onSuccess(orders);
+    } catch (e) {
+        onError(e);
+    }
+}
 
-/* ================= CREATE ORDER ================= */
+export const fetchOrder = (id, onSuccess, onError) => async (dispatch) => {
+    try {
+        const orderData = await api.fetchOrder(id).then(res => res.data);
+        dispatch({ type: ORDERS_FETCH, data: orderData })
+        onSuccess(orderData);
+    } catch (e) {
+        onError(e.response.data);
+    }
+}
+
+export const updateOrder = (id, status, onSuccess, onError) => async () => {
+    try {
+        await api.updateOrder(id, status);
+        onSuccess();
+    } catch (e) {
+        onError(e.response.data);
+    }
+}
+
+export const fetchOrders = (page, onSuccess, onError) => async (dispatch) => {
+    try {
+        const ordersData = await api.fetchOrders(page).then(res => res.data);
+        dispatch({ type: ORDERS_FETCH_ALL, data: ordersData });
+        onSuccess();
+    } catch (e) {
+        onError(e);
+    }
+}
 
 export const postOrder = (token, data, onSuccess, onError) => async () => {
-  try {
-    const res = await axios.post(
-      `${API}/orders`,
-      data,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      }
-    );
-
-    onSuccess && onSuccess(res.data);
-
-  } catch (err) {
-    onError && onError(err.response?.data || { message: "Order failed" });
-  }
-};
-
-/* ================= FETCH SINGLE ORDER ================= */
-
-export const fetchOrder = (id, token) => async () => {
-  return axios.get(`${API}/orders/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`
+    try {
+        const { url } = await api.processPayment(token, data).then(res => res.data);
+        onSuccess(url);
+    } catch (e) {
+        onError(e);
     }
-  });
-};
+}
 
-/* ================= FETCH ALL ORDERS ================= */
-
-export const fetchOrders = (token) => async () => {
-  return axios.get(`${API}/orders`, {
-    headers: {
-      Authorization: `Bearer ${token}`
+export const postOrderCOD = (token, data, onSuccess, onError) => async () => {
+    try {
+        const { order_id } = await api.createOrderCOD(token, data).then(res => res.data);
+        onSuccess(order_id);
+    } catch (e) {
+        onError(e);
     }
-  });
-};
-
-/* ================= UPDATE ORDER ================= */
-
-export const updateOrder = (id, status, token) => async () => {
-  return axios.patch(
-    `${API}/orders/${id}`,
-    { status },
-    {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    }
-  );
-};
+}

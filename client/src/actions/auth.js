@@ -1,25 +1,62 @@
-import axios from "axios"
+import * as api from "../api";
+import { LOGIN, LOGOUT, UPDATE_WISHLIST } from "../constants/actions/authentication";
 
-export const authLogin = (email, password, onSuccess, onError) => async () => {
-  try {
-    const res = await axios.post(
-      `${process.env.REACT_APP_API_URL}/me/login`,
-      { email, password }
-    )
-
-    localStorage.setItem("profile", JSON.stringify({
-      token: res.data.token,
-      user: res.data.user
-    }))
-
-    onSuccess(res.data)
-
-  } catch (err) {
-    onError(err.response?.data || { message: "Login failed" })
-  }
+export const authLogin = (email, password, onSuccess, onError) => async (dispatch) => {
+    try {
+        const loginData = await api.authLogin(email, password).then(res => res.data);
+        dispatch({ type: LOGIN, data: loginData });
+        onSuccess();
+    } catch (e) {
+        onError(e.response ? e.response.data : { message: "Server Error" });
+    }
 }
 
-export const logout = () => () => {
-  localStorage.removeItem("profile")
-  window.location.href = "/login"
+export const logout = async (dispatch) => {
+    dispatch({ type: LOGOUT });
+}
+
+export const verifyUser = (onSuccess, onError) => async () => {
+    try {
+        const verificationData = await api.verify().then(res => res.data);
+        onSuccess(verificationData);
+    } catch (e) {
+        onError(e);
+    }
+}
+
+export const updateWishlist = (product_id, onError) => async (dispatch) => {
+    try {
+        const wishlistData = await api.userUpdateWishlist(product_id).then(res => res.data);
+        dispatch({ type: UPDATE_WISHLIST, data: wishlistData.wishlist });
+    } catch (e) {
+        onError(e);
+    }
+}
+
+export const getWishlist = (onSuccess, onError) => async () => {
+    try {
+        const wishlist = await api.getWishlist().then(res => res.data);
+        onSuccess(wishlist);
+    } catch (e) {
+        onError(e);
+    }
+}
+
+export const authSignup = (formData, onSuccess, onError) => async (dispatch) => {
+    try {
+        const data = await api.authSignup(formData).then(res => res.data);
+        onSuccess(data);
+    } catch (e) {
+        onError(e.response ? e.response.data : { message: "Server Error" });
+    }
+}
+
+export const verifyOtp = (email, otp, onSuccess, onError) => async (dispatch) => {
+    try {
+        const data = await api.verifyOtp(email, otp).then(res => res.data);
+        dispatch({ type: LOGIN, data: data });
+        onSuccess();
+    } catch (e) {
+        onError(e.response ? e.response.data : { message: "Server Error" });
+    }
 }

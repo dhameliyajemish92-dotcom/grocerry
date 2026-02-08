@@ -1,48 +1,38 @@
 import mongoose from "mongoose";
 
-const orderSchema = new mongoose.Schema({
-  order_id: {
-    type: String,
-    required: true,
-    unique: true
-  },
-  name: {
-    first: { type: String },
-    last: { type: String }
-  },
-  email: String,
-  phone_number: String,
+const orderSchema = mongoose.Schema({
+    order_id: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    name: {
+        first: String,
+        last: String
+    },
+    email: {type: String, required: false},
+    phone_number: {type: String, required: false},
+    address: {
+        country: String,
+        city: String,
+        area: String,
+        street: String,
+        building_number: String,
+        floor: String,
+        apartment_number: String
+    },
+    ordered_at: {
+        type: Date,
+    },
+    status: {
+        type: String,
+        enum: ['CREATED', 'PROCESSING', 'FULFILLED', 'CANCELLED'],
+        default: 'CREATED'
+    },
+    products: {type: Array, required: true},
+    total: {type: Number, required: true}
+});
 
-  address: {
-    country: String,
-    city: String,
-    area: String,
-    street: String,
-    building_number: String,
-    floor: String,
-    apartment_number: String
-  },
+const Order = mongoose.model('Order', orderSchema);
 
-  ordered_at: {
-    type: Date,
-    default: Date.now   // ⭐ important
-  },
-
-  status: {
-    type: String,
-    enum: ['CREATED', 'PROCESSING', 'FULFILLED', 'CANCELLED'],
-    default: 'CREATED'
-  },
-
-  products: {
-    type: [Object],    // ❗ array ka proper type
-    required: true
-  },
-
-  total: {
-    type: Number,
-    required: true
-  }
-}, { timestamps: true });
-
-export default mongoose.model("Order", orderSchema);
+export default Order;

@@ -1,10 +1,11 @@
-import {BrowserRouter, Routes, Route} from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import * as api from "./api"; // Import api
 import Home from "./pages/home/Home";
 import './shared/css/master.css';
 import Navigation from "./components/navigation/Navigation";
 import Footer from "./components/footer/Footer";
 import CartPage from "./pages/cart/Cart";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import Order from "./pages/order/Order";
 import Signup from "./pages/authentication/signup/Signup";
 import Shipment from "./pages/shipment/Shipment";
@@ -24,46 +25,81 @@ import AdminNewProduct from "./pages/admin/products/new/AdminNewProduct";
 import AdminShipping from "./pages/admin/shipment/default/AdminShipping";
 import AdminUpdateShipping from "./pages/admin/shipment/update/AdminUpdateShipping";
 import Products from './pages/products/Products';
-import OrderSuccess from "./pages/order-success/OrderSuccess";
 
 import Checkout from "./pages/checkout/checkout";
 import Success from "./pages/checkout/success";
 import ShipmentId from "./pages/shipment/id/ShipmentId";
 import OrderId from "./pages/order/id/OrderId";
 
-const cartInitialization = JSON.parse(localStorage.getItem('cart')) || [];
-
 const App = () => {
 
-    const [cart, setCart] = useState(cartInitialization);
+    const [cart, setCart] = useState([]); // Initialize empty, will sync
+    const [user, setUser] = useState(JSON.parse(localStorage.getItem('profile')));
 
-    const addProductToCart = (product) => {
-        const productIndex = cart.findIndex((cartProduct) => cartProduct.product_id === product.product_id);
+    useEffect(() => {
+        const syncCart = async () => {
+            if (user?.token) {
+                const backendCart = await api.fetchCart().then(res => res.data.products).catch(() => []);
+                setCart(backendCart || []);
+            } else {
+                setCart(JSON.parse(localStorage.getItem('cart')) || []);
+            }
+        }
+        syncCart();
+    }, [user]);
 
-        if (productIndex >= 0) {
-            const updatedData = {...cart[productIndex], quantity: cart[productIndex].quantity + 1};
-            const newArray = [...cart];
-            newArray[productIndex] = updatedData;
-            setCart(newArray);
+    const addProductToCart = async (product) => {
+        const productId = product.product_id || product.id;
+        if (user?.token) {
+            const updatedCart = await api.addToCart(productId, 1).then(res => res.data.products);
+            setCart(updatedCart);
         } else {
-            setCart([...cart, {...product, quantity: 1}]);
+            const productIndex = cart.findIndex((cartProduct) => cartProduct.product_id === productId);
+            let newCart;
+            if (productIndex >= 0) {
+                const updatedData = { ...cart[productIndex], quantity: cart[productIndex].quantity + 1 };
+                const newArray = [...cart];
+                newArray[productIndex] = updatedData;
+                newCart = newArray;
+            } else {
+                // Ensure we store product_id in the local cart item
+                newCart = [...cart, { ...product, product_id: productId, quantity: 1 }];
+            }
+            setCart(newCart);
+            localStorage.setItem('cart', JSON.stringify(newCart));
         }
     }
 
-    const removeProductFromCart = (product) => {
-        const productIndex = cart.findIndex((cartProduct) => cartProduct.product_id === product.product_id);
-
-        if (productIndex === -1)
-            return;
-
-        if (cart[productIndex].quantity === 1) {
-            const newArr = cart.filter((cartItem) => cartItem.product_id !== product.product_id);
-            setCart(newArr);
+    const removeProductFromCart = async (product) => {
+        const productId = product.product_id || product.id;
+        if (user?.token) {
+            // Logic for remove/decrement needs to be handled.
+            // My backend /cart delete removes the item entirely.
+            // My backend /cart patch updates quantity.
+            const productInCart = cart.find(p => p.product_id === productId);
+            if (productInCart && productInCart.quantity > 1) {
+                const updatedCart = await api.updateCartItem(productId, productInCart.quantity - 1).then(res => res.data.products);
+                setCart(updatedCart);
+            } else {
+                const updatedCart = await api.removeFromCart(productId).then(res => res.data.products);
+                setCart(updatedCart);
+            }
         } else {
-            const updatedData = {...cart[productIndex], quantity: cart[productIndex].quantity - 1};
-            const newArray = [...cart];
-            newArray[productIndex] = updatedData;
-            setCart(newArray);
+            const productIndex = cart.findIndex((cartProduct) => cartProduct.product_id === productId);
+
+            if (productIndex === -1) return;
+
+            let newCart;
+            if (cart[productIndex].quantity === 1) {
+                newCart = cart.filter((cartItem) => cartItem.product_id !== productId);
+            } else {
+                const updatedData = { ...cart[productIndex], quantity: cart[productIndex].quantity - 1 };
+                const newArray = [...cart];
+                newArray[productIndex] = updatedData;
+                newCart = newArray;
+            }
+            setCart(newCart);
+            localStorage.setItem('cart', JSON.stringify(newCart));
         }
     }
 
@@ -78,8 +114,6 @@ const App = () => {
     const [cartCount, setCartCount] = useState(0);
 
     useEffect(() => {
-        localStorage.setItem('cart', JSON.stringify(cart));
-
         let products = 0;
         for (const cartElement of cart) {
             products += cartElement.quantity;
@@ -90,45 +124,43 @@ const App = () => {
 
     return (
         <BrowserRouter>
-            <ScrollToTop/>
-            <Navigation cartCount={cartCount}/>
+            <ScrollToTop />
+            <Navigation cartCount={cartCount} />
             <Routes>
-                <Route path={'/'} element={<Home addProductToCart={addProductToCart}/>}/>
-                <Route path={'/products'} element={<Products addProductToCart={addProductToCart}/>}/>
+                <Route path={'/'} element={<Home addProductToCart={addProductToCart} />} />
+                <Route path={'/products'} element={<Products addProductToCart={addProductToCart} />} />
                 <Route path={'/cart'}
-                       element={<CartPage cart={cart} cartCount={cartCount} updateQuantity={updateQuantity}/>}/>
-                <Route path={'/checkout'} element={<Checkout/>}/>
-                <Route path={'/checkout/success'} element={<Success setCart={setCart}/>}/>
-                <Route path={'/signup'} element={<Signup/>}/>
-                <Route path={'/shipping'} element={<Shipment/>}/>
-                <Route path={'/shipping/:id'} element={<ShipmentId/>}/>
-                <Route path={'/login'} element={<Login/>}/>
-                <Route path={'/orders'} element={<Order/>}/>
-                <Route path={'/orders/:id'} element={<OrderId/>}/>
-                <Route path={'/wishlist'} element={<PrivateRoute component={<Wishlist addProductToCart={addProductToCart}/>}/>}/>
-                <Route path={'/admin'} element={<PrivateRoute role={'ADMIN'} component={<Admin/>}/>}/>
+                    element={<CartPage cart={cart} cartCount={cartCount} updateQuantity={updateQuantity} />} />
+                <Route path={'/checkout'} element={<Checkout />} />
+                <Route path={'/checkout/success'} element={<Success setCart={setCart} />} />
+                <Route path={'/signup'} element={<Signup />} />
+                <Route path={'/shipping'} element={<Shipment />} />
+                <Route path={'/shipping/:id'} element={<ShipmentId />} />
+                <Route path={'/login'} element={<Login />} />
+                <Route path={'/orders'} element={<Order />} />
+                <Route path={'/orders/:id'} element={<OrderId />} />
+                <Route path={'/wishlist'} element={<PrivateRoute component={<Wishlist addProductToCart={addProductToCart} />} />} />
+                <Route path={'/admin'} element={<PrivateRoute role={'ADMIN'} component={<Admin />} />} />
                 <Route path={'/admin/orders'}
-                       element={<PrivateRoute role={'ADMIN'} component={<AdminOrders/>}/>}/>
-                <Route path="/success" element={<OrderSuccess />} />
-
+                    element={<PrivateRoute role={'ADMIN'} component={<AdminOrders />} />} />
                 <Route path={'/admin/orders/update'}
-                       element={<PrivateRoute role={'ADMIN'} component={<AdminUpdateOrder/>}/>}/>
+                    element={<PrivateRoute role={'ADMIN'} component={<AdminUpdateOrder />} />} />
                 <Route path={'/admin/shipping'}
-                       element={<PrivateRoute role={'ADMIN'} component={<AdminShipping/>}/>}/>
+                    element={<PrivateRoute role={'ADMIN'} component={<AdminShipping />} />} />
                 <Route path={'/admin/shipping/update'}
-                       element={<PrivateRoute role={'ADMIN'} component={<AdminUpdateShipping/>}/>}/>
+                    element={<PrivateRoute role={'ADMIN'} component={<AdminUpdateShipping />} />} />
                 <Route path={'/admin/products/new'}
-                       element={<PrivateRoute role={'ADMIN'} component={<AdminNewProduct/>}/>}/>
+                    element={<PrivateRoute role={'ADMIN'} component={<AdminNewProduct />} />} />
                 <Route path={'/admin/products/update'}
-                       element={<PrivateRoute role={'ADMIN'} component={<AdminUpdate/>}/>}/>
+                    element={<PrivateRoute role={'ADMIN'} component={<AdminUpdate />} />} />
                 <Route path={'/admin/products/update/success'}
-                       element={<PrivateRoute role={'ADMIN'} component={<AdminUpdateSuccess/>}/>}/>
+                    element={<PrivateRoute role={'ADMIN'} component={<AdminUpdateSuccess />} />} />
                 <Route path={'/admin/orders/:id'}
-                       element={<PrivateRoute role={'ADMIN'} component={<AdminViewOrder/>}/>}/>
-                <Route path={'/401'} element={<Error401/>}/>
-                <Route path={'/*'} element={<Error404/>}/>
+                    element={<PrivateRoute role={'ADMIN'} component={<AdminViewOrder />} />} />
+                <Route path={'/401'} element={<Error401 />} />
+                <Route path={'/*'} element={<Error404 />} />
             </Routes>
-            <Footer/>
+            <Footer />
         </BrowserRouter>
     );
 }
