@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import * as api from "./api"; // Import api
+
+import * as cartActions from "./actions/cart"; // Import cart actions for error handling
 import Home from "./pages/home/Home";
 import './shared/css/master.css';
 import Navigation from "./components/navigation/Navigation";
@@ -18,6 +19,7 @@ import Admin from "./pages/admin/default/Admin";
 import AdminUpdate from "./pages/admin/products/update/default/AdminUpdate";
 import AdminUpdateSuccess from "./pages/admin/products/update/success/AdminUpdateSuccess";
 import AdminUpdateOrder from "./pages/admin/orders/update/AdminUpdateOrder";
+import AdminNewOrder from "./pages/admin/orders/new/AdminNewOrder";
 import ScrollToTop from "./components/scroll-to-top/ScrollToTop";
 import AdminOrders from "./pages/admin/orders/default/AdminOrders";
 import AdminViewOrder from "./pages/admin/orders/id/AdminViewOrder";
@@ -34,15 +36,17 @@ import OrderId from "./pages/order/id/OrderId";
 const App = () => {
 
     const [cart, setCart] = useState([]); // Initialize empty, will sync
-    const [user, setUser] = useState(JSON.parse(localStorage.getItem('profile')));
+    const [user] = useState(JSON.parse(localStorage.getItem('profile')));
 
     useEffect(() => {
         const syncCart = async () => {
             if (user?.token) {
-                const backendCart = await api.fetchCart().then(res => res.data.products).catch(() => []);
+                // Use action wrapper to handle 401s
+                const backendCart = await cartActions.getCart();
                 setCart(backendCart || []);
             } else {
-                setCart(JSON.parse(localStorage.getItem('cart')) || []);
+                localStorage.removeItem('cart'); // Clear stale data
+                setCart([]);
             }
         }
         syncCart();
@@ -51,8 +55,9 @@ const App = () => {
     const addProductToCart = async (product) => {
         const productId = product.product_id || product.id;
         if (user?.token) {
-            const updatedCart = await api.addToCart(productId, 1).then(res => res.data.products);
-            setCart(updatedCart);
+            // Use action wrapper
+            const updatedCart = await cartActions.addToCart(productId, 1);
+            if (updatedCart) setCart(updatedCart);
         } else {
             const productIndex = cart.findIndex((cartProduct) => cartProduct.product_id === productId);
             let newCart;
@@ -78,11 +83,11 @@ const App = () => {
             // My backend /cart patch updates quantity.
             const productInCart = cart.find(p => p.product_id === productId);
             if (productInCart && productInCart.quantity > 1) {
-                const updatedCart = await api.updateCartItem(productId, productInCart.quantity - 1).then(res => res.data.products);
-                setCart(updatedCart);
+                const updatedCart = await cartActions.updateCartItem(productId, productInCart.quantity - 1);
+                if (updatedCart) setCart(updatedCart);
             } else {
-                const updatedCart = await api.removeFromCart(productId).then(res => res.data.products);
-                setCart(updatedCart);
+                const updatedCart = await cartActions.removeFromCart(productId);
+                if (updatedCart) setCart(updatedCart);
             }
         } else {
             const productIndex = cart.findIndex((cartProduct) => cartProduct.product_id === productId);
@@ -131,7 +136,7 @@ const App = () => {
                 <Route path={'/products'} element={<Products addProductToCart={addProductToCart} />} />
                 <Route path={'/cart'}
                     element={<CartPage cart={cart} cartCount={cartCount} updateQuantity={updateQuantity} />} />
-                <Route path={'/checkout'} element={<Checkout />} />
+                <Route path={'/checkout'} element={<PrivateRoute component={<Checkout />} />} />
                 <Route path={'/checkout/success'} element={<Success setCart={setCart} />} />
                 <Route path={'/signup'} element={<Signup />} />
                 <Route path={'/shipping'} element={<Shipment />} />
@@ -145,6 +150,8 @@ const App = () => {
                     element={<PrivateRoute role={'ADMIN'} component={<AdminOrders />} />} />
                 <Route path={'/admin/orders/update'}
                     element={<PrivateRoute role={'ADMIN'} component={<AdminUpdateOrder />} />} />
+                <Route path={'/admin/orders/new'}
+                    element={<PrivateRoute role={'ADMIN'} component={<AdminNewOrder />} />} />
                 <Route path={'/admin/shipping'}
                     element={<PrivateRoute role={'ADMIN'} component={<AdminShipping />} />} />
                 <Route path={'/admin/shipping/update'}

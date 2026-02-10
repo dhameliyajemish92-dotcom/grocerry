@@ -1,14 +1,14 @@
 import styles from './navigation.module.css';
 import Logo from '../../shared/assets/logo.png';
-import {Link} from "react-router-dom";
-import {useEffect, useRef, useState} from "react";
-import {SEARCH_HIDDEN, SEARCH_VISIBLE} from "./constants/search";
-import {useNavigate} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
-import {logout} from "../../actions/auth";
+import { Link } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { SEARCH_HIDDEN, SEARCH_VISIBLE } from "./constants/search";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../actions/auth";
 
 
-const Navigation = ({cartCount}) => {
+const Navigation = ({ cartCount }) => {
 
     const [search, setSearch] = useState(SEARCH_HIDDEN);
     const [menuActive, setMenuActive] = useState(false);
@@ -71,9 +71,9 @@ const Navigation = ({cartCount}) => {
 
     return (
         <div className={styles['wrapper']}>
-            {search === SEARCH_VISIBLE && <div onClick={(e) => handleClose(e)} className={styles['hide-search']}/>}
+            {search === SEARCH_VISIBLE && <div onClick={(e) => handleClose(e)} className={styles['hide-search']} />}
             <Link to={'/'} className={styles['logo']}>
-                <img src={Logo} alt={'Rabbit'}/>
+                <img src={Logo} alt={'Rabbit'} />
             </Link>
             <div className={`${styles['nav-wrapper']} ${menuActive && styles['show-menu']}`}>
                 <div onClick={closeMenu} className={`${styles['close-menu']}`}><span
@@ -97,21 +97,35 @@ const Navigation = ({cartCount}) => {
             </div>
             <div className={styles['actions']}>
                 <input onChange={(e) => setSearchInput(e.target.value)}
-                       onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                       value={searchInput}
-                       placeholder={'Search'}
-                       ref={searchElement}
-                       className={`${styles['search']} ${search === SEARCH_VISIBLE && styles['search-active']}`}/>
+                    onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                    value={searchInput}
+                    placeholder={'Search'}
+                    ref={searchElement}
+                    className={`${styles['search']} ${search === SEARCH_VISIBLE && styles['search-active']}`} />
                 <div onClick={handleSearch} className={`material-symbols-outlined ${styles['icon']}`}>search</div>
                 <Link to={'/cart'}
-                      className={`material-symbols-outlined ${styles['icon']} ${search === SEARCH_VISIBLE && styles['hide-icon']}`}>shopping_cart
+                    className={`material-symbols-outlined ${styles['icon']} ${search === SEARCH_VISIBLE && styles['hide-icon']}`}>shopping_cart
                     {cartCount ?
                         <div className={styles['cart-counter']}>{cartCount < 100 ? cartCount : "+"}</div> : ''}</Link>
-                <Link onClick={auth && handleDropDown} to={!auth && 'login'}
-                      className={`material-symbols-outlined ${styles['account-icon']} ${styles['icon']}`}>person</Link>
+                {auth ? (
+                    <div onClick={handleDropDown}
+                        className={`${styles['account-icon']} ${styles['icon']}`}
+                        style={{
+                            fontSize: '1rem',
+                            fontWeight: '600',
+                            display: 'flex',
+                            alignItems: 'center',
+                            fontFamily: 'inherit' // Ensure it doesn't use the icon font
+                        }}>
+                        {user?.first_name}
+                    </div>
+                ) : (
+                    <Link to={'/login'}
+                        className={`material-symbols-outlined ${styles['account-icon']} ${styles['icon']}`}>person</Link>
+                )}
                 {auth && dropdown && <div className={styles['account-dropdown']}>
                     <div onClick={(e) => handleHideMenu(e)}
-                         className={styles['hide-dropdown']}/>
+                        className={styles['hide-dropdown']} />
                     <Link
                         to={'/wishlist'}>Wishlist {user.wishlist?.length > 0 ? `(${user.wishlist?.length})` : ''}</Link>
                     <Link to={'/orders'}>Orders</Link>

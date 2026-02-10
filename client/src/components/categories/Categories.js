@@ -1,11 +1,3 @@
-import FruitsAndVegetables from '../../shared/assets/categories/fruits_vegetables.png';
-import MeatPoultrySeafood from '../../shared/assets/categories/meat_poultry_seafood.png';
-import Breakfast from '../../shared/assets/categories/breakfast.png';
-import ChocolateCandy from '../../shared/assets/categories/chocolate_candy.png';
-import DairyEggs from '../../shared/assets/categories/dairy_eggs.png';
-import ColdDrinks from '../../shared/assets/categories/cold.png';
-import Snacks from '../../shared/assets/categories/snacks.png';
-import IceCream from '../../shared/assets/categories/icecream.png';
 import All from '../../shared/assets/categories/all.png';
 import styles from './categories.module.css';
 import {Link} from "react-router-dom";
@@ -17,36 +9,40 @@ const Categories = () => {
             img: All
         },
         {
-            display: "Fruits and Vegetables",
-            img: FruitsAndVegetables
-        },
-        {
-            display: "Meat Poultry and Seafood",
-            img: MeatPoultrySeafood
-        },
-        {
-            display: "Breakfast",
-            img: Breakfast
-        },
-        {
-            display: "Chocolate and Candy",
-            img: ChocolateCandy
-        },
-        {
-            display: "Dairy and Eggs",
-            img: DairyEggs
-        },
-        {
             display: "Beverages",
-            img: ColdDrinks
+            img: All
         },
         {
-            display: "Chips and Crackers",
-            img: Snacks
+            display: "Dairy",
+            img: All
         },
         {
-            display: "Ice Cream",
-            img: IceCream
+            display: "Grains",
+            img: All
+        },
+        {
+            display: "HomeCare",
+            img: All
+        },
+        {
+            display: "Oils",
+            img: All
+        },
+        {
+            display: "Personal Care",
+            img: All
+        },
+        {
+            display: "Pulses",
+            img: All
+        },
+        {
+            display: "Snacks",
+            img: All
+        },
+        {
+            display: "Spices",
+            img: All
         }
     ]
 

@@ -29,9 +29,147 @@
     box-shadow: 1px 2px 5px var(--NEUTRAL_2);
 }
 
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1em;
+}
+
+.stat-card {
+    background: var(--NEUTRAL_0);
+    padding: 1.5em;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.stat-value {
+    font-size: 2em;
+    font-weight: bold;
+    color: var(--PRIMARY);
+}
+
+.stat-label {
+    font-size: 0.9em;
+    color: var(--NEUTRAL_2);
+    margin-top: 0.5em;
+}
+
+/* Section */
+.section {
+    margin-top: 2em;
+}
+
+/* Table */
+.table-container {
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--NEUTRAL_0);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table th,
+.table td {
+    padding: 1em;
+    text-align: left;
+    border-bottom: 1px solid var(--NEUTRAL_1);
+}
+
+.table th {
+    background: var(--NEUTRAL_1);
+    font-weight: 600;
+}
+
+/* Status Badge */
+.status-badge {
+    padding: 0.25em 0.75em;
+    border-radius: 20px;
+    font-size: 0.85em;
+    font-weight: 500;
+}
+
+.status-badge.confirmed {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.status-badge.packed {
+    background: #fff3e0;
+    color: #f57c00;
+}
+
+.status-badge.shipped {
+    background: #e8f5e9;
+    color: #388e3c;
+}
+
+.status-badge.delivered {
+    background: #e0f2f1;
+    color: #00796b;
+}
+
+.status-badge.cancelled {
+    background: #ffebee;
+    color: #d32f2f;
+}
+
+/* Alerts */
+.alerts {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
+
+.alert-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--NEUTRAL_0);
+    padding: 1em;
+    border-radius: 8px;
+    border-left: 4px solid #ff9800;
+}
+
+.alert-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.alert-name {
+    font-weight: 500;
+}
+
+.alert-stock {
+    font-size: 0.85em;
+    color: #ff9800;
+}
+
+.alert-link {
+    background: var(--PRIMARY);
+    color: white;
+    padding: 0.5em 1em;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.85em;
+}
+
+.alert-link:hover {
+    opacity: 0.9;
+}
+
 @media screen and (min-width: 800px) {
     .wrapper {
-        max-width: 800px;
+        max-width: 1200px;
         margin: auto;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(4, 1fr);
     }
 }

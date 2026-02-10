@@ -1,19 +1,57 @@
-import jwt from 'jsonwebtoken'
+import jwt from "jsonwebtoken";
 
-const auth = async (req, res, next) => {
+const auth = (req, res, next) => {
     try {
-        const auth = req.headers.authorization;
-        if (!auth)
-            return res.status(401).json({message: "No authorization token was provided"});
-        const token = auth.split(' ')[1];
-        const decodedData = jwt.verify(token, process.env.JWT_SECRET_KEY);
-        req.body.id = decodedData?.id;
+        // console.log("Auth Middleware: Headers:", req.headers); // Uncomment for debugging
+
+        const authHeader = req.headers.authorization;
+
+        if (!authHeader) {
+            console.warn("Auth Middleware: No authorization token provided.");
+            return res.status(401).json({
+                message: "Authentication failed: No token provided. Please login.",
+                code: "NO_TOKEN"
+            });
+        }
+
+        const token = authHeader.split(" ")[1];
+
+        if (!token) {
+            console.warn("Auth Middleware: Malformed authorization header.");
+            return res.status(401).json({
+                message: "Authentication failed: Malformed token.",
+                code: "MALFORMED_TOKEN"
+            });
+        }
+
+        if (!process.env.JWT_SECRET_KEY && process.env.NODE_ENV === 'production') {
+            console.error("Auth Middleware: JWT_SECRET_KEY is not defined in environment variables.");
+            return res.status(500).json({
+                message: "Server misconfiguration: JWT secret missing.",
+            });
+        }
+
+        const decodedData = jwt.verify(token, process.env.JWT_SECRET_KEY || 'test');
+
+        if (!decodedData) {
+            console.warn("Auth Middleware: Token verification failed (returned null/undefined).");
+            return res.status(401).json({
+                message: "Authentication failed: Invalid token.",
+                code: "INVALID_TOKEN"
+            });
+        }
+
+        req.user = decodedData; // BEST PRACTICE
         next();
     } catch (e) {
-        res.status(401).json({
-            message: e.message
-        })
+        console.error("Auth Middleware Error:", e.message);
+        const message = e.name === 'TokenExpiredError' ? "Session expired. Please login again." : "Authentication failed.";
+        return res.status(401).json({
+            message: message,
+            error: e.message,
+            code: "AUTH_ERROR"
+        });
     }
-}
+};
 
 export default auth;

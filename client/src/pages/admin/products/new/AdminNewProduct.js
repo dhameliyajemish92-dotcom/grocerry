@@ -21,9 +21,10 @@ const INITIAL_PRODUCT = {
 const AdminNewProduct = () => {
 
     const dispatch = useDispatch();
-    const categories = ["Beverages", "Breakfast", "Chips & Crackers", "Dairy & Eggs", "Fruits & Vegetables", "Meat Poultry and Seafood"];
+    const categories = ["All", "Beverages", "Dairy", "Grains", "HomeCare", "Oils", "Personal Care", "Pulses", "Snacks", "Spices"];
     const [state, setState] = useState(FORM)
     const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     const [product, setProduct] = useState(INITIAL_PRODUCT);
 
@@ -59,7 +60,7 @@ const AdminNewProduct = () => {
         if (!product.measurement)
             return setError('Enter a valid product measurement');
 
-        if (!product.category || product.category === 'Category')
+        if (!product.category)
             return setError('Enter a valid product category');
 
         if (!product.image || !product.image.match(/(https?:\/\/)?.*(\.png|\.jpg|\.jpeg)/))
@@ -67,13 +68,16 @@ const AdminNewProduct = () => {
 
 
         const onSuccess = () => {
+            setIsLoading(false);
             setState(SUCCESS);
         }
 
         const onError = (e) => {
+            setIsLoading(false);
             setError(e.message)
         }
 
+        setIsLoading(true);
         dispatch(postProduct(product, onSuccess, onError));
     }
 
@@ -110,16 +114,18 @@ const AdminNewProduct = () => {
                        onChange={(e) => handleChange(e)}/>
                 <input placeholder={'Measurement'} maxLength={3} name={'measurement'} value={product.measurement}
                        onChange={(e) => handleChange(e)}/>
-                <select defaultValue={'Category'} className={styles['full']} name={'category'}
+                <select defaultValue={''} className={styles['full']} name={'category'}
                         onChange={(e) => handleChange(e)}>
-                    <option disabled={true}>Category</option>
+                    <option value={''} disabled={true}>Select Category</option>
                     {categories.map((category, i) => <option key={i} value={category}>{category}</option>)}
                 </select>
                 <input placeholder={'Image'} type={'url'} name={'image'} value={product.image}
                        className={styles['full']}
                        onChange={(e) => handleChange(e)}/>
             </div>
-            <button onClick={handleSubmit} className={`btn1 ${styles['submit']}`}>Add</button>
+            <button onClick={handleSubmit} className={`btn1 ${styles['submit']}`} disabled={isLoading}>
+                {isLoading ? 'Adding...' : 'Add'}
+            </button>
         </div>
     );
 }

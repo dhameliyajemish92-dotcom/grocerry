@@ -44,6 +44,11 @@ export const postOrder = (token, data, onSuccess, onError) => async () => {
         const { url } = await api.processPayment(token, data).then(res => res.data);
         onSuccess(url);
     } catch (e) {
+        if (e.response && e.response.status === 401) {
+            localStorage.clear();
+            window.location.href = '/login';
+            return;
+        }
         onError(e);
     }
 }
@@ -53,6 +58,11 @@ export const postOrderCOD = (token, data, onSuccess, onError) => async () => {
         const { order_id } = await api.createOrderCOD(token, data).then(res => res.data);
         onSuccess(order_id);
     } catch (e) {
+        if (e.response && e.response.status === 401) {
+            localStorage.clear();
+            window.location.href = '/login';
+            return;
+        }
         onError(e);
     }
 }

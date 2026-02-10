@@ -59,6 +59,10 @@
     cursor: pointer;
     transition: .2s all ease-out;
     font-weight: 500;
+    background: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .add:hover {

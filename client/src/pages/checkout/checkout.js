@@ -7,7 +7,8 @@ import { postOrder, postOrderCOD } from "../../actions/orders";
 
 const Checkout = () => {
     const [error, setError] = useState('');
-    const [paymentMethod, setPaymentMethod] = useState('ONLINE'); // 'ONLINE' or 'COD'
+    const [paymentMethod, setPaymentMethod] = useState('COD'); // 'COD', 'UPI', 'CARD'
+    const [isLoading, setIsLoading] = useState(false);
 
     const fname = useRef();
     const lname = useRef();
@@ -24,13 +25,17 @@ const Checkout = () => {
     const cart = useSelector(state => state.products.cart_validation);
 
     useEffect(() => {
+
+
         if (!cart) {
             window.location.href = '/cart';
         }
     }, [cart]);
 
     const handleCheckout = () => {
+        if (isLoading) return; // Prevent multiple clicks
         if (!cart) return;
+        setIsLoading(true);
 
         if (!fname.current.value) return setError("Enter a first name");
         if (!lname.current.value) return setError("Enter a last name");
@@ -52,10 +57,12 @@ const Checkout = () => {
         }
 
         const onCODSuccess = (order_id) => {
+            setIsLoading(false);
             window.location.href = `/checkout/success?order=${order_id}`;
         }
 
         const onError = (e) => {
+            setIsLoading(false);
             console.error("Order Creation Error:", e);
             setError(e.message || "An unknown error occurred.");
         }
@@ -78,11 +85,12 @@ const Checkout = () => {
             payment_method: paymentMethod
         };
 
-        if (paymentMethod === 'ONLINE') {
-            dispatch(postOrder(cart.token, data, onSuccess, onError));
-        } else {
+        if (paymentMethod === 'COD') {
             // For COD, we pass the data directly
             dispatch(postOrderCOD(cart.token, data, onCODSuccess, onError));
+        } else {
+            // For UPI/CARD (Online), we use the online flow
+            dispatch(postOrder(cart.token, data, onSuccess, onError));
         }
 
     }
@@ -146,23 +154,34 @@ const Checkout = () => {
                         <input
                             type="radio"
                             name="paymentMethod"
-                            value="ONLINE"
-                            checked={paymentMethod === 'ONLINE'}
-                            onChange={(e) => setPaymentMethod(e.target.value)}
-                            style={{ marginRight: '10px', width: 'auto' }}
-                        />
-                        Online Payment (Card / UPI)
-                    </label>
-                    <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-                        <input
-                            type="radio"
-                            name="paymentMethod"
                             value="COD"
                             checked={paymentMethod === 'COD'}
                             onChange={(e) => setPaymentMethod(e.target.value)}
                             style={{ marginRight: '10px', width: 'auto' }}
                         />
                         Cash on Delivery (COD)
+                    </label>
+                    <label style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', cursor: 'pointer' }}>
+                        <input
+                            type="radio"
+                            name="paymentMethod"
+                            value="UPI"
+                            checked={paymentMethod === 'UPI'}
+                            onChange={(e) => setPaymentMethod(e.target.value)}
+                            style={{ marginRight: '10px', width: 'auto' }}
+                        />
+                        UPI
+                    </label>
+                    <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                        <input
+                            type="radio"
+                            name="paymentMethod"
+                            value="CARD"
+                            checked={paymentMethod === 'CARD'}
+                            onChange={(e) => setPaymentMethod(e.target.value)}
+                            style={{ marginRight: '10px', width: 'auto' }}
+                        />
+                        Debit / Credit Card
                     </label>
                 </div>
             </div>
@@ -173,8 +192,8 @@ const Checkout = () => {
             </div>
 
             <div className={styles['total-wrapper']}>
-                <button onClick={handleCheckout} className={'btn1'}>
-                    {paymentMethod === 'ONLINE' ? 'Pay Now' : 'Place Order'}
+                <button onClick={handleCheckout} className={'btn1'} disabled={isLoading}>
+                    {isLoading ? 'Processing...' : (paymentMethod === 'COD' ? 'Place Order' : 'Pay Now')}
                 </button>
             </div>
 

@@ -31,16 +31,22 @@ const Order = () => {
             ) : (
                 <div className={styles.ordersList}>
                     {orders.map(order => (
-                        <div key={order.order_id} className={styles.orderCard}>
-                            <div className={styles.orderHeader}>
-                                <span>Order ID: {order.order_id}</span>
-                                <span>Status: {order.status}</span>
-                                <span>Date: {new Date(order.ordered_at).toLocaleDateString()}</span>
+                        <div key={order.order_id} className={styles.orderCard} style={{ border: '1px solid #ddd', padding: '15px', marginBottom: '15px', borderRadius: '8px' }}>
+                            <div className={styles.orderHeader} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                                <span><strong>Order ID:</strong> {order.order_id}</span>
+                                <span><strong>Status:</strong> {order.status}</span>
+                                <span><strong>Date:</strong> {new Date(order.ordered_at).toLocaleDateString()}</span>
                             </div>
-                            <div className={styles.orderTotal}>
+                            <div style={{ marginBottom: '10px' }}>
+                                <span><strong>Payment Method:</strong> {order.payment_method}</span>
+                            </div>
+                            <div className={styles.orderTotal} style={{ marginBottom: '10px', fontSize: '1.1em', fontWeight: 'bold' }}>
                                 Total: {order.total} ₹
                             </div>
-                            <Link to={`/orders/${order.order_id}`} className="btn1">View Details</Link>
+                            <div style={{ display: 'flex', gap: '10px' }}>
+                                <Link to={`/orders/${order.order_id}`} className="btn1">View Details</Link>
+                                <Link to={`/shipping/${order.order_id}`} className="btn2">Track Shipment</Link>
+                            </div>
                         </div>
                     ))}
                 </div>

@@ -1,0 +1,4 @@
+export const DASHBOARD_STATS = 'DASHBOARD_STATS';
+export const ADMIN_USERS = 'ADMIN_USERS';
+export const ADMIN_PRODUCT = 'ADMIN_PRODUCT';
+export const ADMIN_ERROR = 'ADMIN_ERROR';

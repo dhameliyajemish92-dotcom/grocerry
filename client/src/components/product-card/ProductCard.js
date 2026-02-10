@@ -23,11 +23,13 @@ const ProductCard = ({ product, addProductToCart, productsPage = false }) => {
     }
 
     const handleAddToCart = () => {
+        if (addToCart) return; // Prevent multiple clicks
         setAddToCart(true);
 
         setTimeout(() => {
-            setAddToCart(false);
             addProductToCart(product);
+            // Reset after animation completes
+            setTimeout(() => setAddToCart(false), 100);
         }, 600)
     }
 
@@ -87,7 +89,9 @@ const ProductCard = ({ product, addProductToCart, productsPage = false }) => {
                         </p>
                     </div>
                     {(product.availability?.in_stock ?? product.stock) ?
-                        <div onClick={handleAddToCart} className={styles['add-to-cart']}>Add to Cart</div> :
+                        <div onClick={handleAddToCart} className={styles['add-to-cart']} style={{ opacity: addToCart ? 0.7 : 1, pointerEvents: addToCart ? 'none' : 'auto' }}>
+                            {addToCart ? 'Adding...' : 'Add to Cart'}
+                        </div> :
                         <div className={styles['unavailable']}>Out of Stock</div>}
                 </div>
             </div>

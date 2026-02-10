@@ -179,17 +179,17 @@ export const validateCart = async (req, res) => {
     let totalPrice = 0;
     const products = [];
 
+    if (!cart || !Array.isArray(cart)) {
+        return res.status(400).json({ message: "Invalid cart data. Cart must be an array." });
+    }
+
     try {
         for (const cartProduct of cart) {
             // get the product from database by id
             const product = await Products.findOne({ id: cartProduct.product_id });
 
-            console.log(`Validating Product ID: ${cartProduct.product_id}`);
-            console.log(`Found in DB:`, product ? "Yes" : "No");
-
             // 404 - the product doesn't exist in the database
             if (!product) {
-                console.log(`Failed to find product ${cartProduct.product_id} in DB`);
                 return res.status(404).json({
                     message: `${cartProduct.name} was not found in the database`,
                     product_id: cartProduct.product_id,
@@ -235,11 +235,16 @@ export const validateCart = async (req, res) => {
         // round to 2 decimals
         totalPrice = totalPrice.toFixed(2);
 
+        if (!process.env.JWT_SECRET_KEY && process.env.NODE_ENV === 'production') {
+            console.error("JWT_SECRET_KEY is not defined in environment variables");
+            return res.status(500).json({ message: "Internal Server Configuration Error" });
+        }
+
         // generate validation/checkout token
         const token = jwt.sign(
             { products: products, total: totalPrice },
-            process.env.JWT_SECRET_KEY,
-            { expiresIn: process.env.JWT_CHECKOUT_TTL });
+            process.env.JWT_SECRET_KEY || 'test',
+            { expiresIn: process.env.JWT_CHECKOUT_TTL || '1h' });
 
         // validated successfully
         return res.status(200).json({
@@ -248,6 +253,7 @@ export const validateCart = async (req, res) => {
             token: token
         });
     } catch (e) {
+        console.error("ERROR IN VALIDATE CART:", e);
         // internal error
         return res.status(500).json({
             message: e.message

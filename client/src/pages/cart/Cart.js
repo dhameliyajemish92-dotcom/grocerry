@@ -11,13 +11,18 @@ const Cart = ({ cart, cartCount, updateQuantity }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleCheckout = () => {
+        if (isLoading) return; // Prevent multiple clicks
+        setIsLoading(true);
         const onSuccess = (token) => {
+            setIsLoading(false);
             navigate(`/checkout?token=${token}&total=${getTotal()}`);
         }
 
         const onError = (e) => {
+            setIsLoading(false);
             setError(e.message);
         }
 
@@ -56,7 +61,9 @@ const Cart = ({ cart, cartCount, updateQuantity }) => {
                 <div className={styles['total-text']}>Total ({cartCount} Items):</div>
                 <div className={styles['total-amount']}>{getTotal().toFixed(2)} ₹</div>
             </div>
-            <div onClick={handleCheckout} className={`btn1`}>Checkout</div>
+            <div onClick={handleCheckout} className={`btn1 ${isLoading ? 'btn-disabled' : ''}`} style={{ opacity: isLoading ? 0.7 : 1, pointerEvents: isLoading ? 'none' : 'auto' }}>
+                {isLoading ? 'Processing...' : 'Checkout'}
+            </div>
         </div>
     );
 }

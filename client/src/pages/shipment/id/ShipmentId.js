@@ -1,14 +1,14 @@
 import styles from './shipmentId.module.css';
-import {useEffect, useState} from "react";
-import {useNavigate, useParams} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import Loading from "../../../components/loading/Loading";
-import {fetchShipment} from "../../../actions/shipping";
+import { fetchShipment } from "../../../actions/shipping";
 import Delivery from '../../../shared/assets/tracking/delivery.png';
 
 const ShipmentId = () => {
 
-    const {id} = useParams();
+    const { id } = useParams();
     const shipment = useSelector(state => state.shipping.fetched);
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(true);
@@ -29,7 +29,7 @@ const ShipmentId = () => {
         else
             dispatch(fetchShipment(id, onSuccess, onError))
 
-    }, []);
+    }, [dispatch, id, navigate, shipment]);
 
     const capitalizeFirst = (m) => {
         return m.charAt(0).toUpperCase() + m.slice(1).toLowerCase();
@@ -47,7 +47,7 @@ const ShipmentId = () => {
     }
 
     if (loading)
-        return <Loading/>
+        return <Loading />
 
     return (
         <div className={styles['wrapper']}>
@@ -58,10 +58,10 @@ const ShipmentId = () => {
                 Order <span>#{shipment.order_id}</span>
             </div>
             <div className={styles['full-progress']}>
-                <div className={styles['progress']} style={{width: getProgress() + '%'}}>
+                <div className={styles['progress']} style={{ width: getProgress() + '%' }}>
                     <img className={styles['img']}
-                         style={{transform: shipment.status === 'RETURNED' ? 'scaleX(-1)' : ''}} src={Delivery}
-                         alt={'Delivery'}/>
+                        style={{ transform: shipment.status === 'RETURNED' ? 'scaleX(-1)' : '' }} src={Delivery}
+                        alt={'Delivery'} />
                 </div>
             </div>
             <div className={styles['status']}>

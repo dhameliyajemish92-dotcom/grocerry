@@ -8,7 +8,11 @@ const CartItem = ({ product, updateQuantity, edit = true, id = false }) => {
             </div>
             <div className={styles['info']}>
                 <div className={styles['title']}>{product.name}</div>
-                <div className={styles['weight']}>{(parseFloat(product.packaging?.quantity ?? product.weight) * parseFloat(product.quantity || '1')).toFixed(2)}{product.packaging?.unit ?? product.measurement}</div>
+                <div className={styles['weight']}>
+                    {(product.packaging?.quantity || product.weight) ?
+                        `${(parseFloat(product.packaging?.quantity ?? product.weight) * parseFloat(product.quantity || '1')).toFixed(2)}${product.packaging?.unit ?? product.measurement}`
+                        : ''}
+                </div>
                 <div className={styles['quantity-wrapper']}>
                     {id && <div className={styles['quantity']}>#{product.product_id}</div>}
                     <div className={styles['quantity']}>{product.quantity ? `Quantity: ${product.quantity}` : `Stock:  ${product.availability?.in_stock ? 'In Stock' : (product.stock ?? 0)}`}</div>

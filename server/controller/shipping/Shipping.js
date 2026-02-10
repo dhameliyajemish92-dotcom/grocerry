@@ -1,7 +1,5 @@
 import Shipments from '../../model/Shipments.js';
 import Pagination from "../../utils/pagination.js";
-import axios from "axios";
-import {USER_BASEURL} from "../../services/BaseURLs.js";
 
 export const getShipmentId = async (req, res) => {
     const {id} = req.params;
@@ -27,15 +25,7 @@ export const getShipmentId = async (req, res) => {
 
 export const updateShipments = async (req, res) => {
     try {
-        const {status, id} = req.body;
-
-        // verify the user's role by calling the `User` service
-        try {
-            await axios.post(`${USER_BASEURL}/role`, {id, role: 'ADMIN'})
-        } catch (e) {
-            const {response} = e;
-            return res.status(response.status).json(response.data);
-        }
+        const {status} = req.body;
 
         if (!status)
             return res.status(400).json({message: "Please provide the new status"});
@@ -73,16 +63,6 @@ export const postShipments = async (req, res) => {
 
 export const getShipments = async (req, res) => {
     try {
-        const id = req.body.id;
-
-        // verify the user's role by calling the `User` service
-        try {
-            await axios.post(`${USER_BASEURL}/role`, {id, role: 'ADMIN'})
-        } catch (e) {
-            const {response} = e;
-            return res.status(response.status).json(response.data);
-        }
-
         const {page} = req.query;
 
         const shipments = await Shipments.find().sort({ordered_at: -1});

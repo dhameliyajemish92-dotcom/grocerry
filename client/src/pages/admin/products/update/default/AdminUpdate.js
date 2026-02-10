@@ -31,6 +31,7 @@ const AdminUpdate = () => {
     }, [file])
 
     const handleSubmit = () => {
+        if (loading) return;
 
         // check if the file was uploaded
         if (!data || !file)
@@ -99,7 +100,9 @@ const AdminUpdate = () => {
                         upload csv
                     </div>
                 </div>
-                <div onClick={handleSubmit} className={`btn1 ${styles['update']}`}>Update</div>
+                <div onClick={handleSubmit} className={`btn1 ${styles['update']}`} style={{ opacity: loading ? 0.7 : 1, pointerEvents: loading ? 'none' : 'auto' }}>
+                    {loading ? 'Updating...' : 'Update'}
+                </div>
                 <Link className={styles['format']} to={'/admin/products/update/help'}>CSV Format Guidelines</Link>
             </div>
         </div>

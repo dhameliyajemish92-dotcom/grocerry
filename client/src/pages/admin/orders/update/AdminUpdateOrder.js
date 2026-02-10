@@ -39,6 +39,7 @@ const AdminUpdateOrder = () => {
     }, [location.search])
 
     const handleFind = () => {
+        if (loading) return;
         setLoading(true);
 
         const onSuccess = (order) => {
@@ -57,6 +58,7 @@ const AdminUpdateOrder = () => {
     }
 
     const handleConfirm = () => {
+        if (loading) return;
         setLoading(true);
 
         const onSuccess = () => {
@@ -106,7 +108,9 @@ const AdminUpdateOrder = () => {
                     <input className={styles['input']} onChange={(e) => setId(e.target.value.toUpperCase())} value={id}
                            maxLength={6}
                            placeholder={'Order Id'}/>
-                    <div onClick={handleFind} className={'btn1'}>Find</div>
+                    <div onClick={handleFind} className={'btn1'} style={{ opacity: loading ? 0.7 : 1, pointerEvents: loading ? 'none' : 'auto' }}>
+                        {loading ? 'Finding...' : 'Find'}
+                    </div>
                 </div>
             }
             {state === ORDER_VIEW &&
@@ -122,7 +126,9 @@ const AdminUpdateOrder = () => {
                                     disabled={options.indexOf(option) < options.indexOf(order.status)}>{option}</option>)}
                         </select>
                     </div>
-                    <div onClick={handleConfirm} className={'btn1'}>Confirm Update</div>
+                    <div onClick={handleConfirm} className={'btn1'} style={{ opacity: loading ? 0.7 : 1, pointerEvents: loading ? 'none' : 'auto' }}>
+                        {loading ? 'Updating...' : 'Confirm Update'}
+                    </div>
                 </div>}
             {state === SUCCESS &&
                 <div className={styles['response-wrapper']}>

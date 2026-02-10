@@ -21,8 +21,8 @@ const Footer = () => {
                     <div className={styles['pages']}>
                         <div className={styles['page-title']}>Products</div>
                         <div className={styles['pages-list']}>
-                            <Link to={'/products?category=Fruits%20and%20Vegetables'}>Fruits & Vegetables</Link>
                             <Link to={'/products?category=Beverages'}>Beverages</Link>
+                            <Link to={'/products?category=Dairy'}>Dairy</Link>
                             <Link to={'/products'}>All Products</Link>
                         </div>
                     </div>

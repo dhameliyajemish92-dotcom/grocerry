@@ -1,27 +1,26 @@
+import dotenv from 'dotenv';
+dotenv.config();
 import express from "express";
 import dns from 'dns';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import products from "./routes/products.js";
 import shipping from "./routes/shipping.js"
 import orders from './routes/orders.js';
 import payments from './routes/payments.js';
 import notifications from "./routes/notifications.js";
 import cart from "./routes/cart.js";
-// import sgMail from '@sendgrid/mail';
 import me from "./routes/me.js";
+import admin from "./routes/admin.js";
 import Stripe from "stripe";
 
 const app = express();
-dotenv.config();
-
 // sgMail.setApiKey(process.env.SENDGRID_KEY);
 export const stripe = Stripe(process.env.STRIPE_PRIVATE_KEY);
 
-app.use(bodyParser.json({ extended: true }));
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(cors());
 app.use('/product_downloads', express.static('product_downloads'));
 app.use('/Grocery_Images', express.static('../client/product-image/Grocery_Images'));
@@ -38,11 +37,12 @@ app.use('/shipping', shipping);
 app.use('/notifications', notifications);
 app.use('/cart', cart);
 app.use('/me', me);
+app.use('/admin', admin);
 
 app.get('/', (req, res) => {
     res.status(200).json({
         team_name: "Curious Monkeys",
-        dev_team: ["Baraa A.", "Eman S.", "Sary N.", "Youssef S."].sort()
+        dev_team: ["jemish dhameliya", "nakrani takshil", "Sary N.", "Youssef S."].sort()
     })
 });
 
