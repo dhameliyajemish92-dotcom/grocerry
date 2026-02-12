@@ -5,6 +5,8 @@ import { useDispatch } from "react-redux";
 import { validateCart } from "../../actions/products";
 import { useState } from "react";
 import Error from "../../components/feedback/error/Error";
+import { generateCartPDF } from "../../utils/pdfGenerator";
+import { sendReceiptEmail } from "../../api";
 
 const Cart = ({ cart, cartCount, updateQuantity }) => {
 
@@ -12,9 +14,46 @@ const Cart = ({ cart, cartCount, updateQuantity }) => {
     const dispatch = useDispatch();
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [emailLoading, setEmailLoading] = useState(false);
+    const [emailMessage, setEmailMessage] = useState('');
+
+    const handleDownloadPDF = () => {
+        if (cart && cart.length) {
+            generateCartPDF(cart, cartCount, getTotal);
+        }
+    }
+
+    const handleSendEmail = () => {
+        if (!cart || cart.length === 0) return;
+        setEmailLoading(true);
+        setEmailMessage('');
+        
+        // Create a temporary order object from cart for the email
+        const tempOrder = {
+            order_id: 'CART-' + Date.now(),
+            products: cart.map(item => ({
+                product_id: item.product_id,
+                name: item.name,
+                price: item.pricing?.selling_price ?? item.price,
+                quantity: item.quantity
+            })),
+            total: getTotal(),
+            ordered_at: Date.now()
+        };
+        
+        sendReceiptEmail(tempOrder.order_id)
+            .then(() => {
+                setEmailMessage('Cart invoice sent to your email!');
+                setEmailLoading(false);
+            })
+            .catch(() => {
+                setEmailMessage('Failed to send email');
+                setEmailLoading(false);
+            });
+    }
 
     const handleCheckout = () => {
-        if (isLoading) return; // Prevent multiple clicks
+        if (isLoading) return;
         setIsLoading(true);
         const onSuccess = (token) => {
             setIsLoading(false);
@@ -54,6 +93,23 @@ const Cart = ({ cart, cartCount, updateQuantity }) => {
             <div className={'heading'}>
                 <h1>Shopping Cart</h1>
             </div>
+            <div className={styles['button-wrapper']}>
+                <button 
+                    onClick={handleDownloadPDF} 
+                    className={`btn2 ${styles['pdf-btn']}`}
+                    disabled={!cart || !cart.length}
+                >
+                    Download Cart PDF
+                </button>
+                <button 
+                    onClick={handleSendEmail} 
+                    className={`btn2 ${styles['email-btn']}`}
+                    disabled={emailLoading || !cart || !cart.length}
+                >
+                    {emailLoading ? 'Sending...' : 'Send Email'}
+                </button>
+            </div>
+            {emailMessage && <div className={styles['email-message']}>{emailMessage}</div>}
             <div className={styles['products-wrapper']}>
                 {cart.map((product, i) => <CartItem product={product} updateQuantity={updateQuantity} key={i} />)}
             </div>
@@ -61,8 +117,10 @@ const Cart = ({ cart, cartCount, updateQuantity }) => {
                 <div className={styles['total-text']}>Total ({cartCount} Items):</div>
                 <div className={styles['total-amount']}>{getTotal().toFixed(2)} ₹</div>
             </div>
-            <div onClick={handleCheckout} className={`btn1 ${isLoading ? 'btn-disabled' : ''}`} style={{ opacity: isLoading ? 0.7 : 1, pointerEvents: isLoading ? 'none' : 'auto' }}>
-                {isLoading ? 'Processing...' : 'Checkout'}
+            <div className={styles['action-buttons']}>
+                <div onClick={handleCheckout} className={`btn1 ${isLoading ? 'btn-disabled' : ''}`} style={{ opacity: isLoading ? 0.7 : 1, pointerEvents: isLoading ? 'none' : 'auto' }}>
+                    {isLoading ? 'Processing...' : 'Checkout'}
+                </div>
             </div>
         </div>
     );

@@ -1,7 +1,6 @@
-# 🐰 Rabbit Mart
+# 🛒 GrocerApp
 
-Rabbit Mart is a new Egyptian startup that guarantees delivery within 20 minutes of specified locations. While Rabbit
-Mart is only available on mobile platforms, our job is to make the shopping experience available to web users as well.
+GrocerApp is a new Egyptian startup that guarantees delivery within 20 minutes of specified locations. While GrocerApp is only available on mobile platforms, our job is to make the shopping experience available to web users as well.
 
 ## Screenshots
 ![Landing Page](https://i.ibb.co/sR92dH4/Screenshot-24.png)
@@ -24,7 +23,7 @@ Mart is only available on mobile platforms, our job is to make the shopping expe
 ### Clone the Project
 
 ```bash
-$ git clone https://github.com/skittlesaur/rabbitmart
+$ git clone https://github.com/skittlesaur/grocerapp
 ```
 
 **Note:** the `master` branch is the current production build. `releases` contain latest deployment tests. `develop` contains all new features and build.
@@ -68,9 +67,9 @@ $ npm start   # start the server
 ## Authors
 
 <table>
-    <td align="center"><a href="https://skittlesaur.github.io"><sub><b>Baraa A.</b></sub></a><br /><a href="https://github.com/skittlesaur/rabbitmart/commits?author=skittlesaur" title="Commits">📖</a></td>
-    <td align="center"><a href="https://github.com/emansalehkhalil"><sub><b>Eman S.</b></sub></a><br /><a href="https://github.com/skittlesaur/rabbitmart/commits?author=emansalehkhalil" title="Commits">📖</a></td>
-    <td align="center"><a href="https://github.com/ssary"><sub><b>Sary N.</b></sub></a><br /><a href="https://github.com/skittlesaur/rabbitmart/commits?author=ssary" title="Commits">📖</a></td>
-    <td align="center"><a href="https://github.com/YoussefElbasha"><sub><b>Youssef S.</b></sub></a><br /><a href="https://github.com/skittlesaur/rabbitmart/commits?author=youssefelbasha" title="Commits">📖</a></td>
+    <td align="center"><a href="https://skittlesaur.github.io"><sub><b>Baraa A.</b></sub></a><br /><a href="https://github.com/skittlesaur/grocerapp/commits?author=skittlesaur" title="Commits">📖</a></td>
+    <td align="center"><a href="https://github.com/emansalehkhalil"><sub><b>Eman S.</b></sub></a><br /><a href="https://github.com/skittlesaur/grocerapp/commits?author=emansalehkhalil" title="Commits">📖</a></td>
+    <td align="center"><a href="https://github.com/ssary"><sub><b>Sary N.</b></sub></a><br /><a href="https://github.com/skittlesaur/grocerapp/commits?author=ssary" title="Commits">📖</a></td>
+    <td align="center"><a href="https://github.com/YoussefElbasha"><sub><b>Youssef S.</b></sub></a><br /><a href="https://github.com/skittlesaur/grocerapp/commits?author=youssefelbasha" title="Commits">📖</a></td>
 </table>
 

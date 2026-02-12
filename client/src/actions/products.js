@@ -61,3 +61,17 @@ export const adminUpdateDatabase = (csv, mode, onSuccess, onError) => async (dis
         onError(e);
     }
 }
+
+export const uploadProductsFromPDF = (pdfFile, mode, onSuccess, onError) => async (dispatch) => {
+    try {
+        const formData = new FormData();
+        formData.append('pdf', pdfFile);
+        formData.append('mode', mode);
+        
+        const updatedData = await api.uploadProductsFromPDF(formData, mode).then(res => res.data);
+        dispatch({ type: UPDATE_DATABASE, data: updatedData });
+        onSuccess(updatedData);
+    } catch (e) {
+        onError(e);
+    }
+}

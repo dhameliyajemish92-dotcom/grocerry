@@ -5,6 +5,7 @@ import dns from 'dns';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import cors from 'cors';
+import multer from 'multer';
 import products from "./routes/products.js";
 import shipping from "./routes/shipping.js"
 import orders from './routes/orders.js';
@@ -18,6 +19,16 @@ import Stripe from "stripe";
 const app = express();
 // sgMail.setApiKey(process.env.SENDGRID_KEY);
 export const stripe = Stripe(process.env.STRIPE_PRIVATE_KEY);
+
+// Configure multer for file uploads
+const storage = multer.memoryStorage();
+const upload = multer({ 
+    storage: storage,
+    limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
+});
+
+// Make upload available to routes
+app.upload = upload;
 
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));

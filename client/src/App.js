@@ -32,6 +32,7 @@ import Checkout from "./pages/checkout/checkout";
 import Success from "./pages/checkout/success";
 import ShipmentId from "./pages/shipment/id/ShipmentId";
 import OrderId from "./pages/order/id/OrderId";
+import Invoice from "./components/invoice/Invoice";
 
 const App = () => {
 
@@ -144,6 +145,7 @@ const App = () => {
                 <Route path={'/login'} element={<Login />} />
                 <Route path={'/orders'} element={<Order />} />
                 <Route path={'/orders/:id'} element={<OrderId />} />
+                <Route path={'/orders/:id/invoice'} element={<Invoice />} />
                 <Route path={'/wishlist'} element={<PrivateRoute component={<Wishlist addProductToCart={addProductToCart} />} />} />
                 <Route path={'/admin'} element={<PrivateRoute role={'ADMIN'} component={<Admin />} />} />
                 <Route path={'/admin/orders'}

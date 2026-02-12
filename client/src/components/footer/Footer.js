@@ -7,7 +7,7 @@ const Footer = () => {
         <div className={styles['wrapper']}>
             <div className={styles['top-wrapper']}>
                 <div className={styles['logo-wrapper']}>
-                    <img src={Logo} alt={'Rabbit Mart'} />
+                    <img src={Logo} alt={'GrocerApp'} />
                 </div>
                 <div className={styles['pages-wrapper']}>
                     <div className={styles['pages']}>

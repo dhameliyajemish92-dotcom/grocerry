@@ -1,0 +1,218 @@
+.container {
+    padding: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+    background-color: #f9f9f9;
+    min-height: 100vh;
+}
+
+.actions {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    gap: 10px;
+}
+
+.invoiceWrapper {
+    background: white;
+    padding: 40px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    min-height: 297mm;
+    /* A4 height */
+    width: 210mm;
+    /* A4 width */
+    margin: 0 auto;
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 3px solid #00b106;
+    padding-bottom: 20px;
+    margin-bottom: 30px;
+}
+
+.brand {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.logo {
+    width: 80px;
+    height: auto;
+}
+
+.storeInfo h1 {
+    color: #00b106;
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.storeInfo p {
+    margin: 2px 0;
+    font-size: 13px;
+    color: #666;
+}
+
+.invoiceTitle h2 {
+    margin: 0;
+    color: #333;
+    font-size: 20px;
+    letter-spacing: 2px;
+}
+
+.infoSection {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 40px;
+}
+
+.billTo h3 {
+    font-size: 14px;
+    color: #999;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+.billTo p {
+    margin: 4px 0;
+    font-size: 14px;
+}
+
+.orderMeta p {
+    margin: 4px 0;
+    font-size: 14px;
+    text-align: right;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+}
+
+.table th {
+    background-color: #f4f4f4;
+    text-align: left;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    border-bottom: 2px solid #ddd;
+}
+
+.table td {
+    padding: 12px;
+    font-size: 14px;
+    border-bottom: 1px solid #eee;
+    vertical-align: middle;
+}
+
+.imageCell {
+    width: 60px;
+    padding-right: 0 !important;
+}
+
+.productImage {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid #eee;
+}
+
+.productName {
+    font-weight: 500;
+}
+
+.brandTag {
+    font-size: 10px;
+    background: #f0f0f0;
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: #666;
+    margin-right: 5px;
+    text-transform: uppercase;
+}
+
+.packagingInfo {
+    font-size: 12px;
+    color: #888;
+}
+
+.summaryContainer {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.summaryBox {
+    width: 250px;
+}
+
+.summaryRow {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    font-size: 14px;
+}
+
+.grandTotal {
+    border-top: 2px solid #00b106;
+    margin-top: 10px;
+    padding-top: 15px;
+    font-weight: 600;
+    font-size: 18px;
+    color: #00b106;
+}
+
+.footer {
+    margin-top: 80px;
+    text-align: center;
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+    color: #999;
+    font-size: 12px;
+}
+
+/* Print Styles */
+@media print {
+    body * {
+        visibility: hidden;
+    }
+
+    .invoiceWrapper,
+    .invoiceWrapper * {
+        visibility: visible;
+    }
+
+    .invoiceWrapper {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        box-shadow: none;
+        padding: 0;
+    }
+
+    .actions {
+        display: none;
+    }
+
+    .container {
+        padding: 0;
+        background: white;
+    }
+}
+
+@media (max-width: 210mm) {
+    .invoiceWrapper {
+        width: 100%;
+        padding: 20px;
+        min-height: auto;
+    }
+}

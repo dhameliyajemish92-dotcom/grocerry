@@ -45,7 +45,7 @@ function findImageFile(category, keyword) {
 }
 
 function extractDetails(keyword) {
-    let brand = "RabbitMart Choice";
+    let brand = "Grocery Choice";
     let quantity = "1";
     let unit = "pack";
 

@@ -3,7 +3,7 @@ import OrderConfirmationTemplate from "./templates/OrderConfirmationTemplate.js"
 
 const defaults = {
     from: {
-        name: 'Rabbit Mart',
+        name: 'Grocery',
         email: 'hey.baraa@gmail.com',
     }
 }

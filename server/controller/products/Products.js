@@ -2,6 +2,7 @@ import Products from '../../model/Products.js';
 import jwt from 'jsonwebtoken';
 import Pagination from '../../utils/pagination.js';
 import CSVtoJSON from "../../utils/CSVtoJSON.js";
+import { parsePDFProductData } from '../../utils/pdfProductParser.js';
 
 export const productsSearch = async (req, res) => {
     try {
@@ -228,7 +229,10 @@ export const validateCart = async (req, res) => {
                 product_id: product.id,
                 name: product.name,
                 price: price,
-                quantity: cartProduct.quantity
+                quantity: cartProduct.quantity,
+                image: product.image,
+                brand: product.brand,
+                packaging: product.packaging
             });
         }
 
@@ -308,4 +312,59 @@ const regenerateDatabase = async (products) => {
     await Products.deleteMany();
     await Products.insertMany(products);
     return products;
+}
+
+/**
+ * Upload and parse products from PDF file
+ * Expected format: CSV-like data within the PDF
+ */
+export const uploadProductsFromPDF = async (req, res) => {
+    try {
+        if (!req.files || !req.files.pdf) {
+            return res.status(400).json({ message: "Please upload a PDF file" });
+        }
+
+        const { mode } = req.body;
+        if (!['UPDATE', 'REGENERATE'].includes(mode)) {
+            return res.status(400).json({ message: "Please select a valid mode (UPDATE or REGENERATE)" });
+        }
+
+        const pdfBuffer = req.files.pdf.data;
+
+        // Parse the PDF
+        const parseResult = await parsePDFProductData(pdfBuffer);
+
+        if (!parseResult.success) {
+            const errorMsg = parseResult.isScannedPDF
+                ? "PDF appears to be scanned/image-based. Please use a text-based PDF or convert it to text format first."
+                : "Failed to parse PDF: " + parseResult.error;
+            return res.status(400).json({ message: errorMsg, details: parseResult });
+        }
+
+        if (parseResult.totalProducts === 0) {
+            return res.status(400).json({
+                message: "No products found in the PDF. Please check the format.",
+                sampleText: parseResult.sampleText || null
+            });
+        }
+
+        let result;
+
+        if (mode === "UPDATE") {
+            result = await updateProducts(parseResult.products);
+        } else {
+            result = await regenerateDatabase(parseResult.products);
+        }
+
+        return res.status(200).json({
+            message: `Successfully processed ${parseResult.totalProducts} products`,
+            products: result,
+            parsedProducts: parseResult.products.map(p => ({ name: p.name, price: p.price, qty: p.stock })),
+            errors: parseResult.errors
+        });
+
+    } catch (e) {
+        console.error("PDF Upload Error:", e);
+        return res.status(500).json({ message: e.message });
+    }
 }

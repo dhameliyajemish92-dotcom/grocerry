@@ -69,7 +69,7 @@ const Login = () => {
             {error && <Error error={error} setError={setError} />}
             <div className={styles['header']}>
                 <div className={styles['title']}>Login with your email</div>
-                <div className={styles['login']}>New to Rabbit Mart? <Link to={'/signup'}>Sign Up</Link></div>
+                <div className={styles['login']}>New to Grocery? <Link to={'/signup'}>Sign Up</Link></div>
             </div>
             <div className={styles['form']}>
                 <input onChange={(e) => handleChange(e)} name={'email'} value={data.email} placeholder={'Email'}

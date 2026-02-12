@@ -6,11 +6,84 @@
     min-height: 70vh;
 }
 
-.products-wrapper {
-    margin-top: 2em;
+.button-wrapper {
     display: flex;
-    flex-direction: column;
-    gap: 1.5em;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.pdf-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    padding: 0.75em 1.5em;
+    background-color: var(--PRIMARY);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.pdf-btn:hover {
+    background-color: var(--PRIMARY_HOVER);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}
+
+.pdf-btn:disabled {
+    background-color: var(--NEUTRAL_2);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.email-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    padding: 0.75em 1.5em;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.email-btn:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+.email-btn:disabled {
+    background-color: var(--NEUTRAL_2);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.email-message {
+    text-align: right;
+    padding: 0.5em;
+    margin-top: 0.5em;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.email-message.success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.email-message.error {
+    background-color: #f8d7da;
+    color: #721c24;
 }
 
 .total-wrapper {
@@ -41,17 +114,37 @@
 }
 
 /* Tablet Support */
-@media screen and (min-width: 768px) {
+@media (max-width: 768px) {
     .wrapper {
-        max-width: 600px;
-        margin: auto;
+        padding: 2em 1em;
+    }
+    
+    .button-wrapper {
+        flex-direction: column;
+        gap: 0.5em;
+    }
+    
+    .pdf-btn,
+    .email-btn {
+        width: 100%;
+        justify-content: center;
     }
 }
 
-
-/* Laptop Support */
-@media screen and (min-width: 1024px) {
+/* Mobile Support */
+@media (max-width: 480px) {
     .wrapper {
-        max-width: 800px;
+        padding: 1em 0.5em;
+        gap: 1em;
+    }
+    
+    .total-wrapper {
+        flex-direction: column;
+        gap: 0.5em;
+    }
+    
+    .total-text,
+    .total-amount {
+        text-align: center;
     }
 }

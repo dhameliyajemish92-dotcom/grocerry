@@ -60,6 +60,13 @@ export const postProduct = (product) =>
 export const adminUpdateDatabase = (csv, mode) =>
     API.patch(`${PRODUCTS_BASEURL}`, { csv, mode });
 
+export const uploadProductsFromPDF = (formData, mode) =>
+    API.post(`${PRODUCTS_BASEURL}/pdf-upload`, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    });
+
 export const validateCart = (cart) =>
     API.post(`${PRODUCTS_BASEURL}/cart`, { cart });
 

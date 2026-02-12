@@ -104,7 +104,7 @@ export const createOrderCOD = async (req, res) => {
         const userId = req.user.id;
 
         if (!token || !data) {
-            return res.status(400).json({ 
+            return res.status(400).json({
                 message: "Token and data are required"
             });
         }
@@ -202,7 +202,7 @@ export const createOrderCOD = async (req, res) => {
         res.status(200).json({ order_id: order.order_id });
     } catch (error) {
         console.error("COD Order Creation Error:", error);
-        res.status(500).json({ 
+        res.status(500).json({
             message: error.message || "Failed to create order",
             error: process.env.NODE_ENV === 'development' ? error.toString() : undefined
         });
@@ -219,12 +219,33 @@ export const getOrder = async (req, res) => {
             return res.status(404).json({ message: "Order does not exist" });
         }
 
-        const productIds = order.products.map(p => p.product_id);
-        const { data } = await axios.post(`${PRODUCTS_BASEURL}/arr`, {
-            arr: productIds,
-        });
+        const productIds = order.products.map(p => p.product_id || p.id);
+        let mergedProducts = order.products; // Fallback to original order products
 
-        res.status(200).json({ ...order._doc, products: data });
+        try {
+            const { data } = await axios.post(`${PRODUCTS_BASEURL}/arr`, {
+                arr: productIds,
+            });
+
+            if (data && data.length > 0) {
+                // Merge results with robust fallbacks
+                mergedProducts = data.map(product => {
+                    const orderProduct = order.products.find(p => (p.product_id || p.id) === product.id);
+                    return {
+                        ...orderProduct, // Use original order data as base (has name, price, image)
+                        ...product,      // Overlay with fresh data from microservice if available
+                        quantity: orderProduct ? orderProduct.quantity : 1,
+                        price: product.pricing?.selling_price || product.pricing?.mrp || product.price || orderProduct?.price || 0,
+                        image: product.image || orderProduct?.image
+                    };
+                });
+            }
+        } catch (e) {
+            console.warn("Could not fetch product details for invoice:", e.message);
+            // Already initialized with order.products
+        }
+
+        res.status(200).json({ ...order._doc, products: mergedProducts });
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -351,7 +372,7 @@ export const createOrderAdmin = async (req, res) => {
             console.warn("Shipment creation failed (non-critical):", e.message);
         }
 
-        res.status(200).json({ 
+        res.status(200).json({
             order_id: order.order_id,
             message: "Order created successfully"
         });
@@ -367,7 +388,7 @@ export const createOrderAdmin = async (req, res) => {
 export const sendReceiptEmail = async (req, res) => {
     try {
         const order_id = req.params.id;
-        
+
         const order = await Order.findOne({ order_id });
         if (!order) {
             return res.status(404).json({ message: "Order not found" });
@@ -380,11 +401,23 @@ export const sendReceiptEmail = async (req, res) => {
         // Get product details
         let products = order.products;
         try {
-            const productIds = order.products.map(p => p.product_id);
+            const productIds = order.products.map(p => p.product_id || p.id);
             const { data } = await axios.post(`${PRODUCTS_BASEURL}/arr`, {
                 arr: productIds,
             });
-            products = data;
+
+            // Merge quantities and map prices
+            if (data && data.length > 0) {
+                products = data.map(product => {
+                    const orderProduct = order.products.find(p => (p.product_id || p.id) === product.id);
+                    return {
+                        ...orderProduct,
+                        ...product,
+                        quantity: orderProduct ? orderProduct.quantity : 1,
+                        price: product.pricing?.selling_price || product.pricing?.mrp || product.price || orderProduct?.price || 0
+                    };
+                });
+            }
         } catch (e) {
             console.warn("Could not fetch product details for receipt:", e.message);
         }
@@ -409,7 +442,7 @@ export const sendReceiptEmail = async (req, res) => {
             // Header
             doc.rect(0, 0, 595, 60).fill('#00b106');
             doc.fontSize(22).fillColor('white').text('TAX INVOICE', 0, 15, { align: 'center' });
-            doc.fontSize(10).text('Grocery Store | GSTIN: 24XXXXX1234X1ZX', 0, 40, { align: 'center' });
+            doc.fontSize(10).text('Grocery | GSTIN: 27AAPCR1234F1Z5', 0, 40, { align: 'center' });
 
             doc.fillColor('black');
             let y = 80;
@@ -520,7 +553,7 @@ export const sendReceiptEmail = async (req, res) => {
             // Footer
             doc.fillColor('#999').fontSize(7);
             doc.text('This is a computer-generated invoice and does not require a signature.', 0, 780, { align: 'center' });
-            doc.text('Thank you for shopping with Grocery Store!', 0, 790, { align: 'center' });
+            doc.text('Thank you for shopping with Grocery!', 0, 790, { align: 'center' });
 
             doc.end();
         });
@@ -545,7 +578,7 @@ export const sendReceiptEmail = async (req, res) => {
                 <hr style="border: 1px solid #eee;">
                 <p>Dear ${order.name.first} ${order.name.last},</p>
                 <p>Please find your GST invoice attached as a PDF.</p>
-                <p style="color: #666; font-size: 12px;">Thank you for shopping with Grocery Store!</p>
+                <p style="color: #666; font-size: 12px;">Thank you for shopping with Grocery!</p>
             </div>
         </body>
         </html>

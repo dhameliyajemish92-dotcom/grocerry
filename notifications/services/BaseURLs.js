@@ -1,1 +1,1 @@
-export const WEBSITE_BASE_URL = 'https://rabbitmart-cm.vercel.app'
+export const WEBSITE_BASE_URL = 'https://grocerapp.vercel.app'

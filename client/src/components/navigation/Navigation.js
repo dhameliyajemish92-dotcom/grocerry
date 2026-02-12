@@ -73,7 +73,7 @@ const Navigation = ({ cartCount }) => {
         <div className={styles['wrapper']}>
             {search === SEARCH_VISIBLE && <div onClick={(e) => handleClose(e)} className={styles['hide-search']} />}
             <Link to={'/'} className={styles['logo']}>
-                <img src={Logo} alt={'Rabbit'} />
+                <img className="image-logo" src={Logo} alt={'Rabbit'} />
             </Link>
             <div className={`${styles['nav-wrapper']} ${menuActive && styles['show-menu']}`}>
                 <div onClick={closeMenu} className={`${styles['close-menu']}`}><span

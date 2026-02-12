@@ -37,6 +37,47 @@
     color: var(--PRIMARY);
 }
 
+.format-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    align-self: center;
+}
+
+.file-type {
+    align-self: center;
+    display: grid;
+    grid-template-columns: .25fr 1fr 1fr;
+    align-items: stretch;
+    gap: 1em;
+}
+
+.file-type > * {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.file-type-title {
+    font-weight: 500;
+    font-size: 0.8rem;
+}
+
+.file-type-btn {
+    font-size: .8rem;
+    line-height: 1rem;
+    text-align: center;
+    border-radius: 5px;
+    padding: .5em 1em;
+    border: 1px solid var(--NEUTRAL_2);
+    cursor: pointer;
+    transition: .2s all ease-in-out;
+}
+
+.file-type-btn:hover {
+    background: var(--NEUTRAL_1);
+}
+
 .mode {
     align-self: center;
     display: grid;

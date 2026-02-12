@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import Loading from "../../../components/loading/Loading";
 import Order from '../../../shared/assets/tracking/order.png';
 import { fetchOrder } from "../../../actions/orders";
+import { generateOrderPDF } from "../../../utils/pdfGenerator";
+import { sendReceiptEmail } from "../../../api";
 
 const OrderId = () => {
 
@@ -12,6 +14,8 @@ const OrderId = () => {
     const order = useSelector(state => state.orders.fetched);
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(true);
+    const [emailLoading, setEmailLoading] = useState(false);
+    const [emailMessage, setEmailMessage] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -46,6 +50,31 @@ const OrderId = () => {
         }
     }
 
+    const handleDownloadPDF = () => {
+        if (!order) {
+            console.log('No order data available');
+            return;
+        }
+        console.log('Generating PDF for order:', order);
+        console.log('Order products:', order.products);
+        generateOrderPDF(order);
+    }
+
+    const handleSendEmail = () => {
+        if (!order) return;
+        setEmailLoading(true);
+        setEmailMessage('');
+        sendReceiptEmail(order.order_id)
+            .then(() => {
+                setEmailMessage('Invoice sent to your email!');
+                setEmailLoading(false);
+            })
+            .catch(() => {
+                setEmailMessage('Failed to send email');
+                setEmailLoading(false);
+            });
+    }
+
     if (loading)
         return <Loading />
 
@@ -54,6 +83,30 @@ const OrderId = () => {
             <div className={'heading'}>
                 <h1>Track Order</h1>
             </div>
+            <div className={styles['pdf-button-wrapper']}>
+                <button
+                    onClick={handleDownloadPDF}
+                    className={`btn2 ${styles['pdf-btn']}`}
+                >
+                    Download PDF
+                </button>
+                <button
+                    onClick={() => navigate(`/orders/${id}/invoice`)}
+                    className={`btn1 ${styles['print-btn']}`}
+                    style={{ marginLeft: '10px' }}
+                >
+                    Print Invoice
+                </button>
+                <button
+                    onClick={handleSendEmail}
+                    className={`btn2 ${styles['email-btn']}`}
+                    disabled={emailLoading}
+                    style={{ marginLeft: '10px' }}
+                >
+                    {emailLoading ? 'Sending...' : 'Send Email'}
+                </button>
+            </div>
+            {emailMessage && <div className={styles['email-message']}>{emailMessage}</div>}
             <div className={styles['sub']}>
                 Order <span>#{order.order_id}</span>
             </div>
@@ -68,6 +121,37 @@ const OrderId = () => {
                 <span className={styles['update']}>Order Update:</span> Your order has
                 been {capitalizeFirst(order.status)}.
             </div>
+
+            <div className={styles['products-section']}>
+                <h2 className={styles['products-heading']}>Items Ordered</h2>
+                <div className={styles['products-list']}>
+                    {order.products && order.products.map((product, index) => (
+                        <div key={index} className={styles['product-item']}>
+                            <div className={styles['product-image']}>
+                                <img
+                                    src={product.image}
+                                    alt={product.name}
+                                    onError={(e) => { e.target.src = '/images/grocery/Beverages/black_tea_packet_001.jpg'; }}
+                                />
+                            </div>
+                            <div className={styles['product-details']}>
+                                <div className={styles['product-name']}>{product.name}</div>
+                                <div className={styles['product-price']}>
+                                    {product.price} x {product.quantity || 1}
+                                </div>
+                            </div>
+                            <div className={styles['product-total']}>
+                                {(product.price * (product.quantity || 1)).toFixed(2)}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+                <div className={styles['order-total']}>
+                    <span>Total:</span>
+                    <span>{order.total}</span>
+                </div>
+            </div>
+
             <div style={{ display: 'flex', gap: '10px', marginTop: '15px' }}>
                 {order.status === 'FULFILLED' &&
                     <Link className={styles['shipping']} to={`/shipping/${order.order_id}`}>Track Shipping</Link>}

@@ -1,4 +1,4 @@
-export const PRODUCTS_BASEURL = 'https://rabbitmart-products.vercel.app/products'
-export const SHIPPING_BASEURL = 'https://rabbitmart-shipping.vercel.app/shipping'
-export const NOTIFICATIONS_BASEURL = 'https://rabbitmart-notifications.vercel.app/notifications'
-export const USER_BASEURL = 'https://rabbitmart-users.vercel.app/me'
+export const PRODUCTS_BASEURL = 'https://grocerapp-products.vercel.app/products'
+export const SHIPPING_BASEURL = 'https://grocerapp-shipping.vercel.app/shipping'
+export const NOTIFICATIONS_BASEURL = 'https://grocerapp-notifications.vercel.app/notifications'
+export const USER_BASEURL = 'https://grocerapp-users.vercel.app/me'

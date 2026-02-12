@@ -101,14 +101,14 @@ const create = (order) => `
         }
 
     </style>
-    <title>Rabbit Mart Emails</title>
+    <title>GrocerApp Emails</title>
 </head>
 <body>
 
 <div class="wrapper">
     <div class="header">
         <img src="https://www.rabbitmart.com/wp-content/uploads/elementor/thumbs/Asset-10-pbt0jiavo8y3y0m7qnt9e3yd60kthgffsxacekimmw.png"
-             alt="Rabbit Mart"/>
+             alt="GrocerApp"/>
         <p>Order Confirmation</p>
     </div>
     <div class="body">
