@@ -47,26 +47,38 @@ export const ShowProductsPerPage = async (req, res) => {
 
         // If there is category: just filter them by the category,
         // then do the pagination on it.
+        console.log(`[ShowProductsPerPage] Category param: ${req.query.category}`);
         if (req.query.category) {
             products = await ShowProductsPerCategory(req.query.category, products);
         } else
             products = await Products.find();
+        
+        console.log(`[ShowProductsPerPage] Found ${products.length} products in database`);
+        if (products.length > 0) {
+            console.log(`[ShowProductsPerPage] First product:`, JSON.stringify(products[0], null, 2));
+        }
+        
         const numberOfPages = Math.ceil(products.length / itemsPerPage);
         // in both cases you have to paginate the products
         products = Pagination(req.query.page, products, itemsPerPage);
 
-
+        console.log(`[ShowProductsPerPage] Returning ${products.length} products, total_pages: ${numberOfPages}`);
         res.status(200).json({ total_pages: numberOfPages, products: products });
 
     } catch (error) {
+        console.error(`[ShowProductsPerPage] Error:`, error.message);
         res.status(500).json({ message: error.message });
     }
 }
 
 const ShowProductsPerCategory = async (category, products) => {
     try {
-
-        products = await Products.find({ "category": { $regex: category, $options: "i" } });
+        // Handle category names with spaces (e.g., "Home%20Care" -> "HomeCare")
+        const normalizedCategory = category.replace(/%20/g, ' ').replace(/\s+/g, '');
+        
+        products = await Products.find({ 
+            "category": { $regex: normalizedCategory, $options: "i" }
+        });
         return products;
 
     } catch (error) {

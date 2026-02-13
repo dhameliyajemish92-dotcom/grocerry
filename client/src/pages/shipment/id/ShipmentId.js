@@ -46,6 +46,28 @@ const ShipmentId = () => {
         }
     }
 
+    const shareOnWhatsApp = () => {
+        const statusMessages = {
+            'CREATED': `confirmed!`,
+            'SHIPPED': `shipped!`,
+            'DELIVERED': `delivered! ✅`,
+            'RETURNED': `returned.`
+        };
+
+        const status = statusMessages[shipment.status] || shipment.status;
+        const message = `Hello! Greetings from Grocerry. \n\nMy Order ID is: #${shipment.order_id}\nOrder Status: ${status}`;
+        const trackUrl = `${window.location.origin}/shipping/${shipment.order_id}`;
+        const fullMessage = `${message}\n\nTrack your order here: ${trackUrl}`;
+
+        // Clean phone number (remove any non-numeric characters)
+        const cleanPhone = shipment.phone_number ? shipment.phone_number.replace(/\D/g, '') : '';
+        const waUrl = cleanPhone
+            ? `https://wa.me/${cleanPhone}/?text=${encodeURIComponent(fullMessage)}`
+            : `https://wa.me/?text=${encodeURIComponent(fullMessage)}`;
+
+        window.open(waUrl, '_blank');
+    }
+
     if (loading)
         return <Loading />
 
@@ -67,6 +89,25 @@ const ShipmentId = () => {
             <div className={styles['status']}>
                 <span className={styles['update']}>Delivery Update:</span> Your order has
                 been {capitalizeFirst(shipment.status)}.
+            </div>
+            <div style={{ marginTop: '20px', display: 'flex', gap: '10px', justifyContent: 'center' }}>
+                <button
+                    onClick={shareOnWhatsApp}
+                    style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        padding: '10px 20px',
+                        backgroundColor: '#25D366',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '5px',
+                        cursor: 'pointer',
+                        fontSize: '14px'
+                    }}
+                >
+                    <span>📱</span> Share on WhatsApp
+                </button>
             </div>
         </div>
     );

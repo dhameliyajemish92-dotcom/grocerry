@@ -34,6 +34,7 @@ app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(cors());
 app.use('/product_downloads', express.static('product_downloads'));
+app.use('/images', express.static('../client/public/images/grocery'));
 app.use('/Grocery_Images', express.static('../client/product-image/Grocery_Images'));
 
 app.use((req, res, next) => {
@@ -52,8 +53,8 @@ app.use('/admin', admin);
 
 app.get('/', (req, res) => {
     res.status(200).json({
-        team_name: "Curious Monkeys",
-        dev_team: ["jemish dhameliya", "nakrani takshil", "Sary N.", "Youssef S."].sort()
+        team_name: "project",
+        dev_team: ["jemish dhameliya", "nakrani takshil"].sort()
     })
 });
 

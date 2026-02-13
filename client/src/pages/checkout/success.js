@@ -68,7 +68,7 @@ const Success = ({ setCart }) => {
 
         doc.setFont(undefined, 'normal');
         doc.setFontSize(9);
-        
+
         // Left column - Invoice details
         doc.text(`Invoice No: INV-${order.order_id}`, 15, y);
         doc.text(`Name: ${order.name.first} ${order.name.last}`, pageWidth / 2 + 5, y);
@@ -287,15 +287,15 @@ const Success = ({ setCart }) => {
                 <div style={{ marginTop: '25px', padding: '15px', backgroundColor: '#e8f5e9', borderRadius: '8px', border: '1px solid #c8e6c9' }}>
                     <h4 style={{ marginBottom: '12px' }}>🧾 Receipt</h4>
                     <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                        <button 
-                            className={'btn1'} 
+                        <button
+                            className={'btn1'}
                             onClick={handleDownloadReceipt}
                             style={{ display: 'flex', alignItems: 'center', gap: '5px' }}
                         >
                             📥 Download Invoice (PDF)
                         </button>
-                        <button 
-                            className={'btn2'} 
+                        <button
+                            className={'btn2'}
                             onClick={handleSendEmail}
                             disabled={emailSending || emailSent}
                             style={{ display: 'flex', alignItems: 'center', gap: '5px' }}

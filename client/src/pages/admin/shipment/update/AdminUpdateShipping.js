@@ -126,6 +126,32 @@ const AdminUpdateShipping = () => {
                     <div onClick={handleConfirm} className={'btn1'} style={{ opacity: loading ? 0.7 : 1, pointerEvents: loading ? 'none' : 'auto' }}>
                         {loading ? 'Updating...' : 'Confirm Update'}
                     </div>
+                    <div 
+                        onClick={() => {
+                            const statusMessages = {
+                                'CREATED': `📦 Your order #${shipping.order_id} has been confirmed! We're preparing your items.`,
+                                'SHIPPED': `🚚 Your order #${shipping.order_id} has been shipped! Track: ${window.location.origin}/shipping/${shipping.order_id}`,
+                                'DELIVERED': `✅ Your order #${shipping.order_id} has been delivered! Thank you for shopping with us.`,
+                                'RETURNED': `↩️ Your order #${shipping.order_id} has been returned. Contact us for assistance.`
+                            };
+                            const message = statusMessages[status] || `Order #${shipping.order_id} status: ${status}`;
+                            window.open(`https://wa.me/9313683554?text=${encodeURIComponent(message)}`, '_blank');
+                        }}
+                        style={{ 
+                            backgroundColor: '#25D366', 
+                            color: 'white',
+                            border: 'none',
+                            padding: '10px 15px',
+                            borderRadius: '5px',
+                            cursor: 'pointer',
+                            marginLeft: '10px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '5px'
+                        }}
+                    >
+                        📱 Notify Customer
+                    </div>
                 </div>}
             {state === SUCCESS &&
                 <div className={styles['response-wrapper']}>

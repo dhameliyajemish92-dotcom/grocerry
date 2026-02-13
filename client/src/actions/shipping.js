@@ -17,7 +17,8 @@ export const fetchShipment = (id, onSuccess, onError) => async (dispatch) => {
         dispatch({type: SHIPPING_FETCH, data: shipmentData})
         onSuccess(shipmentData);
     } catch (e) {
-        onError(e.response.data);
+        const errorMessage = e.response?.data?.message || e.message || 'Failed to fetch shipment details';
+        onError({ message: errorMessage });
     }
 }
 
@@ -26,6 +27,7 @@ export const updateShipment = (id, status, onSuccess, onError) => async () => {
         await api.updateShipment(id, status);
         onSuccess();
     } catch (e) {
-        onError(e.response.data);
+        const errorMessage = e.response?.data?.message || e.message || 'Failed to update shipment';
+        onError({ message: errorMessage });
     }
 }

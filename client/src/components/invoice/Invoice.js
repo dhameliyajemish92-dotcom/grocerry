@@ -31,6 +31,24 @@ const Invoice = () => {
         window.print();
     };
 
+    const shareOnWhatsApp = () => {
+        const message = `📦 Order Invoice #${order.order_id}\n\n` +
+            `Items: ${order.products?.length || 0}\n` +
+            `Total: ₹${order.total}\n\n` +
+            `Track: ${window.location.origin}/shipping/${order.order_id}`;
+        
+        window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
+    };
+
+    const sendEmail = () => {
+        const subject = `Order Invoice #${order.order_id}`;
+        const body = `Please find the invoice attached for order #${order.order_id}.\n\n` +
+            `Total: ₹${order.total}\n\n` +
+            `Track your shipment: ${window.location.origin}/shipping/${order.order_id}`;
+        
+        window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    };
+
     if (loading) return <Loading />;
     if (!order) return <div>Order not found</div>;
 
@@ -48,6 +66,34 @@ const Invoice = () => {
             <div className={styles.actions}>
                 <button onClick={() => navigate(-1)} className="btn2">Back</button>
                 <button onClick={handlePrint} className="btn1">Print Invoice</button>
+                <button 
+                    onClick={shareOnWhatsApp} 
+                    style={{ 
+                        backgroundColor: '#25D366', 
+                        color: 'white',
+                        border: 'none',
+                        padding: '10px 15px',
+                        borderRadius: '5px',
+                        cursor: 'pointer',
+                        marginLeft: '10px'
+                    }}
+                >
+                    📱 WhatsApp
+                </button>
+                <button 
+                    onClick={sendEmail} 
+                    style={{ 
+                        backgroundColor: '#EA4335', 
+                        color: 'white',
+                        border: 'none',
+                        padding: '10px 15px',
+                        borderRadius: '5px',
+                        cursor: 'pointer',
+                        marginLeft: '10px'
+                    }}
+                >
+                    ✉️ Email
+                </button>
             </div>
 
             <div className={styles.invoiceWrapper}>

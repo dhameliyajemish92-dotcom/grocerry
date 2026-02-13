@@ -1,0 +1,20 @@
+Connecting to MongoDB...
+(node:8420) [MONGOOSE] DeprecationWarning: Mongoose: the `strictQuery` option will be switched back to `false` by default in Mongoose 7. Use `mongoose.set('strictQuery', false);` if you want to prepare for this change. Or use `mongoose.set('strictQuery', true);` to suppress this warning.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Connection successful!
+Fetching categories...
+Unique categories in database:
+ - "Beverages": 20 products
+ - "Oils": 20 products
+ - "Dairy": 20 products
+ - "Spices": 20 products
+ - "Snacks": 20 products
+ - "Pulses": 20 products
+ - "Home Care": 20 products
+ - "Personal Care": 19 products
+ - "Grains": 18 products
+
+Searching for 'Personal Care' products...
+Found 19 products with "Personal Care" (case-insensitive regex)
+Sample product from 'Personal Care': Baby Lotion Bottle
+Disconnected from MongoDB.

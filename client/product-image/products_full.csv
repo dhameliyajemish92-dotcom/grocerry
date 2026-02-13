@@ -1,0 +1,179 @@
+product_id,name,price,image,weight,measurement,category,stock
+PRD001,Black Tea Packet,120,/images/grocery/Beverages/black_tea_packet_001.jpg,250,g,Beverages,100
+PRD002,Coconut Water Bottle,55,/images/grocery/Beverages/coconut_water_bottle_002.jpg,250,ml,Beverages,100
+PRD003,Coffee Powder Jar,250,/images/grocery/Beverages/coffee_powder_jar_003.jpg,100,g,Beverages,50
+PRD004,Cold Coffee Bottle,55,/images/grocery/Beverages/cold_coffee_bottle_004.jpg,250,ml,Beverages,100
+PRD005,Energy Drink Can,125,/images/grocery/Beverages/energy_drink_can_005.jpg,250,ml,Beverages,100
+PRD006,Filter Coffee Powder,180,/images/grocery/Beverages/filter_coffee_powder_006.jpg,100,g,Beverages,50
+PRD007,Flavoured Water Bottle,20,/images/grocery/Beverages/flavoured_water_bottle_007.jpg,500,ml,Beverages,100
+PRD008,Fruit Juice Tetra Pack,75,/images/grocery/Beverages/fruit_juice_tetra_pack_008.jpg,1,L,Beverages,50
+PRD009,Fruit Squash Bottle,85,/images/grocery/Beverages/fruit_squash_bottle_009.jpg,750,ml,Beverages,50
+PRD010,Green Tea Box,150,/images/grocery/Beverages/green_tea_box_010.jpg,100,g,Beverages,50
+PRD011,Health Drink Powder,299,/images/grocery/Beverages/health_drink_powder_011.jpg,500,g,Beverages,50
+PRD012,Herbal Tea Box,140,/images/grocery/Beverages/herbal_tea_box_012.jpg,100,g,Beverages,50
+PRD013,Hot Chocolate Powder,120,/images/grocery/Beverages/hot_chocolate_powder_013.jpg,250,g,Beverages,50
+PRD014,Iced Tea Bottle,45,/images/grocery/Beverages/iced_tea_bottle_014.jpg,300,ml,Beverages,100
+PRD015,Instant Coffee Sachet,15,/images/grocery/Beverages/instant_coffee_sachet_015.jpg,1,g,Beverages,200
+PRD016,Lemon Drink Bottle,35,/images/grocery/Beverages/lemon_drink_bottle_016.jpg,250,ml,Beverages,100
+PRD017,Milkshake Bottle,30,/images/grocery/Beverages/milkshake_bottle_017.jpg,250,ml,Beverages,100
+PRD018,Protein Drink Bottle,350,/images/grocery/Beverages/protein_drink_bottle_018.jpg,450,ml,Beverages,30
+PRD019,Soft Drink Bottle,40,/images/grocery/Beverages/soft_drink_bottle_019.jpg,500,ml,Beverages,100
+PRD020,Tea Powder Packet,120,/images/grocery/Beverages/tea_powder_packet_020.jpg,250,g,Beverages,100
+PRD101,Amul Butter Packet,50,/images/grocery/Dairy/amul_butter_packet_001.jpg,100,g,Dairy,100
+PRD102,Amul Cheese Slice,75,/images/grocery/Dairy/amul_cheese_slice_002.jpg,200,g,Dairy,50
+PRD103,Amul Ghee Jar,450,/images/grocery/Dairy/amul_ghee_jar_003.jpg,500,g,Dairy,30
+PRD104,Amul Milk Packet,25,/images/grocery/Dairy/amul_milk_packet_004.jpg,500,ml,Dairy,200
+PRD105,Butter Milk Tetra Pack,25,/images/grocery/Dairy/butter_milk_tetra_pack_005.jpg,250,ml,Dairy,100
+PRD106,Buttermilk Packet,20,/images/grocery/Dairy/buttermilk_packet_006.jpg,250,ml,Dairy,100
+PRD107,Cheese Block Packet,145,/images/grocery/Dairy/cheese_block_packet_007.jpg,400,g,Dairy,30
+PRD108,Cheese Spread Jar,110,/images/grocery/Dairy/cheese_spread_jar_008.jpg,200,g,Dairy,50
+PRD109,Condensed Milk Tin,95,/images/grocery/Dairy/condensed_milk_tin_009.jpg,400,g,Dairy,30
+PRD110,Cream Packet,65,/images/grocery/Dairy/cream_packet_010.jpg,200,ml,Dairy,50
+PRD111,Curd Dahi Cup,25,/images/grocery/Dairy/curd_dahi_cup_011.jpg,200,g,Dairy,100
+PRD112,Flavoured Milk Bottle,35,/images/grocery/Dairy/flavoured_milk_bottle_012.jpg,250,ml,Dairy,100
+PRD113,Fresh Cream Pack,75,/images/grocery/Dairy/fresh_cream_pack_013.jpg,250,ml,Dairy,50
+PRD114,Full Cream Milk Packet,28,/images/grocery/Dairy/full_cream_milk_packet_014.jpg,500,ml,Dairy,200
+PRD115,Khoya Mawa Packet,160,/images/grocery/Dairy/khoya_mawa_packet_015.jpg,400,g,Dairy,30
+PRD116,Lassi Bottle,45,/images/grocery/Dairy/lassi_bottle_016.jpg,300,ml,Dairy,100
+PRD117,Paneer Packet,120,/images/grocery/Dairy/paneer_packet_017.jpg,200,g,Dairy,50
+PRD118,Skimmed Milk Packet,22,/images/grocery/Dairy/skimmed_milk_packet_018.jpg,500,ml,Dairy,200
+PRD119,Whipping Cream Pack,85,/images/grocery/Dairy/whipping_cream_pack_019.jpg,250,ml,Dairy,50
+PRD120,Yogurt Cup,35,/images/grocery/Dairy/yogurt_cup_020.jpg,150,g,Dairy,100
+PRD201,Aashirvaad Atta Packet,259,/images/grocery/Grains/aashirvaad_atta_packet_001.jpg,10,kg,Grains,50
+PRD202,Bajra Flour Packet,75,/images/grocery/Grains/bajra_flour_packet_002.jpg,1,kg,Grains,50
+PRD203,Barley Packet,95,/images/grocery/Grains/barley_packet_003.jpg,500,g,Grains,50
+PRD204,Basmati Rice Grocery Packet,299,/images/grocery/Grains/basmati_rice_grocery_packet_004.jpg,5,kg,Grains,50
+PRD205,Brown Rice Packet,249,/images/grocery/Grains/brown_rice_packet_005.jpg,1,kg,Grains,50
+PRD206,Corn Flour Packet,55,/images/grocery/Grains/corn_flour_packet_006.jpg,500,g,Grains,50
+PRD207,Dosa Rice Packet,110,/images/grocery/Grains/dosa_rice_packet_007.jpg,2,kg,Grains,50
+PRD208,Idli Rice Packet,120,/images/grocery/Grains/idli_rice_packet_008.jpg,2,kg,Grains,50
+PRD209,Jowar Flour Packet,85,/images/grocery/Grains/jowar_flour_packet_009.jpg,1,kg,Grains,50
+PRD210,Long Grain Rice Packet,199,/images/grocery/Grains/long_grain_rice_packet_010.jpg,5,kg,Grains,50
+PRD211,Maida Flour Packet,80,/images/grocery/Grains/maida_flour_packet_011.jpg,1,kg,Grains,50
+PRD212,Oats Packet,189,/images/grocery/Grains/oats_packet_012.jpg,500,g,Grains,50
+PRD213,Organic Rice Packet,299,/images/grocery/Grains/organic_rice_packet_013.jpg,1,kg,Grains,30
+PRD214,Quinoa Packet,350,/images/grocery/Grains/quinoa_packet_014.jpg,500,g,Grains,30
+PRD215,Rava Sooji Packet,65,/images/grocery/Grains/rava_sooji_packet_015.jpg,500,g,Grains,50
+PRD216,Short Grain Rice Packet,189,/images/grocery/Grains/short_grain_rice_packet_016.jpg,5,kg,Grains,50
+PRD217,Wheat Flour Atta Packet,199,/images/grocery/Grains/wheat_flour_atta_packet_017.jpg,10,kg,Grains,50
+PRD218,Whole Wheat Grain,150,/images/grocery/Grains/whole_wheat_grain_018.jpg,5,kg,Grains,50
+PRD301,Black Chana Packet,95,/images/grocery/Pulses/black_chana_packet_001.jpg,1,kg,Pulses,50
+PRD302,Chana Dal Packet,89,/images/grocery/Pulses/chana_dal_packet_002.jpg,1,kg,Pulses,50
+PRD303,Chickpeas Packet,99,/images/grocery/Pulses/chickpeas_packet_003.jpg,1,kg,Pulses,50
+PRD304,Green Peas Packet,75,/images/grocery/Pulses/green_peas_packet_004.jpg,500,g,Pulses,50
+PRD305,Horse Gram Packet,79,/images/grocery/Pulses/horse_gram_packet_005.jpg,500,g,Pulses,50
+PRD306,Kabuli Chana Packet,169,/images/grocery/Pulses/kabuli_chana_packet_006.jpg,1,kg,Pulses,50
+PRD307,Kidney Beans Packet,149,/images/grocery/Pulses/kidney_beans_packet_007.jpg,1,kg,Pulses,50
+PRD308,Lentils Mix Packet,109,/images/grocery/Pulses/lentils_mix_packet_008.jpg,1,kg,Pulses,50
+PRD309,Lobia Black Eyed Beans,95,/images/grocery/Pulses/lobia_black_eyed_beans_009.jpg,500,g,Pulses,50
+PRD310,Masoor Dal Packet,95,/images/grocery/Pulses/masoor_dal_packet_010.jpg,1,kg,Pulses,50
+PRD311,Masoor Whole Packet,90,/images/grocery/Pulses/masoor_whole_packet_011.jpg,1,kg,Pulses,50
+PRD312,Moong Dal Packet,99,/images/grocery/Pulses/moong_dal_packet_012.jpg,1,kg,Pulses,50
+PRD313,Moong Whole Packet,89,/images/grocery/Pulses/moong_whole_packet_013.jpg,1,kg,Pulses,50
+PRD314,Moth Beans Packet,75,/images/grocery/Pulses/moth_beans_packet_014.jpg,500,g,Pulses,50
+PRD315,Rajma Packet,139,/images/grocery/Pulses/rajma_packet_015.jpg,1,kg,Pulses,50
+PRD316,Soybean Packet,85,/images/grocery/Pulses/soybean_packet_016.jpg,500,g,Pulses,50
+PRD317,Toor Dal Packet,129,/images/grocery/Pulses/toor_dal_packet_017.jpg,1,kg,Pulses,50
+PRD318,Urad Dal Packet,119,/images/grocery/Pulses/urad_dal_packet_018.jpg,1,kg,Pulses,50
+PRD319,Urad Whole Packet,115,/images/grocery/Pulses/urad_whole_packet_019.jpg,1,kg,Pulses,50
+PRD320,White Peas Packet,69,/images/grocery/Pulses/white_peas_packet_020.jpg,500,g,Pulses,50
+PRD401,Blended Oil Bottle,159,/images/grocery/Oils/blended_oil_bottle_001.jpg,1,L,Oils,50
+PRD402,Canola Oil Bottle,199,/images/grocery/Oils/canola_oil_bottle_002.jpg,1,L,Oils,50
+PRD403,Coconut Oil Bottle,199,/images/grocery/Oils/coconut_oil_bottle_003.jpg,500,ml,Oils,50
+PRD404,Cold Pressed Oil Bottle,299,/images/grocery/Oils/cold_pressed_oil_bottle_004.jpg,500,ml,Oils,30
+PRD405,Cooking Oil Pouch,149,/images/grocery/Oils/cooking_oil_pouch_005.jpg,1,L,Oils,50
+PRD406,Corn Oil Bottle,189,/images/grocery/Oils/corn_oil_bottle_006.jpg,1,L,Oils,50
+PRD407,Extra Virgin Olive Oil,399,/images/grocery/Oils/extra_virgin_olive_oil_007.jpg,500,ml,Oils,30
+PRD408,Fortune Oil Bottle,159,/images/grocery/Oils/fortune_oil_bottle_008.jpg,1,L,Oils,50
+PRD409,Gingelly Oil Bottle,229,/images/grocery/Oils/gingelly_oil_bottle_009.jpg,500,ml,Oils,50
+PRD410,Groundnut Oil Bottle,189,/images/grocery/Oils/groundnut_oil_bottle_010.jpg,1,L,Oils,50
+PRD411,Mustard Oil Bottle,149,/images/grocery/Oils/mustard_oil_bottle_011.jpg,1,L,Oils,50
+PRD412,Olive Oil Bottle,549,/images/grocery/Oils/olive_oil_bottle_012.jpg,500,ml,Oils,30
+PRD413,Organic Oil Bottle,299,/images/grocery/Oils/organic_oil_bottle_013.jpg,500,ml,Oils,30
+PRD414,Palm Oil Bottle,129,/images/grocery/Oils/palm_oil_bottle_014.jpg,1,L,Oils,50
+PRD415,Refined Oil Bottle,149,/images/grocery/Oils/refined_oil_bottle_015.jpg,1,L,Oils,50
+PRD416,Rice Bran Oil Bottle,179,/images/grocery/Oils/rice_bran_oil_bottle_016.jpg,1,L,Oils,50
+PRD417,Saffola Oil Bottle,169,/images/grocery/Oils/saffola_oil_bottle_017.jpg,1,L,Oils,50
+PRD418,Soybean Oil Bottle,139,/images/grocery/Oils/soybean_oil_bottle_018.jpg,1,L,Oils,50
+PRD419,Sunflower Oil Bottle,169,/images/grocery/Oils/sunflower_oil_bottle_019.jpg,1,L,Oils,50
+PRD420,Vegetable Oil Bottle,139,/images/grocery/Oils/vegetable_oil_bottle_020.jpg,1,L,Oils,50
+PRD501,Asafoetida Hing,35,/images/grocery/Spices/asafoetida_hing_001.jpg,25,g,Spices,100
+PRD502,Bay Leaf Tej Patta,20,/images/grocery/Spices/bay_leaf_tej_patta_002.jpg,25,g,Spices,100
+PRD503,Black Pepper Whole,45,/images/grocery/Spices/black_pepper_whole_003.jpg,50,g,Spices,100
+PRD504,Chat Masala Packet,32,/images/grocery/Spices/chat_masala_packet_004.jpg,100,g,Spices,100
+PRD505,Chicken Masala,42,/images/grocery/Spices/chicken_masala_005.jpg,100,g,Spices,100
+PRD506,Cinnamon Sticks,35,/images/grocery/Spices/cinnamon_sticks_006.jpg,50,g,Spices,100
+PRD507,Cloves Laung,40,/images/grocery/Spices/cloves_laung_007.jpg,25,g,Spices,100
+PRD508,Coriander Powder Packet,32,/images/grocery/Spices/coriander_powder_packet_008.jpg,100,g,Spices,100
+PRD509,Cumin Seeds Jeera,30,/images/grocery/Spices/cumin_seeds_jeera_009.jpg,50,g,Spices,100
+PRD510,Fennel Seeds Saunf,28,/images/grocery/Spices/fennel_seeds_saunf_010.jpg,50,g,Spices,100
+PRD511,Garam Masala Packet,45,/images/grocery/Spices/garam_masala_packet_011.jpg,100,g,Spices,100
+PRD512,Green Cardamom,55,/images/grocery/Spices/green_cardamom_012.jpg,25,g,Spices,100
+PRD513,Kitchen King Masala,40,/images/grocery/Spices/kitchen_king_masala_013.jpg,100,g,Spices,100
+PRD514,Meat Masala,40,/images/grocery/Spices/meat_masala_014.jpg,100,g,Spices,100
+PRD515,Mustard Seeds Rai,25,/images/grocery/Spices/mustard_seeds_rai_015.jpg,50,g,Spices,100
+PRD516,Pav Bhaji Masala,32,/images/grocery/Spices/pav_bhaji_masala_016.jpg,100,g,Spices,100
+PRD517,Rasam Powder,35,/images/grocery/Spices/rasam_powder_017.jpg,100,g,Spices,100
+PRD518,Red Chilli Powder Packet,35,/images/grocery/Spices/red_chilli_powder_packet_018.jpg,100,g,Spices,100
+PRD519,Sambar Masala,38,/images/grocery/Spices/sambar_masala_019.jpg,100,g,Spices,100
+PRD520,Turmeric Powder Packet,35,/images/grocery/Spices/turmeric_powder_packet_020.jpg,100,g,Spices,100
+PRD601,Aloo Bhujia Packet,30,/images/grocery/Snacks/aloo_bhujia_packet_001.jpg,200,g,Snacks,100
+PRD602,Banana Chips Packet,45,/images/grocery/Snacks/banana_chips_packet_002.jpg,200,g,Snacks,100
+PRD603,Britannia Good Day Biscuit,30,/images/grocery/Snacks/britannia_good_day_biscuit_003.jpg,600,g,Snacks,100
+PRD604,Cheese Balls Snack,20,/images/grocery/Snacks/cheese_balls_snack_004.jpg,50,g,Snacks,100
+PRD605,Cream Biscuit Packet,35,/images/grocery/Snacks/cream_biscuit_packet_005.jpg,500,g,Snacks,100
+PRD606,Khakhra Packet,50,/images/grocery/Snacks/khakhra_packet_006.jpg,300,g,Snacks,100
+PRD607,Kurkure Packet,20,/images/grocery/Snacks/kurkure_packet_007.jpg,60,g,Snacks,100
+PRD608,Makhana Fox Nuts,85,/images/grocery/Snacks/makhana_fox_nuts_008.jpg,200,g,Snacks,50
+PRD609,Marie Biscuit Packet,25,/images/grocery/Snacks/marie_biscuit_packet_009.jpg,700,g,Snacks,100
+PRD610,Mathri Packet,35,/images/grocery/Snacks/mathri_packet_010.jpg,250,g,Snacks,100
+PRD611,Namkeen Mixture Packet,40,/images/grocery/Snacks/namkeen_mixture_packet_011.jpg,200,g,Snacks,100
+PRD612,Namkeen Sev Packet,25,/images/grocery/Snacks/namkeen_sev_packet_012.jpg,150,g,Snacks,100
+PRD613,Parle G Biscuit Packet,20,/images/grocery/Snacks/parle_g_biscuit_packet_013.jpg,800,g,Snacks,100
+PRD614,Peanut Chikki,35,/images/grocery/Snacks/peanut_chikki_014.jpg,150,g,Snacks,100
+PRD615,Popcorn Packet,25,/images/grocery/Snacks/popcorn_packet_015.jpg,100,g,Snacks,100
+PRD616,Potato Chips Packet,20,/images/grocery/Snacks/potato_chips_packet_016.jpg,50,g,Snacks,100
+PRD617,Roasted Peanuts Packet,55,/images/grocery/Snacks/roasted_peanuts_packet_017.jpg,200,g,Snacks,100
+PRD618,Salted Cashews,145,/images/grocery/Snacks/salted_cashews_018.jpg,200,g,Snacks,50
+PRD619,Sev Bhujia Packet,30,/images/grocery/Snacks/sev_bhujia_packet_019.jpg,200,g,Snacks,100
+PRD620,Tortilla Chips Packet,45,/images/grocery/Snacks/tortilla_chips_packet_020.jpg,150,g,Snacks,100
+PRD701,Baby Lotion Bottle,125,/images/grocery/PersonalCare/baby_lotion_bottle_001.jpg,300,ml,PersonalCare,50
+PRD702,Baby Shampoo Bottle,95,/images/grocery/PersonalCare/baby_shampoo_bottle_002.jpg,200,ml,PersonalCare,50
+PRD703,Baby Soap Packet,45,/images/grocery/PersonalCare/baby_soap_packet_003.jpg,75,g,PersonalCare,100
+PRD704,Body Lotion Bottle,165,/images/grocery/PersonalCare/body_lotion_bottle_004.jpg,400,ml,PersonalCare,50
+PRD705,Conditioner Bottle,140,/images/grocery/PersonalCare/conditioner_bottle_005.jpg,180,ml,PersonalCare,50
+PRD706,Face Cream Jar,145,/images/grocery/PersonalCare/face_cream_jar_006.jpg,50,g,PersonalCare,50
+PRD707,Face Wash Tube,125,/images/grocery/PersonalCare/face_wash_tube_007.jpg,100,g,PersonalCare,50
+PRD708,Hair Gel Tube,85,/images/grocery/PersonalCare/hair_gel_tube_008.jpg,100,g,PersonalCare,50
+PRD709,Hair Oil Bottle,95,/images/grocery/PersonalCare/hair_oil_bottle_009.jpg,300,ml,PersonalCare,50
+PRD710,Hand Sanitizer Bottle,75,/images/grocery/PersonalCare/hand_sanitizer_bottle_010.jpg,200,ml,PersonalCare,100
+PRD711,Hand Wash Bottle,85,/images/grocery/PersonalCare/hand_wash_bottle_011.jpg,250,ml,PersonalCare,50
+PRD712,Perfume Deodorant Spray,195,/images/grocery/PersonalCare/perfume_deodorant_spray_012.jpg,150,ml,PersonalCare,30
+PRD713,Razor Pack,120,/images/grocery/PersonalCare/razor_pack_013.jpg,4,pcs,PersonalCare,50
+PRD714,Sanitary Napkin Pack,65,/images/grocery/PersonalCare/sanitary_napkin_pack_014.jpg,20,pcs,PersonalCare,50
+PRD715,Shampoo Bottle,150,/images/grocery/PersonalCare/shampoo_bottle_015.jpg,180,ml,PersonalCare,50
+PRD716,Shaving Cream Tube,95,/images/grocery/PersonalCare/shaving_cream_tube_016.jpg,150,g,PersonalCare,50
+PRD717,Soap Bar Packet,35,/images/grocery/PersonalCare/soap_bar_packet_017.jpg,75,g,PersonalCare,100
+PRD718,Talcum Powder,75,/images/grocery/PersonalCare/talcum_powder_018.jpg,200,g,PersonalCare,50
+PRD719,Toothbrush Pack,45,/images/grocery/PersonalCare/toothbrush_pack_019.jpg,2,pcs,PersonalCare,100
+PRD720,Toothpaste Tube,95,/images/grocery/PersonalCare/toothpaste_tube_020.jpg,150,g,PersonalCare,100
+PRD801,Air Freshener Refill,85,/images/grocery/HomeCare/air_freshener_refill_001.jpg,270,ml,HomeCare,50
+PRD802,Bleach Liquid Bottle,95,/images/grocery/HomeCare/bleach_liquid_bottle_002.jpg,500,ml,HomeCare,50
+PRD803,Cleaning Gloves,75,/images/grocery/HomeCare/cleaning_gloves_003.jpg,1,pair,HomeCare,50
+PRD804,Detergent Liquid Bottle,299,/images/grocery/HomeCare/detergent_liquid_bottle_004.jpg,2,L,HomeCare,30
+PRD805,Detergent Powder Packet,169,/images/grocery/HomeCare/detergent_powder_packet_005.jpg,1,kg,HomeCare,50
+PRD806,Dishwash Bar Soap,20,/images/grocery/HomeCare/dishwash_bar_soap_006.jpg,100,g,HomeCare,100
+PRD807,Dishwash Liquid Bottle,80,/images/grocery/HomeCare/dishwash_liquid_bottle_007.jpg,250,ml,HomeCare,50
+PRD808,Fabric Softener Bottle,189,/images/grocery/HomeCare/fabric_softener_bottle_008.jpg,1,L,HomeCare,50
+PRD809,Floor Cleaner Bottle,145,/images/grocery/HomeCare/floor_cleaner_bottle_009.jpg,500,ml,HomeCare,50
+PRD810,Garbage Bags Roll,85,/images/grocery/HomeCare/garbage_bags_roll_010.jpg,30,pcs,HomeCare,30
+PRD811,Glass Cleaner Spray,125,/images/grocery/HomeCare/glass_cleaner_spray_011.jpg,500,ml,HomeCare,50
+PRD812,Insect Killer Spray,125,/images/grocery/HomeCare/insect_killer_spray_012.jpg,400,ml,HomeCare,50
+PRD813,Mop Cleaner Liquid,155,/images/grocery/HomeCare/mop_cleaner_liquid_013.jpg,1,L,HomeCare,30
+PRD814,Mosquito Repellent,75,/images/grocery/HomeCare/mosquito_repellent_014.jpg,45,ml,HomeCare,100
+PRD815,Phenyl Floor Cleaner,95,/images/grocery/HomeCare/phenyl_floor_cleaner_015.jpg,500,ml,HomeCare,50
+PRD816,Room Freshener Spray,165,/images/grocery/HomeCare/room_freshener_spray_016.jpg,300,ml,HomeCare,50
+PRD817,Scrub Pad Packet,65,/images/grocery/HomeCare/scrub_pad_packet_017.jpg,4,pcs,HomeCare,50
+PRD818,Toilet Cleaner Bottle,129,/images/grocery/HomeCare/toilet_cleaner_bottle_018.jpg,500,ml,HomeCare,50
+PRD819,Toilet Freshener Block,45,/images/grocery/HomeCare/toilet_freshener_block_019.jpg,50,g,HomeCare,100
+PRD820,Washing Bar Soap,35,/images/grocery/HomeCare/washing_bar_soap_020.jpg,150,g,HomeCare,100

@@ -3,15 +3,36 @@
 }
 
 .categories-scroll {
-    display: grid;
-    grid-auto-flow: column;
+    display: flex;
     gap: .5em;
     overflow-x: auto;
     overflow-y: hidden;
     overscroll-behavior: contain;
-    scroll-snap-type: inline mandatory;
-    padding: 1em 1em;
+    scroll-snap-type: x mandatory;
+    padding: 1em;
     scroll-padding: 0 1em;
+    
+    /* Hide scrollbar */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.categories-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+/* Slider animation on hover */
+.categories-scroll:hover {
+    animation: slideCategories 20s linear infinite;
+}
+
+@keyframes slideCategories {
+    0% {
+        scroll-behavior: smooth;
+    }
+    100% {
+        scroll-behavior: auto;
+    }
 }
 
 .category {
@@ -29,13 +50,44 @@
     border-radius: 10px;
     overflow: hidden;
     border: 1px solid var(--NEUTRAL_2);
+    
+    /* Animation */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: scale(1) translateY(0);
+}
+
+.category:hover {
+    transform: scale(1.08) translateY(-5px);
+    box-shadow: 0 12px 30px rgba(0, 177, 6, 0.35);
+    border-color: var(--PRIMARY);
+    z-index: 10;
+}
+
+.category:active {
+    transform: scale(0.95) translateY(0);
+    box-shadow: 0 4px 15px rgba(0, 177, 6, 0.2);
 }
 
 .category div {
     position: relative;
     z-index: 1;
     text-align: center;
-    font-size: 1.1rem;
+    font-size: .9rem;
+    line-height: 1.1rem;
+    font-weight: 500;
+    color: var(--PRIMARY);
+    transition: color 0.3s ease;
+}
+
+.category:hover div {
+    color: var(--PRIMARY_DARK);
+}
+
+.category div {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    font-size: .9rem;
     line-height: 1.1rem;
     font-weight: 500;
     color: var(--PRIMARY);

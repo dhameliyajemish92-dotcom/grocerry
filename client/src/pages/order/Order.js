@@ -46,6 +46,23 @@ const Order = () => {
                             <div style={{ display: 'flex', gap: '10px' }}>
                                 <Link to={`/orders/${order.order_id}`} className="btn1">View Details</Link>
                                 <Link to={`/shipping/${order.order_id}`} className="btn2">Track Shipment</Link>
+                                <button 
+                                    onClick={() => {
+                                        const message = `📦 Order #${order.order_id}\nTotal: ₹${order.total}\nStatus: ${order.status}\n\nTrack: ${window.location.origin}/shipping/${order.order_id}`;
+                                        window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
+                                    }}
+                                    style={{ 
+                                        backgroundColor: '#25D366', 
+                                        color: 'white',
+                                        border: 'none',
+                                        padding: '8px 12px',
+                                        borderRadius: '5px',
+                                        cursor: 'pointer',
+                                        fontSize: '12px'
+                                    }}
+                                >
+                                    📱 Share
+                                </button>
                             </div>
                         </div>
                     ))}

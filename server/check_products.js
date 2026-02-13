@@ -1,42 +1,32 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import Products from './model/Products.js';
-import dns from 'dns';
-
 dotenv.config();
 
-const mongooseOptions = {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-}
+import Product from './model/Products.js';
 
-mongoose.set('strictQuery', false);
-dns.setServers(['8.8.8.8']);
-
-async function checkProducts() {
-    console.log("Connecting to Database...");
+const checkProducts = async () => {
     try {
-        await mongoose.connect(process.env.MONGO_URI, mongooseOptions);
-        console.log("Connected.");
+        await mongoose.connect(process.env.MONGO_URI);
+        console.log("Connected to MongoDB");
 
-        const count = await Products.countDocuments();
-        console.log(`Total Products in DB: ${count}`);
+        const allProducts = await Product.find({});
+        console.log(`Total products in DB: ${allProducts.length}`);
 
-        if (count > 0) {
-            const sample = await Products.findOne();
-            console.log("Sample Product:");
-            console.log("Name:", sample.name);
-            console.log("Brand:", sample.brand);
-            console.log("Packaging:", sample.packaging);
-            console.log("Image:", sample.image);
-        } else {
-            console.log("No products found!");
+        if (allProducts.length > 0) {
+            console.log("\nFirst 3 products:");
+            allProducts.slice(0, 3).forEach((p, i) => {
+                console.log(`\n${i + 1}. ID: ${p.product_id || p.id}`);
+                console.log(`   Name: ${p.name}`);
+                console.log(`   Category: ${p.category}`);
+                console.log(`   Price: ${p.price}`);
+            });
         }
 
     } catch (error) {
-        console.error("Error:", error);
+        console.error(error);
     } finally {
-        mongoose.disconnect();
+        await mongoose.disconnect();
+        console.log("\nDisconnected from MongoDB");
     }
 }
 

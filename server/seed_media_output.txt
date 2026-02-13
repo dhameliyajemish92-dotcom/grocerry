@@ -1,0 +1,15 @@
+(node:5360) [MONGOOSE] DeprecationWarning: Mongoose: the `strictQuery` option will be switched back to `false` by default in Mongoose 7. Use `mongoose.set('strictQuery', false);` if you want to prepare for this change. Or use `mongoose.set('strictQuery', true);` to suppress this warning.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Connected to MongoDB
+Cleared existing products
+Inserted 177 products
+Total products in database: 177
+
+Sample products:
+1. Black Tea Packet - Lipton - ₹120
+2. Coconut Water Bottle - Coco - ₹55
+3. Coffee Powder Jar - Nescafe - ₹250
+4. Cold Coffee Bottle - Cafe - ₹55
+5. Energy Drink Can - Red Bull - ₹125
+
+Disconnected from MongoDB
