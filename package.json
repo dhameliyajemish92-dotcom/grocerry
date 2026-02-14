@@ -16,7 +16,7 @@
         "users"
     ],
     "scripts": {
-        "build": "npm install && npm run build --workspace=client",
-        "start": "npm start --workspace=server"
+        "build": "yarn install && yarn workspace client run build",
+        "start": "yarn workspace server run start"
     }
 }
