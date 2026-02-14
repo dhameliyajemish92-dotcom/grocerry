@@ -5,9 +5,7 @@
         "node": "20.x"
     },
     "scripts": {
-        "build": "npm run build:full",
-        "build:full": "npm install && cd client && npm install && npm run build && cd ../server && npm install",
-        "start": "node server/index.js",
-        "start:prod": "node server/index.js"
+        "build": "npm install && npm install --prefix client && npm run build --prefix client && npm install --prefix server",
+        "start": "npm start --prefix server"
     }
 }
