@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "proxy": "http://localhost:5000",
+  "engines": {
+    "node": "20.x"
+  },
   "dependencies": {
     "@reduxjs/toolkit": "^1.8.1",
     "@testing-library/jest-dom": "^5.16.4",
