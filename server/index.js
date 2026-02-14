@@ -15,6 +15,11 @@ import cart from "./routes/cart.js";
 import me from "./routes/me.js";
 import admin from "./routes/admin.js";
 import Stripe from "stripe";
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 // sgMail.setApiKey(process.env.SENDGRID_KEY);
@@ -42,6 +47,9 @@ app.use((req, res, next) => {
     next();
 });
 
+// Serve Static Files for Production
+app.use(express.static(path.join(__dirname, '../client/build')));
+
 const apiRouter = express.Router();
 
 apiRouter.use('/orders', orders);
@@ -55,11 +63,16 @@ apiRouter.use('/admin', admin);
 
 app.use('/api', apiRouter);
 
-app.get('/', (req, res) => {
+apiRouter.get('/status', (req, res) => {
     res.status(200).json({
         team_name: "project",
         dev_team: ["jemish dhameliya", "nakrani takshil"].sort()
     })
+});
+
+// Catch-all route to serve the React app
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
 });
 
 const PORT = process.env.PORT || 5000;

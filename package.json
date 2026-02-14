@@ -1,0 +1,11 @@
+{
+    "name": "grocerapp-monorepo",
+    "version": "1.0.0",
+    "engines": {
+        "node": "20.x"
+    },
+    "scripts": {
+        "build:full": "npm install && cd client && npm install && npm run build && cd ../server && npm install",
+        "start:prod": "node server/index.js"
+    }
+}
