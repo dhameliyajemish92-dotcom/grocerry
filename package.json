@@ -11,7 +11,7 @@
         "server"
     ],
     "scripts": {
-        "build": "yarn install && yarn workspace client run build",
-        "start": "yarn workspace server run start"
+        "build": "yarn install && yarn workspace grocerapp run build",
+        "start": "yarn workspace grocerapp-server run start"
     }
 }
