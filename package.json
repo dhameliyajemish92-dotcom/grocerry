@@ -2,18 +2,13 @@
     "name": "grocerapp-monorepo",
     "version": "1.0.0",
     "private": true,
+    "license": "MIT",
     "engines": {
         "node": "20.x"
     },
     "workspaces": [
         "client",
-        "server",
-        "notifications",
-        "orders",
-        "payments",
-        "products",
-        "shipping",
-        "users"
+        "server"
     ],
     "scripts": {
         "build": "yarn install && yarn workspace client run build",
