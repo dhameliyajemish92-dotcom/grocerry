@@ -84,6 +84,10 @@ const mongooseOptions = {
 
 mongoose.set('strictQuery', false);
 dns.setServers(['8.8.8.8']); // Use Google DNS for MongoDB SRV lookup
+if (!process.env.MONGO_URI) {
+    console.error("FATAL ERROR: MONGO_URI is not defined in environment variables.");
+    process.exit(1);
+}
 mongoose.connect(process.env.MONGO_URI, mongooseOptions)
     .then(() => {
         app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));

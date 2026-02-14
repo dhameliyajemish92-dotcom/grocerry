@@ -12,7 +12,7 @@ import { NOTIFICATIONS_BASEURL, SHIPPING_BASEURL } from "../../services/BaseURLs
 // SIMPLE FILE LOGGER FOR DEBUGGING
 const logToFile = (message, data) => {
     try {
-        const logPath = 'd:/grocerry/server/payment_debug.log';
+        const logPath = path.join(process.cwd(), 'payment_debug.log');
         const timestamp = new Date().toISOString();
         let dataStr = '';
         if (data) {
