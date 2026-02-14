@@ -3,7 +3,7 @@ import '../.././shared/css/master.css';
 import { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Error from "../../components/feedback/error/Error";
-import { postOrder, postOrderCOD } from "../../actions/orders";
+import { postOrder, postOrderCOD, verifyRazorpayPayment } from "../../actions/orders";
 
 const Checkout = () => {
     const [error, setError] = useState('');
@@ -21,19 +21,27 @@ const Checkout = () => {
     const pincode = useRef();
 
     const dispatch = useDispatch();
-
     const cart = useSelector(state => state.products.cart_validation);
+    const user = useSelector(state => state.me?.user); // Added to get user ID for metadata
 
     useEffect(() => {
-
-
         if (!cart) {
             window.location.href = '/cart';
+        }
+
+        // Load Razorpay script
+        const script = document.createElement('script');
+        script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+        script.async = true;
+        document.body.appendChild(script);
+
+        return () => {
+            document.body.removeChild(script);
         }
     }, [cart]);
 
     const handleCheckout = () => {
-        if (isLoading) return; // Prevent multiple clicks
+        if (isLoading) return;
         if (!cart) return;
         setIsLoading(true);
 
@@ -50,22 +58,6 @@ const Checkout = () => {
         if (!state.current.value) return setError("Enter a state");
         if (!pincode.current.value) return setError("Enter a pincode");
         if (!validatePincode(pincode.current.value)) return setError("Enter a valid 6-digit pincode");
-
-
-        const onSuccess = (url) => {
-            window.location.href = url;
-        }
-
-        const onCODSuccess = (order_id) => {
-            setIsLoading(false);
-            window.location.href = `/checkout/success?order=${order_id}`;
-        }
-
-        const onError = (e) => {
-            setIsLoading(false);
-            console.error("Order Creation Error:", e);
-            setError(e.message || "An unknown error occurred.");
-        }
 
         const data = {
             name: {
@@ -85,14 +77,72 @@ const Checkout = () => {
             payment_method: paymentMethod
         };
 
-        if (paymentMethod === 'COD') {
-            // For COD, we pass the data directly
-            dispatch(postOrderCOD(cart.token, data, onCODSuccess, onError));
-        } else {
-            // For UPI/CARD (Online), we use the online flow
-            dispatch(postOrder(cart.token, data, onSuccess, onError));
+        const onCODSuccess = (order_id) => {
+            setIsLoading(false);
+            window.location.href = `/checkout/success?order=${order_id}`;
         }
 
+        const onError = (e) => {
+            setIsLoading(false);
+            console.error("Order Creation Error:", e);
+            setError(e.message || "An unknown error occurred.");
+        }
+
+        if (paymentMethod === 'COD') {
+            dispatch(postOrderCOD(cart.token, data, onCODSuccess, onError));
+        } else {
+            // Razorpay flow
+            const onRazorpayOrderSuccess = (resData) => {
+                const options = {
+                    key: resData.key_id,
+                    amount: resData.amount,
+                    currency: resData.currency,
+                    name: "GrocerApp",
+                    description: "Grocery Order Payment",
+                    order_id: resData.order_id,
+                    handler: function (response) {
+                        const paymentData = {
+                            razorpay_order_id: response.razorpay_order_id,
+                            razorpay_payment_id: response.razorpay_payment_id,
+                            razorpay_signature: response.razorpay_signature,
+                            metadata: {
+                                order_id: resData.receipt,
+                                user_id: user?._id || 'guest',
+                                name: data.name,
+                                email: data.email,
+                                phone_number: data.phone_number,
+                                address: data.address,
+                                products: cart.products,
+                                total: cart.total
+                            }
+                        };
+                        dispatch(verifyRazorpayPayment(paymentData, (final_order_id) => {
+                            window.location.href = `/checkout/success?order=${final_order_id}`;
+                        }, onError));
+                    },
+                    prefill: {
+                        name: `${data.name.first} ${data.name.last}`,
+                        email: data.email,
+                        contact: data.phone_number,
+                    },
+                    theme: {
+                        color: "#28a745",
+                    },
+                    modal: {
+                        ondismiss: function () {
+                            setIsLoading(false);
+                        }
+                    }
+                };
+                const rzp1 = new window.Razorpay(options);
+                rzp1.on('payment.failed', function (response) {
+                    onError({ message: response.error.description });
+                });
+                rzp1.open();
+            };
+
+            dispatch(postOrder(cart.token, data, onRazorpayOrderSuccess, onError));
+        }
     }
     const validatePhone = (phone) => {
         return String(phone)

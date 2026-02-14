@@ -33,6 +33,7 @@ import Success from "./pages/checkout/success";
 import ShipmentId from "./pages/shipment/id/ShipmentId";
 import OrderId from "./pages/order/id/OrderId";
 import Invoice from "./components/invoice/Invoice";
+import Contact from "./pages/contact/Contact";
 
 const App = () => {
 
@@ -140,6 +141,7 @@ const App = () => {
                 <Route path={'/checkout'} element={<PrivateRoute component={<Checkout />} />} />
                 <Route path={'/checkout/success'} element={<Success setCart={setCart} />} />
                 <Route path={'/signup'} element={<Signup />} />
+                <Route path={'/contact'} element={<Contact />} />
                 <Route path={'/shipping'} element={<Shipment />} />
                 <Route path={'/shipping/:id'} element={<ShipmentId />} />
                 <Route path={'/login'} element={<Login />} />

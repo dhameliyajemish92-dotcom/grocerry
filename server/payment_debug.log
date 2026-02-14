@@ -1,0 +1,40 @@
+[2026-02-14T04:44:27.087Z] Payments.js module loaded with Direct Axios Implementation 
+[2026-02-14T04:45:17.712Z] createCheckoutSession started {
+  "body": {
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9kdWN0cyI6W3sicHJvZHVjdF9pZCI6IlBSRDAwMSIsIm5hbWUiOiJCbGFjayBUZWEgUGFja2V0IiwicHJpY2UiOjEyMCwicXVhbnRpdHkiOjEsImltYWdlIjoiL2ltYWdlcy9ncm9jZXJ5L0JldmVyYWdlcy9ibGFja190ZWFfcGFja2V0XzAwMS5qcGciLCJicmFuZCI6IkxpcHRvbiIsInBhY2thZ2luZyI6eyJxdWFudGl0eSI6IjI1MCIsInVuaXQiOiJnIn19LHsicHJvZHVjdF9pZCI6IlBSRDAwMiIsIm5hbWUiOiJDb2NvbnV0IFdhdGVyIEJvdHRsZSIsInByaWNlIjo1NSwicXVhbnRpdHkiOjEsImltYWdlIjoiL2ltYWdlcy9ncm9jZXJ5L0JldmVyYWdlcy9jb2NvbnV0X3dhdGVyX2JvdHRsZV8wMDIuanBnIiwiYnJhbmQiOiJDb2NvIiwicGFja2FnaW5nIjp7InF1YW50aXR5IjoiMjUwIiwidW5pdCI6Im1sIn19XSwidG90YWwiOiIxNzUuMDAiLCJpYXQiOjE3NzEwNDQyNzQsImV4cCI6MTc3MTA0Nzg3NH0.cN-5P1gS4ey0S8m5nRhzrOMh4sP3JR-9rxAp24F9mBk",
+    "data": {
+      "name": {
+        "first": "abc",
+        "last": "bcd"
+      },
+      "email": "dhameliyajemish1@gmail.com",
+      "phone_number": "9313683554",
+      "address": {
+        "country": "India",
+        "street": "513",
+        "area": "sarthana",
+        "city": "surat",
+        "state": "gujrat",
+        "pincode": "394004"
+      },
+      "payment_method": "UPI"
+    }
+  }
+}
+[2026-02-14T04:45:17.713Z] Creating Razorpay order via Axios {
+  "options": {
+    "amount": 17500,
+    "currency": "INR",
+    "receipt": "WLF297"
+  },
+  "key_id": "rzp_test_GFjWtFrV9orbTZ"
+}
+[2026-02-14T04:45:17.854Z] RAZORPAY API ERROR (AXIOS) {
+  "message": "Request failed with status code 401",
+  "response": {
+    "error": {
+      "code": "BAD_REQUEST_ERROR",
+      "description": "Authentication failed"
+    }
+  }
+}

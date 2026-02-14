@@ -88,6 +88,7 @@ const Navigation = ({ cartCount }) => {
                     {auth &&
                         <Link onClick={closeMenu} className={styles['account']} to={'/orders'}>Previous Orders</Link>}
                     <Link onClick={closeMenu} to={'/shipping'}>Track Shipping</Link>
+                    <Link onClick={closeMenu} to={'/contact'}>Contact Us</Link>
                     {admin && <Link onClick={closeMenu} className={styles['account']} to={'/admin'}>Admin Panel</Link>}
                     {auth && <div className={styles['account']} onClick={() => {
                         handleLogout();

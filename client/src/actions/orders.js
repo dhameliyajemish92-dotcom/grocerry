@@ -41,14 +41,23 @@ export const fetchOrders = (page, onSuccess, onError) => async (dispatch) => {
 
 export const postOrder = (token, data, onSuccess, onError) => async () => {
     try {
-        const { url } = await api.processPayment(token, data).then(res => res.data);
-        onSuccess(url);
+        const resData = await api.processPayment(token, data).then(res => res.data);
+        onSuccess(resData);
     } catch (e) {
         if (e.response && e.response.status === 401) {
             localStorage.clear();
             window.location.href = '/login';
             return;
         }
+        onError(e);
+    }
+}
+
+export const verifyRazorpayPayment = (paymentData, onSuccess, onError) => async () => {
+    try {
+        const { order_id } = await api.verifyRazorpayPayment(paymentData).then(res => res.data);
+        onSuccess(order_id);
+    } catch (e) {
         onError(e);
     }
 }

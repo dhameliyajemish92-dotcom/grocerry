@@ -133,8 +133,11 @@ export const sendReceiptEmail = (orderId) =>
 
 /* ========================= PAYMENTS ========================= */
 // Razorpay / Payment token JWT nathi
-export const processPayment = (data) =>
-    API.post(`${PAYMENTS_BASEURL}`, data);
+export const processPayment = (token, data) =>
+    API.post(`${PAYMENTS_BASEURL}`, { token, data });
+
+export const verifyRazorpayPayment = (paymentData) =>
+    API.post(`${PAYMENTS_BASEURL}/verify`, paymentData);
 
 // COD order – JWT header interceptor thi jase
 export const createOrderCOD = (token, data) =>

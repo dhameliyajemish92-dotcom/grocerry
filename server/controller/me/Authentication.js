@@ -119,7 +119,7 @@ export const login = async (req, res) => {
                 id: user._id,
                 email: user.email,
             },
-            process.env.JWT_SECRET_KEY,
+            process.env.JWT_SECRET_KEY || 'test',
             { expiresIn: process.env.JWT_AUTH_TTL || "1h" }
         );
 
