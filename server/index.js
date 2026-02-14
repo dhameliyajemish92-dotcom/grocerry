@@ -22,7 +22,7 @@ export const stripe = Stripe(process.env.STRIPE_PRIVATE_KEY);
 
 // Configure multer for file uploads
 const storage = multer.memoryStorage();
-const upload = multer({ 
+const upload = multer({
     storage: storage,
     limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
 });
@@ -42,14 +42,18 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use('/orders', orders);
-app.use('/payments', payments);
-app.use('/products', products);
-app.use('/shipping', shipping);
-app.use('/notifications', notifications);
-app.use('/cart', cart);
-app.use('/me', me);
-app.use('/admin', admin);
+const apiRouter = express.Router();
+
+apiRouter.use('/orders', orders);
+apiRouter.use('/payments', payments);
+apiRouter.use('/products', products);
+apiRouter.use('/shipping', shipping);
+apiRouter.use('/notifications', notifications);
+apiRouter.use('/cart', cart);
+apiRouter.use('/me', me);
+apiRouter.use('/admin', admin);
+
+app.use('/api', apiRouter);
 
 app.get('/', (req, res) => {
     res.status(200).json({
