@@ -20,11 +20,6 @@ const sendEmail = async (email, subject, text, html, attachments) => {
             logger: true
         });
 
-        // Verify connection configuration
-        console.log(">>> [EMAIL TRACE] Verifying transporter...");
-        await transporter.verify();
-        console.log(">>> [EMAIL TRACE] Transporter verified successfully.");
-
         const mailOptions = {
             from: `"Grocer App" <${process.env.EMAIL_USER}>`,
             to: email,

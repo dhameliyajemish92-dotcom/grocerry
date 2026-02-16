@@ -58,7 +58,9 @@ app.use((req, res, next) => {
 });
 
 // --- 2. External Services ---
-export const stripe = Stripe(process.env.STRIPE_PRIVATE_KEY);
+export const stripe = process.env.STRIPE_PRIVATE_KEY
+    ? Stripe(process.env.STRIPE_PRIVATE_KEY)
+    : null;
 const storage = multer.memoryStorage();
 app.upload = multer({
     storage: storage,
@@ -117,12 +119,23 @@ mongoose.set('strictQuery', false);
 dns.setServers(['8.8.8.8']);
 
 // Strict Environment Check
-const requiredEnv = ['MONGO_URI', 'JWT_SECRET_KEY', 'EMAIL_USER', 'EMAIL_PASS'];
+const requiredEnv = [
+    'MONGO_URI',
+    'JWT_SECRET_KEY',
+    'EMAIL_USER',
+    'EMAIL_PASS',
+    'RAZORPAY_KEY_ID',
+    'RAZORPAY_KEY_SECRET'
+];
 const missing = requiredEnv.filter(k => !process.env[k]);
 if (missing.length > 0) {
     console.error(`FATAL ERROR: Missing required environment variables: ${missing.join(', ')}`);
-    console.error(`Make sure to add these in Render dashboard -> Environment.`);
+    console.error(`Please add these in Render dashboard -> Environment.`);
     process.exit(1);
+}
+
+if (!process.env.STRIPE_PRIVATE_KEY) {
+    console.warn("WARNING: STRIPE_PRIVATE_KEY is missing. Stripe features will be disabled.");
 }
 
 let server;
