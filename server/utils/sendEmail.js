@@ -1,29 +1,29 @@
 import nodemailer from 'nodemailer';
 
+// Simplified transporter for compatibility
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+    },
+});
+
+export const verifyTransporter = async () => {
+    try {
+        console.log(">>> [EMAIL] Verifying connection...");
+        await transporter.verify();
+        console.log(">>> [EMAIL] Service is READY");
+        return true;
+    } catch (error) {
+        console.error(">>> [EMAIL] Service FAILED:", error.message);
+        return false;
+    }
+};
+
 const sendEmail = async (email, subject, text, html, attachments) => {
     try {
-        console.log(`>>> [EMAIL TRACE] Starting sendEmail to: ${email}`);
-        console.log(`>>> [EMAIL TRACE] Config - User: ${process.env.EMAIL_USER}, Pass Length: ${process.env.EMAIL_PASS?.length || 0}`);
-
-        const transporter = nodemailer.createTransport({
-            host: "smtp.gmail.com",
-            port: 587,
-            secure: false, // Must be false for 587
-            auth: {
-                user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASS,
-            },
-            tls: {
-                rejectUnauthorized: false,
-                minVersion: "TLSv1.2"
-            },
-            connectionTimeout: 10000, // 10 seconds
-            greetingTimeout: 10000,
-            socketTimeout: 15000,
-            pool: true,
-            debug: true,
-            logger: true
-        });
+        console.log(`>>> [EMAIL] Attempting to send to: ${email}`);
 
         const mailOptions = {
             from: `"Grocer App" <${process.env.EMAIL_USER}>`,
@@ -40,14 +40,15 @@ const sendEmail = async (email, subject, text, html, attachments) => {
             mailOptions.attachments = attachments;
         }
 
-        console.log(">>> [EMAIL TRACE] Sending mail...");
         const info = await transporter.sendMail(mailOptions);
-        console.log(">>> [EMAIL TRACE] Email sent successfully:", info.messageId);
-        console.log(">>> [EMAIL TRACE] Response:", info.response);
+        console.log(`>>> [EMAIL] Success! MessageId: ${info.messageId}`);
         return info;
     } catch (error) {
-        console.error(">>> [EMAIL TRACE] ERROR:", error.message);
-        console.error(">>> [EMAIL TRACE] Stack:", error.stack);
+        console.error(`>>> [EMAIL] FAILED to send to ${email}:`, error.message);
+        // We log the stack locally during development/debug
+        if (process.env.NODE_ENV !== 'production') {
+            console.error(error.stack);
+        }
         throw error;
     }
 };
