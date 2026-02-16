@@ -116,6 +116,7 @@ const PORT = process.env.PORT || 5000;
 const mongooseOptions = { useNewUrlParser: true, useUnifiedTopology: true };
 
 mongoose.set('strictQuery', false);
+dns.setServers(['8.8.8.8']);
 
 // Strict Environment Check
 const requiredEnv = [
@@ -139,13 +140,8 @@ if (!process.env.STRIPE_PRIVATE_KEY) {
 
 let server;
 mongoose.connect(process.env.MONGO_URI, mongooseOptions)
-    .then(async () => {
+    .then(() => {
         console.log("Database Connected Successfully");
-
-        // Final Email System Check
-        const { verifyTransporter } = await import('./utils/sendEmail.js');
-        await verifyTransporter();
-
         server = app.listen(PORT, () => console.log(`Server executing on port ${PORT}`));
     })
     .catch((error) => {
