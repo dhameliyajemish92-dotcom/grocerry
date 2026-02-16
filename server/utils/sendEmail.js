@@ -4,13 +4,19 @@ const sendEmail = async (email, subject, text, html, attachments) => {
     try {
         console.log("Attempting to send email to:", email);
         console.log("Using EMAIL_USER:", process.env.EMAIL_USER);
-        
+        console.log(`>>> [EMAIL TRACE] Starting sendEmail to: ${email}`);
+        console.log(`>>> [EMAIL TRACE] Using Config - User: ${process.env.EMAIL_USER}, Pass Length: ${process.env.EMAIL_PASS?.length || 0}`);
+
         const transporter = nodemailer.createTransport({
-            service: 'gmail',
+            host: "smtp.gmail.com",
+            port: 465,
+            secure: true,
             auth: {
                 user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_PASS,
             },
+            debug: true,
+            logger: true
         });
 
         const mailOptions = {

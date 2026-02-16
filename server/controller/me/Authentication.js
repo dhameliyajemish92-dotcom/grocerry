@@ -64,7 +64,10 @@ Do not share it with anyone.
 
         res
             .status(200)
-            .json({ message: "User registered. Please verify your email." });
+            .json({
+                message: "User registered. Please verify your email.",
+                debug_id: "SIGNUP_SUCCESS_2026_02_16"
+            });
     } catch (err) {
         console.error("CRITICAL SIGNUP ERROR:", err);
         res.status(500).json({

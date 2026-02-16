@@ -117,10 +117,11 @@ mongoose.set('strictQuery', false);
 dns.setServers(['8.8.8.8']);
 
 // Strict Environment Check
-const requiredEnv = ['MONGO_URI', 'JWT_SECRET_KEY'];
+const requiredEnv = ['MONGO_URI', 'JWT_SECRET_KEY', 'EMAIL_USER', 'EMAIL_PASS'];
 const missing = requiredEnv.filter(k => !process.env[k]);
 if (missing.length > 0) {
     console.error(`FATAL ERROR: Missing required environment variables: ${missing.join(', ')}`);
+    console.error(`Make sure to add these in Render dashboard -> Environment.`);
     process.exit(1);
 }
 

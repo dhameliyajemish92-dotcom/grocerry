@@ -62,9 +62,10 @@ const Signup = () => {
 
     const form =
         <div className={styles['wrapper']}>
+            <div style={{ fontSize: '10px', color: '#ccc' }}>Debug version: 2026-02-16-v2</div>
             <div className={styles['header']}>
                 <div className={styles['title']}>
-                    {step === 'signup' ? 'Sign up with your email' : 'Verify Email'}
+                    {step === 'signup' ? 'Sign up with your email' : 'Verify Email (Step 2)'}
                 </div>
                 {step === 'signup' && <div className={styles['login']}>Already have an account? <Link to={'/login'}>Login</Link></div>}
             </div>
