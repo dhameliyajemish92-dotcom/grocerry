@@ -88,6 +88,11 @@ if (!process.env.MONGO_URI) {
     console.error("FATAL ERROR: MONGO_URI is not defined in environment variables.");
     process.exit(1);
 }
+
+if (!process.env.JWT_SECRET_KEY) {
+    console.error("FATAL ERROR: JWT_SECRET_KEY is not defined in environment variables. This is required for user authentication.");
+    process.exit(1);
+}
 mongoose.connect(process.env.MONGO_URI, mongooseOptions)
     .then(() => {
         app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
