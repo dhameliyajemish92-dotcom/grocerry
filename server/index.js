@@ -84,13 +84,22 @@ const mongooseOptions = {
 
 mongoose.set('strictQuery', false);
 dns.setServers(['8.8.8.8']); // Use Google DNS for MongoDB SRV lookup
+
+// Debug: Print available environment variable keys (NOT values)
+console.log("========================================");
+console.log("DEBUG: Environment Check");
+console.log("Available Keys:", Object.keys(process.env).filter(key => !key.includes('SECRET') && !key.includes('KEY') && !key.includes('PASS') && !key.includes('URI')).join(", "));
+console.log("MONGO_URI present:", !!process.env.MONGO_URI);
+console.log("JWT_SECRET_KEY present:", !!process.env.JWT_SECRET_KEY);
+console.log("========================================");
+
 if (!process.env.MONGO_URI) {
-    console.error("FATAL ERROR: MONGO_URI is not defined in environment variables.");
+    console.error("FATAL ERROR: MONGO_URI is missing. Please add it to Render -> Environment tab.");
     process.exit(1);
 }
 
 if (!process.env.JWT_SECRET_KEY) {
-    console.error("FATAL ERROR: JWT_SECRET_KEY is not defined in environment variables. This is required for user authentication.");
+    console.error("FATAL ERROR: JWT_SECRET_KEY is missing. Please add it to Render -> Environment tab.");
     process.exit(1);
 }
 mongoose.connect(process.env.MONGO_URI, mongooseOptions)
