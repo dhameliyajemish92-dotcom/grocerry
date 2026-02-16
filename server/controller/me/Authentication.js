@@ -9,9 +9,21 @@ export const signup = async (req, res) => {
     try {
         const { first_name, last_name, email, password } = req.body;
 
+        // Validation logs
+        console.log("Signup attempt for email:", email);
+
+        if (!email || !password || !first_name || !last_name) {
+            console.warn("Validation failed: Missing fields");
+            return res.status(400).json({
+                message: "All fields are required (first_name, last_name, email, password)"
+            });
+        }
+
         const existingUser = await Users.findOne({ email });
-        if (existingUser)
-            return res.status(400).json({ message: "User already exists" });
+        if (existingUser) {
+            console.warn("Signup failed: User already exists:", email);
+            return res.status(400).json({ message: "User already exists. Please try another email or login." });
+        }
 
         const hashedPassword = await bcrypt.hash(password, 12);
         const otp = crypto.randomInt(100000, 999999).toString();
