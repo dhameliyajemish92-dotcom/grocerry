@@ -8,6 +8,8 @@ import Footer from "./components/footer/Footer";
 import CartPage from "./pages/cart/Cart";
 import { useEffect, useState } from "react";
 import Order from "./pages/order/Order";
+import ForgotPassword from "./pages/authentication/forgot-password/ForgotPassword";
+import ResetPassword from "./pages/authentication/forgot-password/ResetPassword";
 import Signup from "./pages/authentication/signup/Signup";
 import Shipment from "./pages/shipment/Shipment";
 import Login from "./pages/authentication/login/Login";
@@ -145,6 +147,8 @@ const App = () => {
                 <Route path={'/shipping'} element={<Shipment />} />
                 <Route path={'/shipping/:id'} element={<ShipmentId />} />
                 <Route path={'/login'} element={<Login />} />
+                <Route path={'/forgot-password'} element={<ForgotPassword />} />
+                <Route path={'/reset-password'} element={<ResetPassword />} />
                 <Route path={'/orders'} element={<Order />} />
                 <Route path={'/orders/:id'} element={<OrderId />} />
                 <Route path={'/orders/:id/invoice'} element={<Invoice />} />

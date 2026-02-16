@@ -80,6 +80,12 @@ export const authSignup = (formData) =>
 export const verifyOtp = (email, otp) =>
     API.post(`${USER_BASEURL}/verify-otp`, { email, otp });
 
+export const forgotPassword = (email) =>
+    API.post(`${USER_BASEURL}/forgot-password`, { email });
+
+export const resetPassword = (formData) =>
+    API.post(`${USER_BASEURL}/reset-password`, formData);
+
 export const verify = () =>
     API.post(`${USER_BASEURL}/verify`);
 

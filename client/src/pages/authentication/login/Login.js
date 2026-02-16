@@ -76,6 +76,9 @@ const Login = () => {
                     type={'email'} />
                 <input onChange={(e) => handleChange(e)} name={'password'} value={data.password}
                     placeholder={'Password'} type={'password'} />
+                <div style={{ textAlign: 'right', marginBottom: '10px' }}>
+                    <Link to={'/forgot-password'} style={{ fontSize: '0.85rem', color: 'var(--primary-color)' }}>Forgot Password?</Link>
+                </div>
                 <button onClick={handleLogin} className={'btn1'} disabled={isLoading}>
                     {isLoading ? 'Logging in...' : 'Login'}
                 </button>

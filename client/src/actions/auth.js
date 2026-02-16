@@ -60,3 +60,21 @@ export const verifyOtp = (email, otp, onSuccess, onError) => async (dispatch) =>
         onError(e.response ? e.response.data : { message: "Server Error" });
     }
 }
+
+export const forgotPassword = (email, onSuccess, onError) => async () => {
+    try {
+        const data = await api.forgotPassword(email).then(res => res.data);
+        onSuccess(data);
+    } catch (e) {
+        onError(e.response ? e.response.data : { message: "Server Error" });
+    }
+}
+
+export const resetPassword = (formData, onSuccess, onError) => async () => {
+    try {
+        const data = await api.resetPassword(formData).then(res => res.data);
+        onSuccess(data);
+    } catch (e) {
+        onError(e.response ? e.response.data : { message: "Server Error" });
+    }
+}

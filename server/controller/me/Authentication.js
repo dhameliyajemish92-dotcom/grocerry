@@ -211,3 +211,64 @@ export const verifyRole = async (req, res) => {
         res.status(400).json({ message: "Role verification failed.", error: err.message });
     }
 };
+
+/* ========================= FORGOT PASSWORD ========================= */
+export const forgotPassword = async (req, res) => {
+    try {
+        const { email } = req.body;
+        if (!email) return res.status(400).json({ message: "Email is required" });
+
+        const user = await Users.findOne({ email });
+        if (!user) return res.status(404).json({ message: "User not found with this email" });
+
+        const otp = crypto.randomInt(100000, 999999).toString();
+        const otpExpires = Date.now() + 10 * 60 * 1000; // 10 minutes
+
+        user.otp = otp;
+        user.otpExpires = otpExpires;
+        await user.save();
+
+        const message = `
+You requested a password reset. 
+Your OTP is: ${otp}
+
+This OTP is valid for 10 minutes. 
+If you did not request this, please ignore this email.
+`;
+        await sendEmail(email, "Password Reset OTP", message);
+
+        res.status(200).json({ message: "Password reset OTP sent to your email." });
+    } catch (err) {
+        console.error("FORGOT PASSWORD ERROR:", err);
+        res.status(500).json({ message: "Failed to send reset OTP.", error: err.message });
+    }
+};
+
+/* ========================= RESET PASSWORD ========================= */
+export const resetPassword = async (req, res) => {
+    try {
+        const { email, otp, newPassword } = req.body;
+
+        if (!email || !otp || !newPassword) {
+            return res.status(400).json({ message: "Email, OTP, and new password are required" });
+        }
+
+        const user = await Users.findOne({ email });
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        if (user.otp !== otp || user.otpExpires < Date.now()) {
+            return res.status(400).json({ message: "Invalid or expired OTP" });
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 12);
+        user.password = hashedPassword;
+        user.otp = undefined;
+        user.otpExpires = undefined;
+        await user.save();
+
+        res.status(200).json({ message: "Password reset successfully. You can now login with your new password." });
+    } catch (err) {
+        console.error("RESET PASSWORD ERROR:", err);
+        res.status(500).json({ message: "Failed to reset password.", error: err.message });
+    }
+};
