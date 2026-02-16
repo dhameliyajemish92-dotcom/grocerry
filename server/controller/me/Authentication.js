@@ -50,14 +50,28 @@ This OTP is valid for 5 minutes.
 Do not share it with anyone.
 `;
 
-        await sendEmail(email, "Email Verification", message);
+        try {
+            await sendEmail(email, "Email Verification", message);
+            console.log("Signup OTP email sent to:", email);
+        } catch (emailErr) {
+            console.error("Critical: Signup OTP email failed to send:", emailErr.message);
+            // We still return 200 because the user IS created, but we need to know it failed.
+            return res.status(200).json({
+                message: "User registered, but verification email failed to send. Please contact support.",
+                debug_email_error: emailErr.message
+            });
+        }
 
         res
             .status(200)
             .json({ message: "User registered. Please verify your email." });
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: "Something went wrong" });
+        console.error("CRITICAL SIGNUP ERROR:", err);
+        res.status(500).json({
+            message: "Internal Server Error during signup",
+            error: err.message,
+            stack: err.stack
+        });
     }
 };
 

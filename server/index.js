@@ -22,6 +22,20 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
+
+console.log("==========================================");
+console.log("STARTUP DIAGNOSTICS");
+console.log("Current Working Directory:", process.cwd());
+console.log("__dirname:", __dirname);
+console.log("Checking if client build exists:", path.join(__dirname, '../client/build'));
+import fs from 'fs';
+if (fs.existsSync(path.join(__dirname, '../client/build'))) {
+    console.log("SUCCESS: Client build folder found.");
+} else {
+    console.warn("WARNING: Client build folder NOT found. Static files will fail.");
+}
+console.log("==========================================");
+
 // sgMail.setApiKey(process.env.SENDGRID_KEY);
 export const stripe = Stripe(process.env.STRIPE_PRIVATE_KEY);
 
@@ -68,6 +82,12 @@ apiRouter.get('/status', (req, res) => {
         team_name: "project",
         dev_team: ["jemish dhameliya", "nakrani takshil"].sort()
     })
+});
+
+// Catch-all for unmatched API routes
+app.use('/api', (req, res) => {
+    console.warn(`Unmatched API Route: ${req.method} ${req.url}`);
+    res.status(404).json({ message: `API route ${req.url} not found` });
 });
 
 // Catch-all route to serve the React app
