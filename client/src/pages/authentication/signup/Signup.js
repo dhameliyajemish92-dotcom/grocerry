@@ -29,13 +29,17 @@ const Signup = () => {
         if (isLoading) return;
         setError('');
         setIsLoading(true);
+        console.log("Signup starting with data:", { ...formData, password: '***' });
+
         dispatch(authSignup(formData, (data) => {
+            console.log("Signup success response:", data);
             setIsLoading(false);
-            setMessage(data.message);
+            setMessage(data.message || "User registered. Please check your email.");
             setStep('verify');
         }, (err) => {
+            console.error("Signup error response:", err);
             setIsLoading(false);
-            setError(err.message);
+            setError(err.message || "Signup failed. Please check your connection.");
         }));
     }
 
@@ -43,12 +47,16 @@ const Signup = () => {
         if (isLoading) return;
         setError('');
         setIsLoading(true);
+        console.log("Verification starting for:", formData.email, "with OTP:", otp);
+
         dispatch(verifyOtp(formData.email, otp, () => {
+            console.log("Verification successful");
             setIsLoading(false);
             navigate('/');
         }, (err) => {
+            console.error("Verification error:", err);
             setIsLoading(false);
-            setError(err.message);
+            setError(err.message || "Verification failed. Incorrect OTP.");
         }));
     }
 
