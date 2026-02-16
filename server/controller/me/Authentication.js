@@ -112,8 +112,8 @@ export const verifyOtp = async (req, res) => {
             token,
         });
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: "Something went wrong" });
+        console.error("OTP VERIFY ERROR:", err);
+        res.status(500).json({ message: "OTP verification failed due to an internal error.", error: err.message });
     }
 };
 
@@ -149,7 +149,7 @@ export const login = async (req, res) => {
                 id: user._id,
                 email: user.email,
             },
-            process.env.JWT_SECRET_KEY || 'test',
+            process.env.JWT_SECRET_KEY,
             { expiresIn: process.env.JWT_AUTH_TTL || "1h" }
         );
 
@@ -162,13 +162,16 @@ export const login = async (req, res) => {
                 address: user.address,
                 role: user.role,
                 wishlist: user.wishlist,
-                isVerified: user.isVerified, // info mate moklo
+                isVerified: user.isVerified,
             },
             token,
         });
     } catch (e) {
-        console.error(e);
-        return res.status(500).json({ message: "Login failed" });
+        console.error("CRITICAL LOGIN ERROR:", e);
+        return res.status(500).json({
+            message: "Login failed due to an internal server error.",
+            error: e.message
+        });
     }
 };
 
@@ -185,7 +188,8 @@ export const verifyUser = async (req, res) => {
 
         res.status(200).json(user);
     } catch (err) {
-        res.status(500).json({ message: "Something went wrong" });
+        console.error("VERIFY USER ERROR:", err);
+        res.status(500).json({ message: "User verification failed.", error: err.message });
     }
 };
 
@@ -203,6 +207,7 @@ export const verifyRole = async (req, res) => {
 
         res.status(200).json({ user });
     } catch (err) {
-        res.status(400).json({ message: err.message });
+        console.error("VERIFY ROLE ERROR:", err);
+        res.status(400).json({ message: "Role verification failed.", error: err.message });
     }
 };

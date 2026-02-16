@@ -24,14 +24,15 @@ const auth = (req, res, next) => {
             });
         }
 
-        if (!process.env.JWT_SECRET_KEY && process.env.NODE_ENV === 'production') {
-            console.error("Auth Middleware: JWT_SECRET_KEY is not defined in environment variables.");
+        if (!process.env.JWT_SECRET_KEY) {
+            console.error("Auth Middleware: JWT_SECRET_KEY is MISSING in environment.");
             return res.status(500).json({
-                message: "Server misconfiguration: JWT secret missing.",
+                message: "Internal Server Configuration Error",
+                code: "CONFIG_ERROR"
             });
         }
 
-        const decodedData = jwt.verify(token, process.env.JWT_SECRET_KEY || 'test');
+        const decodedData = jwt.verify(token, process.env.JWT_SECRET_KEY);
 
         if (!decodedData) {
             console.warn("Auth Middleware: Token verification failed (returned null/undefined).");

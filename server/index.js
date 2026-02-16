@@ -23,49 +23,56 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
+// --- 1. Senior Diagnostics & Logging ---
 console.log("==========================================");
-console.log("STARTUP DIAGNOSTICS");
-console.log("Current Working Directory:", process.cwd());
+console.log("PRODUCTION STARTUP DIAGNOSTICS");
+console.log("CWD:", process.cwd());
 console.log("__dirname:", __dirname);
-console.log("Checking if client build exists:", path.join(__dirname, '../client/build'));
+
 import fs from 'fs';
-if (fs.existsSync(path.join(__dirname, '../client/build'))) {
-    console.log("SUCCESS: Client build folder found.");
+const clientBuildPath = path.join(__dirname, '../client/build');
+if (fs.existsSync(clientBuildPath)) {
+    console.log("STATUS: Client build folder found.");
 } else {
-    console.warn("WARNING: Client build folder NOT found. Static files will fail.");
+    console.warn("CRITICAL WARNING: Client build folder NOT found at:", clientBuildPath);
 }
 console.log("==========================================");
 
-// sgMail.setApiKey(process.env.SENDGRID_KEY);
-export const stripe = Stripe(process.env.STRIPE_PRIVATE_KEY);
+// CORS configuration - Senior Excellence
+const corsOptions = {
+    origin: process.env.NODE_ENV === 'production'
+        ? [/\.onrender\.com$/, /\.vercel\.app$/] // Allow Render/Vercel subdomains
+        : ['http://localhost:3000', 'http://localhost:5000'],
+    credentials: true,
+    optionsSuccessStatus: 200
+};
 
-// Configure multer for file uploads
-const storage = multer.memoryStorage();
-const upload = multer({
-    storage: storage,
-    limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
-});
-
-// Make upload available to routes
-app.upload = upload;
-
+app.use(cors(corsOptions));
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
-app.use(cors());
-app.use('/product_downloads', express.static('product_downloads'));
-app.use('/images', express.static('../client/public/images/grocery'));
-app.use('/Grocery_Images', express.static('../client/product-image/Grocery_Images'));
 
+// Request Logger (placed above static to catch all traffic)
 app.use((req, res, next) => {
-    console.log(`Incoming Request: ${req.method} ${req.url}`);
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
     next();
 });
 
-// Serve Static Files for Production
-app.use(express.static(path.join(__dirname, '../client/build')));
+// --- 2. External Services ---
+export const stripe = Stripe(process.env.STRIPE_PRIVATE_KEY);
+const storage = multer.memoryStorage();
+app.upload = multer({
+    storage: storage,
+    limits: { fileSize: 10 * 1024 * 1024 } // 10MB
+});
 
+// --- 3. Static Files ---
+app.use('/product_downloads', express.static('product_downloads'));
+app.use('/images', express.static('../client/public/images/grocery'));
+app.use('/Grocery_Images', express.static('../client/product-image/Grocery_Images'));
+app.use(express.static(clientBuildPath));
+
+// --- 4. API Routes ---
 const apiRouter = express.Router();
-
 apiRouter.use('/orders', orders);
 apiRouter.use('/payments', payments);
 apiRouter.use('/products', products);
@@ -75,58 +82,75 @@ apiRouter.use('/cart', cart);
 apiRouter.use('/me', me);
 apiRouter.use('/admin', admin);
 
-app.use('/api', apiRouter);
-
 apiRouter.get('/status', (req, res) => {
     res.status(200).json({
-        team_name: "project",
-        dev_team: ["jemish dhameliya", "nakrani takshil"].sort()
-    })
+        status: "Online",
+        timestamp: new Date().toISOString(),
+        team: ["jemish dhameliya", "nakrani takshil"].sort()
+    });
 });
 
-// Catch-all for unmatched API routes
-app.use('/api', (req, res) => {
-    console.warn(`Unmatched API Route: ${req.method} ${req.url}`);
-    res.status(404).json({ message: `API route ${req.url} not found` });
+app.use('/api', apiRouter);
+
+// --- 5. error & Catch-all Handlers ---
+
+// Unmatched API routes
+apiRouter.use((req, res) => {
+    console.warn(`404: Unmatched API Request: ${req.method} ${req.originalUrl}`);
+    res.status(404).json({
+        message: "API endpoint not found",
+        path: req.originalUrl
+    });
 });
 
-// Catch-all route to serve the React app
+// Serve React SPA for all non-API routes
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+    if (req.url.startsWith('/api')) return; // Redundancy check
+    res.sendFile(path.join(clientBuildPath, 'index.html'));
 });
 
+// --- 6. Server Initialization & Database ---
 const PORT = process.env.PORT || 5000;
-
-const mongooseOptions = {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-}
+const mongooseOptions = { useNewUrlParser: true, useUnifiedTopology: true };
 
 mongoose.set('strictQuery', false);
-dns.setServers(['8.8.8.8']); // Use Google DNS for MongoDB SRV lookup
+dns.setServers(['8.8.8.8']);
 
-// Debug: Print available environment variable keys (NOT values)
-console.log("========================================");
-console.log("DEBUG: Environment Check");
-console.log("Available Keys:", Object.keys(process.env).filter(key => !key.includes('SECRET') && !key.includes('KEY') && !key.includes('PASS') && !key.includes('URI')).join(", "));
-console.log("MONGO_URI present:", !!process.env.MONGO_URI);
-console.log("JWT_SECRET_KEY present:", !!process.env.JWT_SECRET_KEY);
-console.log("========================================");
-
-if (!process.env.MONGO_URI) {
-    console.error("FATAL ERROR: MONGO_URI is missing. Please add it to Render -> Environment tab.");
+// Strict Environment Check
+const requiredEnv = ['MONGO_URI', 'JWT_SECRET_KEY'];
+const missing = requiredEnv.filter(k => !process.env[k]);
+if (missing.length > 0) {
+    console.error(`FATAL ERROR: Missing required environment variables: ${missing.join(', ')}`);
     process.exit(1);
 }
 
-if (!process.env.JWT_SECRET_KEY) {
-    console.error("FATAL ERROR: JWT_SECRET_KEY is missing. Please add it to Render -> Environment tab.");
-    process.exit(1);
-}
+let server;
 mongoose.connect(process.env.MONGO_URI, mongooseOptions)
     .then(() => {
-        app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
         console.log("Database Connected Successfully");
+        server = app.listen(PORT, () => console.log(`Server executing on port ${PORT}`));
     })
-    .catch((error) => console.log("Database connection failed:", error.message));
+    .catch((error) => {
+        console.error("Database connection failed:", error.message);
+        process.exit(1);
+    });
 
-export default app
+// --- 7. Graceful Shutdown ---
+const gracefulShutdown = (signal) => {
+    console.log(`${signal} received: closing HTTP server...`);
+    if (server) {
+        server.close(async () => {
+            console.log('HTTP server closed.');
+            await mongoose.connection.close(false);
+            console.log('MongoDB connection closed.');
+            process.exit(0);
+        });
+    } else {
+        process.exit(0);
+    }
+};
+
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+
+export default app;
