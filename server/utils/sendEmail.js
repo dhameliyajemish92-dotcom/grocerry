@@ -2,10 +2,8 @@ import nodemailer from 'nodemailer';
 
 const sendEmail = async (email, subject, text, html, attachments) => {
     try {
-        console.log("Attempting to send email to:", email);
-        console.log("Using EMAIL_USER:", process.env.EMAIL_USER);
         console.log(`>>> [EMAIL TRACE] Starting sendEmail to: ${email}`);
-        console.log(`>>> [EMAIL TRACE] Using Config - User: ${process.env.EMAIL_USER}, Pass Length: ${process.env.EMAIL_PASS?.length || 0}`);
+        console.log(`>>> [EMAIL TRACE] Config - User: ${process.env.EMAIL_USER}, Pass Length: ${process.env.EMAIL_PASS?.length || 0}`);
 
         const transporter = nodemailer.createTransport({
             host: "smtp.gmail.com",
@@ -19,8 +17,13 @@ const sendEmail = async (email, subject, text, html, attachments) => {
             logger: true
         });
 
+        // Verify connection configuration
+        console.log(">>> [EMAIL TRACE] Verifying transporter...");
+        await transporter.verify();
+        console.log(">>> [EMAIL TRACE] Transporter verified successfully.");
+
         const mailOptions = {
-            from: process.env.EMAIL_USER,
+            from: `"Grocer App" <${process.env.EMAIL_USER}>`,
             to: email,
             subject: subject,
             text: text,
@@ -34,11 +37,14 @@ const sendEmail = async (email, subject, text, html, attachments) => {
             mailOptions.attachments = attachments;
         }
 
+        console.log(">>> [EMAIL TRACE] Sending mail...");
         const info = await transporter.sendMail(mailOptions);
-        console.log("Email sent successfully:", info.messageId);
+        console.log(">>> [EMAIL TRACE] Email sent successfully:", info.messageId);
+        console.log(">>> [EMAIL TRACE] Response:", info.response);
         return info;
     } catch (error) {
-        console.error("Email sending failed:", error.message);
+        console.error(">>> [EMAIL TRACE] ERROR:", error.message);
+        console.error(">>> [EMAIL TRACE] Stack:", error.stack);
         throw error;
     }
 };
