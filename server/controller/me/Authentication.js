@@ -6,8 +6,10 @@ import crypto from "crypto";
 
 /* ========================= SIGNUP ========================= */
 export const signup = async (req, res) => {
+    console.log("POST /api/me/signup requested");
     try {
         const { first_name, last_name, email, password } = req.body;
+        console.log("Signup data:", { first_name, last_name, email, password: '***' });
 
         // Validation logs
         console.log("Signup attempt for email:", email);
@@ -103,7 +105,9 @@ export const verifyOtp = async (req, res) => {
 
 /* ========================= LOGIN ========================= */
 export const login = async (req, res) => {
+    console.log("POST /api/me/login requested");
     const { email, password } = req.body;
+    console.log("Login attempt for email:", email);
 
     if (!email)
         return res.status(400).json({ message: "Email address is required" });
