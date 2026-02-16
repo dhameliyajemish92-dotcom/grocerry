@@ -50,19 +50,12 @@ This OTP is valid for 5 minutes.
 Do not share it with anyone.
 `;
 
-        try {
-            await sendEmail(email, "Email Verification", message);
-            console.log("Signup OTP email sent to:", email);
-        } catch (emailErr) {
-            console.error("Critical: Signup OTP email failed to send:", emailErr.message);
-            // We still return 200 because the user IS created, but we need to know it failed.
-            return res.status(200).json({
-                message: "User registered, but verification email failed to send. Please contact support.",
-                debug_email_error: emailErr.message
-            });
-        }
+        // Backgrounding email to prevent Render 502/Timeout issue
+        sendEmail(email, "Email Verification", message)
+            .then(() => console.log("Signup OTP email sent in background to:", email))
+            .catch(emailErr => console.error("CRITICAL: Background Signup OTP email failed:", emailErr.message));
 
-        res
+        return res
             .status(200)
             .json({
                 message: "User registered. Please verify your email.",
@@ -238,7 +231,10 @@ Your OTP is: ${otp}
 This OTP is valid for 10 minutes. 
 If you did not request this, please ignore this email.
 `;
-        await sendEmail(email, "Password Reset OTP", message);
+        // Backgrounding email to prevent Render 502/Timeout issue
+        sendEmail(email, "Password Reset OTP", message)
+            .then(() => console.log("Forgot Password OTP email sent in background to:", email))
+            .catch(emailErr => console.error("CRITICAL: Background Forgot Password OTP email failed:", emailErr.message));
 
         res.status(200).json({ message: "Password reset OTP sent to your email." });
     } catch (err) {

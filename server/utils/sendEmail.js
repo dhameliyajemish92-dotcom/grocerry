@@ -17,7 +17,10 @@ const sendEmail = async (email, subject, text, html, attachments) => {
                 rejectUnauthorized: false,
                 minVersion: "TLSv1.2"
             },
-            pool: true, // Use a pool for multiple sends
+            connectionTimeout: 10000, // 10 seconds
+            greetingTimeout: 10000,
+            socketTimeout: 15000,
+            pool: true,
             debug: true,
             logger: true
         });
