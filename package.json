@@ -4,14 +4,14 @@
     "private": true,
     "license": "MIT",
     "engines": {
-        "node": "20.x"
+        "node": ">=20.0.0"
     },
     "workspaces": [
         "client",
         "server"
     ],
     "scripts": {
-        "build": "yarn install && yarn workspace grocerapp run build",
-        "start": "yarn workspace grocerapp-server run start"
+        "build": "npm install && npm run build -w grocerapp",
+        "start": "npm run start -w grocerapp-server"
     }
 }
