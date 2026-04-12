@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 import Loading from "../../components/loading/Loading";
 import { getRecommendations } from "../../actions/products";
 
-const Home = ({ addProductToCart }) => {
+const Home = ({ addProductToCart, cart }) => {
     const products = useSelector(state => state.products.recommendations) || [];
     const [loading, setLoading] = useState(true);
     const dispatch = useDispatch()
@@ -58,8 +58,14 @@ const Home = ({ addProductToCart }) => {
                                 <Link to={`/products?category=${item.category}`}>{item.category}</Link>
                             </div>
                             <div className={styles['products-wrapper']}>
-                                {item.products.map((product, j) => <ProductCard addProductToCart={addProductToCart}
-                                    product={product} key={`${i}${j}`} />)}
+                                {item.products.map((product, j) => {
+                                    const cartItem = cart?.find(c => c.product_id === (product.product_id || product.id));
+                                    return <ProductCard addProductToCart={addProductToCart}
+                                        product={product} key={`${i}${j}`} 
+                                        isInCart={!!cartItem}
+                                        cartQuantity={cartItem?.quantity || 0}
+                                    />;
+                                })}
                             </div>
                         </div>
                     )}

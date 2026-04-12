@@ -6,6 +6,7 @@ import Loading from "../../../../../components/loading/Loading";
 import {useDispatch} from "react-redux";
 import {adminUpdateDatabase, uploadProductsFromPDF} from "../../../../../actions/products";
 import Warning from "../../../../../components/feedback/warning/Warning";
+import { toast } from "react-toastify";
 
 const AdminUpdate = () => {
 
@@ -161,7 +162,7 @@ const AdminUpdate = () => {
                             className={styles['format']} 
                             onClick={(e) => {
                                 e.preventDefault();
-                                alert('PDF Format Options:\n\nOption 1 - Invoice/Purchase Format (Recommended):\nColumns: Name, QTY, Rate, GST%, GST Amt, Total\n\nExample:\nProduct Name 1  2  150  18  27  327\nProduct Name 2  1  250  0  0  250\n\nOption 2 - Standard CSV Format:\nproduct_id, name, price, image, weight, measurement, category, stock\n\nExample:\nPRD001, Organic Basmati Rice, 250, images/rice.jpg, 1, kg, Grains, 100');
+                                toast.info('PDF Format Options:\n\nOption 1 - Invoice/Purchase Format (Recommended):\nColumns: Name, QTY, Rate, GST%, GST Amt, Total\n\nExample:\nProduct Name 1  2  150  18  27  327\nProduct Name 2  1  250  0  0  250\n\nOption 2 - Standard CSV Format:\nproduct_id, name, price, image, weight, measurement, category, stock\n\nExample:\nPRD001, Organic Basmati Rice, 250, images/rice.jpg, 1, kg, Grains, 100');
                             }}
                         >
                             PDF Format Guidelines

@@ -5,6 +5,7 @@ import { useState } from "react";
 import Error from "../../../components/feedback/error/Error";
 import { resetPassword } from "../../../actions/auth";
 import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 
 const ResetPassword = () => {
     const dispatch = useDispatch();
@@ -41,7 +42,7 @@ const ResetPassword = () => {
         const onSuccess = () => {
             setIsLoading(false);
             localStorage.removeItem('resetEmail');
-            alert("Password updated successfully! Please login.");
+            toast.success("Password updated successfully! Please login.");
             navigate('/login');
         }
 

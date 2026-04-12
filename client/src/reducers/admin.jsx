@@ -13,7 +13,8 @@ const initialState = {
     ordersByStatus: [],
     users: [],
     product: null,
-    error: null
+    error: null,
+    monthlySales: []
 };
 
 const adminReducer = (state = initialState, action) => {
@@ -24,7 +25,8 @@ const adminReducer = (state = initialState, action) => {
                 stats: action.data.stats,
                 recentOrders: action.data.recentOrders,
                 lowStockProducts: action.data.lowStockProducts,
-                ordersByStatus: action.data.ordersByStatus
+                ordersByStatus: action.data.ordersByStatus,
+                monthlySales: action.data.monthlySales || []
             };
         case 'ADMIN_USERS':
             return { ...state, users: action.data };

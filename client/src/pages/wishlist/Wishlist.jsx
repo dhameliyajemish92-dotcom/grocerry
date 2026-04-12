@@ -7,7 +7,7 @@ import Loading from "../../components/loading/Loading";
 import ProductCard from "../../components/product-card/ProductCard";
 import Error from "../../components/feedback/error/Error";
 
-const Wishlist = ({addProductToCart}) => {
+const Wishlist = ({addProductToCart, cart}) => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -42,8 +42,14 @@ const Wishlist = ({addProductToCart}) => {
                     <Link to={'/products'} className={'btn1'}>Explore Products</Link>
                 </div> :
                 <div className={styles['products-wrapper']}>
-                    {products.map((product, i) => <ProductCard product={product} addProductToCart={addProductToCart}
-                                                               key={i}/>)}
+                    {products.map((product, i) => {
+                        const cartItem = cart?.find(c => c.product_id === (product.product_id || product.id));
+                        return <ProductCard product={product} addProductToCart={addProductToCart}
+                                           key={i}
+                                           isInCart={!!cartItem}
+                                           cartQuantity={cartItem?.quantity || 0}
+                        />;
+                    })}
                 </div>
             }
         </div>

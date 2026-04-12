@@ -4,10 +4,12 @@ import { motion } from 'framer-motion';
 import { useDispatch, useSelector } from "react-redux";
 import { updateWishlist } from "../../actions/auth";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
-const ProductCard = ({ product, addProductToCart, productsPage = false }) => {
+const ProductCard = ({ product, addProductToCart, productsPage = false, isInCart = false, cartQuantity = 0 }) => {
 
     const [addToCart, setAddToCart] = useState(false);
+    const [quantity, setQuantity] = useState(1);
     console.log("ProductCard Image:", product.name, product.image);
     const wrapperRef = useRef();
     const wishlist = useSelector(state => state.authentication.user?.wishlist) || [];
@@ -23,14 +25,33 @@ const ProductCard = ({ product, addProductToCart, productsPage = false }) => {
     }
 
     const handleAddToCart = () => {
-        if (addToCart) return; // Prevent multiple clicks
+        if (addToCart) return;
         setAddToCart(true);
 
+        const productWithQuantity = {
+            ...product,
+            quantity: quantity
+        };
+
         setTimeout(() => {
-            addProductToCart(product);
-            // Reset after animation completes
+            addProductToCart(productWithQuantity);
+            toast.success(`${product.name} x${quantity} added to cart!`);
+            setQuantity(1);
             setTimeout(() => setAddToCart(false), 100);
         }, 600)
+    }
+
+    const handleIncrement = () => {
+        const maxStock = product.availability?.in_stock ?? product.stock ?? 99;
+        if (quantity < maxStock) {
+            setQuantity(quantity + 1);
+        }
+    }
+
+    const handleDecrement = () => {
+        if (quantity > 1) {
+            setQuantity(quantity - 1);
+        }
     }
 
     const getXi = () => {
@@ -89,9 +110,32 @@ const ProductCard = ({ product, addProductToCart, productsPage = false }) => {
                         </p>
                     </div>
                     {(product.availability?.in_stock ?? product.stock) ?
-                        <div onClick={handleAddToCart} className={styles['add-to-cart']} style={{ opacity: addToCart ? 0.7 : 1, pointerEvents: addToCart ? 'none' : 'auto' }}>
-                            {addToCart ? 'Adding...' : 'Add to Cart'}
-                        </div> :
+                        isInCart ? (
+                            <div className={styles['add-section']}>
+                                <div className={styles['quantity-controls']}>
+                                    <button onClick={() => {
+                                        if (cartQuantity > 1) {
+                                            addProductToCart({ ...product, quantity: -1 });
+                                        } else {
+                                            addProductToCart({ ...product, quantity: 0, remove: true });
+                                        }
+                                    }} className={styles['qty-btn']} disabled={cartQuantity <= 0}>-</button>
+                                    <span className={styles['qty-value']}>{cartQuantity}</span>
+                                    <button onClick={() => addProductToCart({ ...product, quantity: 1 })} className={styles['qty-btn']}>+</button>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className={styles['add-section']}>
+                                <div className={styles['quantity-controls']}>
+                                    <button onClick={handleDecrement} className={styles['qty-btn']} disabled={quantity <= 1}>-</button>
+                                    <span className={styles['qty-value']}>{quantity}</span>
+                                    <button onClick={handleIncrement} className={styles['qty-btn']}>+</button>
+                                </div>
+                                <div onClick={handleAddToCart} className={styles['add-to-cart']} style={{ opacity: addToCart ? 0.7 : 1, pointerEvents: addToCart ? 'none' : 'auto' }}>
+                                    {addToCart ? 'Adding...' : 'Add to Cart'}
+                                </div>
+                            </div>
+                        ) :
                         <div className={styles['unavailable']}>Out of Stock</div>}
                 </div>
             </div>

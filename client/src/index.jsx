@@ -8,6 +8,8 @@ import authentication from "./reducers/authentication";
 import orders from "./reducers/orders";
 import shipping from "./reducers/shipping";
 import admin from "./reducers/admin";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './shared/css/master.css';
 
 const renderApp = () => {
@@ -34,6 +36,7 @@ const renderApp = () => {
     root.render(
         <React.StrictMode>
             <Provider store={store}>
+                <ToastContainer position="bottom-right" autoClose={3000} />
                 <App />
             </Provider>
         </React.StrictMode>

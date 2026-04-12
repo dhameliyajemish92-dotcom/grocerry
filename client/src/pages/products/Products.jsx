@@ -8,7 +8,7 @@ import Pages from "../../components/pages/Pages";
 import Categories from "../../components/categories/Categories";
 import Loading from "../../components/loading/Loading";
 
-const Products = ({addProductToCart}) => {
+const Products = ({addProductToCart, cart}) => {
     const [page, setPage] = useState(1);
     const [products, setProducts] = useState([]);
     const [totalPages, setTotalPages] = useState(1);
@@ -30,9 +30,8 @@ const Products = ({addProductToCart}) => {
             dispatch(productsSearch(search, page, onSuccess));
         } else if (query.get('category')) {
             const category = query.get('category');
-            if (category === 'All') {
+            if (category === 'All' || category === '') {
                 setPage(Number(page));
-
                 dispatch(getProductsPerPage(page, null, onSuccess));
             } else {
                 dispatch(getProductsPerPage(page, category, onSuccess));
@@ -76,8 +75,14 @@ const Products = ({addProductToCart}) => {
             {loading ? <Loading/> :
                 <>
                     <div className={styles['products-wrapper']}>
-                        {products.map(((product, i) => <ProductCard addProductToCart={addProductToCart} key={i}
-                                                                    product={product} productsPage={true}/>))}
+                        {products.map(((product, i) => {
+                            const cartItem = cart?.find(c => c.product_id === (product.product_id || product.id));
+                            return <ProductCard addProductToCart={addProductToCart} key={i}
+                                product={product} productsPage={true}
+                                isInCart={!!cartItem}
+                                cartQuantity={cartItem?.quantity || 0}
+                            />;
+                        }))}
                     </div>
                     <Pages max={totalPages} current={page} onPageClick={handleClick}/>
                 </>

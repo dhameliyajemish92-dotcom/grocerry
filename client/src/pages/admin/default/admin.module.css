@@ -284,3 +284,16 @@
 .btn-link:hover {
     text-decoration: underline;
 }
+
+/* Chart Section */
+.chart-section {
+    margin-top: 2em;
+}
+
+.chart-container {
+    background: var(--NEUTRAL_0);
+    padding: 1.5em;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    height: 350px;
+}

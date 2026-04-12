@@ -58,21 +58,63 @@ const App = () => {
 
     const addProductToCart = async (product) => {
         const productId = product.product_id || product.id;
+        const qty = product.quantity || 1;
+        
+        if (product.remove) {
+            if (user?.token) {
+                const updatedCart = await cartActions.removeFromCart(productId);
+                if (updatedCart) setCart(updatedCart);
+            } else {
+                const newCart = cart.filter((cartItem) => cartItem.product_id !== productId);
+                setCart(newCart);
+                localStorage.setItem('cart', JSON.stringify(newCart));
+            }
+            return;
+        }
+
+        if (qty < 0) {
+            const productInCart = cart.find(p => p.product_id === productId);
+            if (!productInCart) return;
+            
+            if (productInCart.quantity + qty <= 0) {
+                if (user?.token) {
+                    const updatedCart = await cartActions.removeFromCart(productId);
+                    if (updatedCart) setCart(updatedCart);
+                } else {
+                    const newCart = cart.filter((cartItem) => cartItem.product_id !== productId);
+                    setCart(newCart);
+                    localStorage.setItem('cart', JSON.stringify(newCart));
+                }
+            } else {
+                if (user?.token) {
+                    const updatedCart = await cartActions.updateCartItem(productId, productInCart.quantity + qty);
+                    if (updatedCart) setCart(updatedCart);
+                } else {
+                    const newCart = cart.map(item => 
+                        item.product_id === productId 
+                            ? { ...item, quantity: item.quantity + qty }
+                            : item
+                    );
+                    setCart(newCart);
+                    localStorage.setItem('cart', JSON.stringify(newCart));
+                }
+            }
+            return;
+        }
+
         if (user?.token) {
-            // Use action wrapper
-            const updatedCart = await cartActions.addToCart(productId, 1);
+            const updatedCart = await cartActions.addToCart(productId, qty);
             if (updatedCart) setCart(updatedCart);
         } else {
             const productIndex = cart.findIndex((cartProduct) => cartProduct.product_id === productId);
             let newCart;
             if (productIndex >= 0) {
-                const updatedData = { ...cart[productIndex], quantity: cart[productIndex].quantity + 1 };
+                const updatedData = { ...cart[productIndex], quantity: cart[productIndex].quantity + qty };
                 const newArray = [...cart];
                 newArray[productIndex] = updatedData;
                 newCart = newArray;
             } else {
-                // Ensure we store product_id in the local cart item
-                newCart = [...cart, { ...product, product_id: productId, quantity: 1 }];
+                newCart = [...cart, { ...product, product_id: productId, quantity: qty }];
             }
             setCart(newCart);
             localStorage.setItem('cart', JSON.stringify(newCart));
@@ -136,8 +178,8 @@ const App = () => {
             <ScrollToTop />
             <Navigation cartCount={cartCount} />
             <Routes>
-                <Route path={'/'} element={<Home addProductToCart={addProductToCart} />} />
-                <Route path={'/products'} element={<Products addProductToCart={addProductToCart} />} />
+                <Route path={'/'} element={<Home addProductToCart={addProductToCart} cart={cart} />} />
+                <Route path={'/products'} element={<Products addProductToCart={addProductToCart} cart={cart} />} />
                 <Route path={'/cart'}
                     element={<CartPage cart={cart} cartCount={cartCount} updateQuantity={updateQuantity} />} />
                 <Route path={'/checkout'} element={<PrivateRoute component={<Checkout />} />} />
@@ -152,7 +194,7 @@ const App = () => {
                 <Route path={'/orders'} element={<Order />} />
                 <Route path={'/orders/:id'} element={<OrderId />} />
                 <Route path={'/orders/:id/invoice'} element={<Invoice />} />
-                <Route path={'/wishlist'} element={<PrivateRoute component={<Wishlist addProductToCart={addProductToCart} />} />} />
+                <Route path={'/wishlist'} element={<PrivateRoute component={<Wishlist addProductToCart={addProductToCart} cart={cart} />} />} />
                 <Route path={'/admin'} element={<PrivateRoute role={'ADMIN'} component={<Admin />} />} />
                 <Route path={'/admin/orders'}
                     element={<PrivateRoute role={'ADMIN'} component={<AdminOrders />} />} />

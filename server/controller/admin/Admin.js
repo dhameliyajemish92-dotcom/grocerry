@@ -36,6 +36,29 @@ export const getDashboardStats = async (req, res) => {
             .limit(10)
             .select('id name stock');
 
+        // Get monthly sales for the last 12 months
+        const twelveMonthsAgo = new Date();
+        twelveMonthsAgo.setMonth(twelveMonthsAgo.getMonth() - 12);
+        
+        const monthlySales = await Order.aggregate([
+            {
+                $match: {
+                    ordered_at: { $gte: twelveMonthsAgo },
+                    status: { $ne: 'CANCELLED' }
+                }
+            },
+            {
+                $group: {
+                    _id: {
+                        year: { $year: '$ordered_at' },
+                        month: { $month: '$ordered_at' }
+                    },
+                    totalSales: { $sum: '$total' }
+                }
+            },
+            { $sort: { '_id.year': 1, '_id.month': 1 } }
+        ]);
+
         res.status(200).json({
             stats: {
                 totalProducts,
@@ -46,7 +69,8 @@ export const getDashboardStats = async (req, res) => {
             },
             recentOrders,
             ordersByStatus,
-            lowStockProducts
+            lowStockProducts,
+            monthlySales
         });
     } catch (error) {
         console.error("Dashboard Stats Error:", error);

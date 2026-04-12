@@ -75,7 +75,6 @@ export const generateCartPDF = (cart, cartCount, getTotal) => {
             displayName = displayName + '...';
         }
 
-        // Draw text at current yPosition
         doc.text(displayName, margin + 3, yPosition + 5);
         doc.text(String(quantity), margin + col1Width + 3, yPosition + 5);
         doc.text('Rs.' + unitPrice.toFixed(2), margin + col1Width + col2Width + 3, yPosition + 5);

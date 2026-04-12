@@ -4,6 +4,25 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchDashboardStats } from "../../../actions/admin";
 import Loading from "../../../components/loading/Loading";
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend,
+} from 'chart.js';
+import { Bar } from 'react-chartjs-2';
+
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend
+);
 
 const Admin = () => {
     const adminData = useSelector(state => state.admin);
@@ -68,6 +87,110 @@ const Admin = () => {
     const stats = adminData?.stats || {};
     const recentOrders = adminData?.recentOrders || [];
     const lowStockProducts = adminData?.lowStockProducts || [];
+    const monthlySales = adminData?.monthlySales || [];
+
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const salesData = new Array(12).fill(0);
+    monthlySales.forEach(item => {
+        const monthIndex = item._id.month - 1;
+        salesData[monthIndex] = item.totalSales;
+    });
+
+    const chartData = {
+        labels: monthNames,
+        datasets: [
+            {
+                label: 'Monthly Sales (₹)',
+                data: salesData,
+                backgroundColor: [
+                    'rgba(34, 197, 94, 0.8)',
+                    'rgba(59, 130, 246, 0.8)',
+                    'rgba(249, 115, 22, 0.8)',
+                    'rgba(139, 92, 246, 0.8)',
+                    'rgba(236, 72, 153, 0.8)',
+                    'rgba(20, 184, 166, 0.8)',
+                    'rgba(234, 179, 8, 0.8)',
+                    'rgba(162, 28, 175, 0.8)',
+                    'rgba(14, 165, 233, 0.8)',
+                    'rgba(99, 102, 241, 0.8)',
+                    'rgba(248, 113, 113, 0.8)',
+                    'rgba(52, 211, 153, 0.8)',
+                ],
+                borderColor: [
+                    'rgb(34, 197, 94)',
+                    'rgb(59, 130, 246)',
+                    'rgb(249, 115, 22)',
+                    'rgb(139, 92, 246)',
+                    'rgb(236, 72, 153)',
+                    'rgb(20, 184, 166)',
+                    'rgb(234, 179, 8)',
+                    'rgb(162, 28, 175)',
+                    'rgb(14, 165, 233)',
+                    'rgb(99, 102, 241)',
+                    'rgb(248, 113, 113)',
+                    'rgb(52, 211, 153)',
+                ],
+                borderWidth: 2,
+                borderRadius: 8,
+                borderSkipped: false,
+            },
+        ],
+    };
+
+    const chartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'top',
+                labels: {
+                    usePointStyle: true,
+                    padding: 20,
+                    font: { size: 12 }
+                }
+            },
+            title: {
+                display: true,
+                text: 'Monthly Sales (Last 12 Months)',
+                font: { size: 16, weight: 'bold' },
+                padding: { bottom: 20 }
+            },
+            tooltip: {
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                padding: 12,
+                cornerRadius: 8,
+                callbacks: {
+                    label: (context) => `Sales: ₹${context.raw?.toLocaleString() || 0}`
+                }
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                grid: {
+                    color: 'rgba(0, 0, 0, 0.05)'
+                },
+                title: {
+                    display: true,
+                    text: 'Sales (₹)',
+                    font: { weight: 'bold' }
+                },
+                ticks: {
+                    callback: (value) => '₹' + value.toLocaleString()
+                }
+            },
+            x: {
+                grid: {
+                    display: false
+                },
+                title: {
+                    display: true,
+                    text: 'Month',
+                    font: { weight: 'bold' }
+                }
+            }
+        }
+    };
 
     // Render error state
     if (error) {
@@ -156,6 +279,18 @@ const Admin = () => {
                             <div className={styles['stat-label']}>Total Revenue</div>
                         </div>
                     </div>
+
+                    {/* Sales Chart */}
+                    {monthlySales.length > 0 && (
+                        <div className={styles['chart-section']}>
+                            <div className={'heading'}>
+                                <h2>Sales Overview</h2>
+                            </div>
+                            <div className={styles['chart-container']}>
+                                <Bar data={chartData} options={chartOptions} />
+                            </div>
+                        </div>
+                    )}
 
                     {/* Quick Actions */}
                     <div className={'heading'}>
