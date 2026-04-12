@@ -123,20 +123,22 @@ const requiredEnv = [
     'MONGO_URI',
     'JWT_SECRET_KEY',
     'EMAIL_USER',
-    'EMAIL_PASS',
-    'RAZORPAY_KEY_ID',
-    'RAZORPAY_KEY_SECRET'
+    'EMAIL_PASS'
 ];
 const missing = requiredEnv.filter(k => !process.env[k]);
 if (missing.length > 0) {
-    console.error(`FATAL ERROR: Missing required environment variables: ${missing.join(', ')}`);
-    console.error(`Please add these in Render dashboard -> Environment.`);
+    console.error(`FATAL ERROR: Missing critical environment variables: ${missing.join(', ')}`);
+    console.error(`Please add these in .env or Render dashboard.`);
     process.exit(1);
 }
 
-if (!process.env.STRIPE_PRIVATE_KEY) {
-    console.warn("WARNING: STRIPE_PRIVATE_KEY is missing. Stripe features will be disabled.");
-}
+// Optional Service Checks
+const optionalEnv = ['RAZORPAY_KEY_ID', 'RAZORPAY_KEY_SECRET', 'STRIPE_PRIVATE_KEY'];
+optionalEnv.forEach(key => {
+    if (!process.env[key]) {
+        console.warn(`WARNING: ${key} is missing. Related features will be disabled.`);
+    }
+});
 
 let server;
 mongoose.connect(process.env.MONGO_URI, mongooseOptions)

@@ -14,9 +14,9 @@ export const getDashboardStats = async (req, res) => {
         const totalShipments = await Shipments.countDocuments();
         const totalUsers = await Users.countDocuments();
 
-        // Get revenue from completed orders
-        const completedOrders = await Order.find({ status: 'DELIVERED' });
-        const totalRevenue = completedOrders.reduce((sum, order) => sum + (order.total || 0), 0);
+        // Get revenue from non-cancelled orders
+        const validOrders = await Order.find({ status: { $ne: 'CANCELLED' } });
+        const totalRevenue = validOrders.reduce((sum, order) => sum + (order.total || 0), 0);
 
         // Get recent orders (last 5)
         const recentOrders = await Order.find()

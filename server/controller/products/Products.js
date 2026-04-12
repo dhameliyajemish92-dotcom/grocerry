@@ -24,13 +24,15 @@ export const updateQuantity = async (req, res) => {
         const { products } = req.body;
         for (const product of products) {
             const searchedProduct = await Products.findOne({ id: product.product_id });
-            if (searchedProduct.stock !== undefined) {
-                if (searchedProduct.stock - product.quantity <= 0) {
-                    await Products.findOneAndUpdate({ id: product.product_id }, { "stock": 0 });
-                }
-                else {
-                    await Products.findOneAndUpdate({ id: product.product_id }, { "stock": searchedProduct.stock - product.quantity });
-                }
+            if (searchedProduct && searchedProduct.stock !== undefined) {
+                const newStock = Math.max(0, searchedProduct.stock - product.quantity);
+                await Products.findOneAndUpdate(
+                    { id: product.product_id }, 
+                    { 
+                        "stock": newStock,
+                        "availability.in_stock": newStock > 0
+                    }
+                );
             }
         }
         res.status(200).json({ message: "updated" });
@@ -86,17 +88,38 @@ const ShowProductsPerCategory = async (category, products) => {
     }
 }
 
+const mapProductData = (data) => {
+    return {
+        id: data.product_id || data.id,
+        name: data.name,
+        brand: data.brand || 'N/A',
+        category: data.category,
+        stock: parseInt(data.stock || 0),
+        image: data.image,
+        pricing: {
+            mrp: parseFloat(data.mrp || data.price || 0),
+            selling_price: parseFloat(data.selling_price || data.price || 0)
+        },
+        packaging: {
+            quantity: String(data.quantity || data.weight || "1"),
+            unit: String(data.unit || data.measurement || "kg")
+        },
+        availability: {
+            in_stock: parseInt(data.stock || 0) > 0
+        }
+    };
+};
+
 export const PostProducts = async (req, res) => {
-    const product = req.body;
-    const newProduct = new Products(product);
     try {
+        const productData = mapProductData(req.body);
+        const newProduct = new Products(productData);
         await newProduct.save();
         res.status(201).send(newProduct);
-
     } catch (error) {
+        console.error("Post Product Error:", error);
         res.status(409).json({ message: error.message });
     }
-
 }
 
 export const ProductsRecommendations = async (req, res) => {
@@ -209,29 +232,22 @@ export const validateCart = async (req, res) => {
                 });
             }
 
-            const stock = product.stock !== undefined ? product.stock : (product.availability?.in_stock ? Infinity : 0);
-            const price = product.pricing?.selling_price !== undefined ? product.pricing.selling_price : product.price;
+            const stock = product.stock ?? (product.availability?.in_stock ? 999 : 0);
+            const price = product.pricing?.selling_price ?? product.price ?? 0;
 
-            // 400 - the product is out of stock
-            if (!stock && stock !== 0) // if stock is undefined and not 0, it might be false from bool check? logic below covers it
-                if (product.availability && !product.availability.in_stock)
-                    return res.status(400).json({
-                        message: `${product.name} is out of stock`,
-                        product_id: product.product_id
-                    });
-
-            if (stock === 0)
+            if (stock <= 0) {
                 return res.status(400).json({
                     message: `${product.name} is out of stock`,
                     product_id: product.id
                 });
+            }
 
-            // 400 - product stock is not enough for purchase
-            if (stock < cartProduct.quantity)
+            if (stock < cartProduct.quantity) {
                 return res.status(400).json({
-                    message: `Not enough stock for ${product.name} to complete the purchase. Requested items: ${cartProduct.quantity}`,
+                    message: `Not enough stock for ${product.name}. Available: ${stock}, Requested: ${cartProduct.quantity}`,
                     product_id: product.id
                 });
+            }
 
             // calculate total price from the database
             totalPrice += price * cartProduct.quantity;
@@ -305,15 +321,16 @@ const updateProducts = async (products) => {
     const updated = [];
 
     for (const product of products) {
-        const res = await Products.updateOne({ id: product.product_id }, product);
+        const productData = mapProductData(product);
+        const res = await Products.updateOne({ id: productData.id }, productData);
 
         // if the product was updated push it to the array
         if (res.modifiedCount !== 0)
-            updated.push(product);
+            updated.push(productData);
         // if the product doesn't exist in the database, add it
         else if (res.matchedCount === 0) {
-            await Products.create(product);
-            updated.push(product);
+            await Products.create(productData);
+            updated.push(productData);
         }
     }
 
@@ -322,8 +339,9 @@ const updateProducts = async (products) => {
 
 const regenerateDatabase = async (products) => {
     await Products.deleteMany();
-    await Products.insertMany(products);
-    return products;
+    const mappedProducts = products.map(p => mapProductData(p));
+    await Products.insertMany(mappedProducts);
+    return mappedProducts;
 }
 
 /**

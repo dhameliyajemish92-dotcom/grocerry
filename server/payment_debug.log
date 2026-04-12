@@ -1,46 +1,43 @@
-[2026-02-14T04:44:27.087Z] Payments.js module loaded with Direct Axios Implementation 
-[2026-02-14T04:45:17.712Z] createCheckoutSession started {
+[2026-03-13T19:26:19.113Z] createCheckoutSession started {
   "body": {
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9kdWN0cyI6W3sicHJvZHVjdF9pZCI6IlBSRDAwMSIsIm5hbWUiOiJCbGFjayBUZWEgUGFja2V0IiwicHJpY2UiOjEyMCwicXVhbnRpdHkiOjEsImltYWdlIjoiL2ltYWdlcy9ncm9jZXJ5L0JldmVyYWdlcy9ibGFja190ZWFfcGFja2V0XzAwMS5qcGciLCJicmFuZCI6IkxpcHRvbiIsInBhY2thZ2luZyI6eyJxdWFudGl0eSI6IjI1MCIsInVuaXQiOiJnIn19LHsicHJvZHVjdF9pZCI6IlBSRDAwMiIsIm5hbWUiOiJDb2NvbnV0IFdhdGVyIEJvdHRsZSIsInByaWNlIjo1NSwicXVhbnRpdHkiOjEsImltYWdlIjoiL2ltYWdlcy9ncm9jZXJ5L0JldmVyYWdlcy9jb2NvbnV0X3dhdGVyX2JvdHRsZV8wMDIuanBnIiwiYnJhbmQiOiJDb2NvIiwicGFja2FnaW5nIjp7InF1YW50aXR5IjoiMjUwIiwidW5pdCI6Im1sIn19XSwidG90YWwiOiIxNzUuMDAiLCJpYXQiOjE3NzEwNDQyNzQsImV4cCI6MTc3MTA0Nzg3NH0.cN-5P1gS4ey0S8m5nRhzrOMh4sP3JR-9rxAp24F9mBk",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9kdWN0cyI6W3sicHJvZHVjdF9pZCI6IkhPTUVfMDExIiwibmFtZSI6IkhhbmQgU2FuaXRpemVyIiwicHJpY2UiOjEwMCwicXVhbnRpdHkiOjEsImltYWdlIjoiL2ltYWdlcy9ncm9jZXJ5L1BlcnNvbmFsQ2FyZS9oYW5kX3Nhbml0aXplcl9ib3R0bGVfMDEwLmpwZyIsImJyYW5kIjoiR2VuZXJpYyIsInBhY2thZ2luZyI6eyJxdWFudGl0eSI6IjEiLCJ1bml0IjoiYm90dGxlIn19XSwidG90YWwiOiIxMDAuMDAiLCJpYXQiOjE3NzM0Mjk5NDMsImV4cCI6MTc3MzQzMzU0M30.xzI7bMOO31qrAlAB_GOj7QtdTh-bcx6piZkKsCNi_GY",
     "data": {
       "name": {
-        "first": "abc",
-        "last": "bcd"
+        "first": "Jemish",
+        "last": "Dhameliya"
       },
-      "email": "dhameliyajemish1@gmail.com",
+      "email": "Djemisb4@gmail.com",
       "phone_number": "9313683554",
       "address": {
         "country": "India",
-        "street": "513",
-        "area": "sarthana",
-        "city": "surat",
-        "state": "gujrat",
-        "pincode": "394004"
+        "street": "Tys",
+        "area": "Dhdjd",
+        "city": "Djd",
+        "state": "Dhds",
+        "pincode": "946443"
       },
       "payment_method": "UPI"
     }
   }
 }
-[2026-02-14T04:45:17.713Z] Creating Razorpay order via Axios {
+[2026-03-13T19:26:19.119Z] Creating Razorpay order via Axios {
   "options": {
-    "amount": 17500,
+    "amount": 10000,
     "currency": "INR",
-    "receipt": "WLF297"
+    "receipt": "OKC945"
   },
-  "key_id": "rzp_test_GFjWtFrV9orbTZ"
+  "key_id": "dummy_key_id"
 }
-[2026-02-14T04:45:17.854Z] RAZORPAY API ERROR (AXIOS) {
+[2026-03-13T19:26:19.728Z] RAZORPAY API ERROR (AXIOS) {
   "message": "Request failed with status code 401",
   "response": {
     "error": {
-      "code": "BAD_REQUEST_ERROR",
-      "description": "Authentication failed"
+      "description": "Authentication failed",
+      "code": "BAD_REQUEST_ERROR"
     }
   }
 }
-[2026-02-16T08:32:49.425Z] Payments.js module loaded with Direct Axios Implementation 
-[2026-03-06T18:08:02.876Z] Payments.js module loaded with Direct Axios Implementation 
-[2026-03-06T18:11:18.716Z] Payments.js module loaded with Direct Axios Implementation 
-[2026-03-06T18:11:48.916Z] Payments.js module loaded with Direct Axios Implementation 
-[2026-03-09T12:37:03.172Z] Payments.js module loaded with Direct Axios Implementation 
-[2026-03-10T09:16:46.208Z] Payments.js module loaded with Direct Axios Implementation 
+[2026-03-13T19:32:45.740Z] Payments.js module loaded with Direct Axios Implementation 
+[2026-03-13T19:33:38.093Z] Payments.js module loaded with Direct Axios Implementation 
+[2026-03-30T15:24:13.626Z] Payments.js module loaded with Direct Axios Implementation 
+[2026-04-11T05:47:08.590Z] Payments.js module loaded with Direct Axios Implementation 

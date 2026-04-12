@@ -93,7 +93,12 @@ export const verifyOtp = async (req, res) => {
         await user.save();
 
         const token = jwt.sign(
-            { id: user._id, email: user.email },
+            { 
+                id: user._id, 
+                email: user.email,
+                role: user.role,
+                isVerified: true
+            },
             process.env.JWT_SECRET_KEY,
             { expiresIn: '1w' }
         );
@@ -136,6 +141,14 @@ export const login = async (req, res) => {
         if (!isPasswordCorrect)
             return res.status(400).json({ message: "Wrong password" });
 
+        // --- ADMIN PROMOTION LOGIC ---
+        // Ensure the primary account always has ADMIN role in the database
+        if (email === process.env.EMAIL_USER && user.role !== 'ADMIN') {
+            user.role = 'ADMIN';
+            await user.save();
+            console.log(`User ${email} promoted to ADMIN automatically at login.`);
+        }
+
         // 🔥 IMPORTANT FIX:
         // Email verified check REMOVED
         // Login allowed even if isVerified = false
@@ -144,6 +157,8 @@ export const login = async (req, res) => {
             {
                 id: user._id,
                 email: user.email,
+                role: user.role,
+                isVerified: user.isVerified
             },
             process.env.JWT_SECRET_KEY,
             { expiresIn: process.env.JWT_AUTH_TTL || "1h" }

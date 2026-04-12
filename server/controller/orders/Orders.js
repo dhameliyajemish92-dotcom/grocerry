@@ -298,6 +298,21 @@ export const updateOrder = async (req, res) => {
             return res.status(404).json({ message: "Order does not exist" });
         }
 
+        // --- SYNC WITH SHIPMENTS ---
+        try {
+            const Shipments = (await import('../../model/Shipments.js')).default;
+            if (['SHIPPED', 'DELIVERED'].includes(status)) {
+                await Shipments.findOneAndUpdate(
+                    { order_id: req.params.id },
+                    { status: status },
+                    { new: true }
+                );
+                console.log(`Shipment for ${req.params.id} synced to ${status}`);
+            }
+        } catch (syncErr) {
+            console.warn("Shipment sync failed (non-critical):", syncErr.message);
+        }
+
         res.status(200).json(updated);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -527,22 +542,22 @@ export const sendReceiptEmail = async (req, res) => {
 
             doc.fillColor('black').fontSize(9).font('Helvetica');
             doc.text(`Subtotal (excl. GST):`, boxX + 5, y + 8);
-            doc.text(`Rs. ${subtotal.toFixed(2)}`, boxX + 200, y + 8, { align: 'right', width: 0 });
+            doc.text(`₹ ${subtotal.toFixed(2)}`, boxX + 200, y + 8, { align: 'right', width: 0 });
 
             doc.text(`CGST (${GST_RATE / 2}%):`, boxX + 5, y + 22);
-            doc.text(`Rs. ${(totalGST / 2).toFixed(2)}`, boxX + 200, y + 22, { align: 'right', width: 0 });
+            doc.text(`₹ ${(totalGST / 2).toFixed(2)}`, boxX + 200, y + 22, { align: 'right', width: 0 });
 
             doc.text(`SGST (${GST_RATE / 2}%):`, boxX + 5, y + 36);
-            doc.text(`Rs. ${(totalGST / 2).toFixed(2)}`, boxX + 200, y + 36, { align: 'right', width: 0 });
+            doc.text(`₹ ${(totalGST / 2).toFixed(2)}`, boxX + 200, y + 36, { align: 'right', width: 0 });
 
             doc.text(`Total GST (${GST_RATE}%):`, boxX + 5, y + 50);
-            doc.text(`Rs. ${totalGST.toFixed(2)}`, boxX + 200, y + 50, { align: 'right', width: 0 });
+            doc.text(`₹ ${totalGST.toFixed(2)}`, boxX + 200, y + 50, { align: 'right', width: 0 });
 
             // Grand Total
             doc.rect(boxX, y + 65, 205, 20).fill('#00b106');
             doc.fillColor('white').fontSize(11).font('Helvetica-Bold');
             doc.text('Grand Total:', boxX + 5, y + 70);
-            doc.text(`Rs. ${order.total.toFixed(2)}`, boxX + 200, y + 70, { align: 'right', width: 0 });
+            doc.text(`₹ ${order.total.toFixed(2)}`, boxX + 200, y + 70, { align: 'right', width: 0 });
 
             y += 100;
 
@@ -572,7 +587,7 @@ export const sendReceiptEmail = async (req, res) => {
             <div style="border: 1px solid #ddd; border-top: none; padding: 20px; border-radius: 0 0 10px 10px;">
                 <h2 style="color: #333;">Order #${order.order_id}</h2>
                 <p><strong>Date:</strong> ${orderDate}</p>
-                <p><strong>Total:</strong> Rs. ${order.total.toFixed(2)} (incl. ${GST_RATE}% GST)</p>
+                <p><strong>Total:</strong> ₹ ${order.total.toFixed(2)} (incl. ${GST_RATE}% GST)</p>
                 <p><strong>Payment:</strong> ${order.payment_method || 'N/A'}</p>
                 <p><strong>Status:</strong> ${order.status}</p>
                 <hr style="border: 1px solid #eee;">
@@ -584,7 +599,7 @@ export const sendReceiptEmail = async (req, res) => {
         </html>
         `;
 
-        const textContent = `Order Invoice - #${order.order_id}\nDate: ${orderDate}\nTotal: Rs. ${order.total}\nPlease find your GST invoice attached.`;
+        const textContent = `Order Invoice - #${order.order_id}\nDate: ${orderDate}\nTotal: ₹ ${order.total}\nPlease find your GST invoice attached.`;
 
         const attachments = [
             {

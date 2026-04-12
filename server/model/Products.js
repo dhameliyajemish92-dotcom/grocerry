@@ -18,8 +18,13 @@ const productSchema = new Schema(
 
         brand: {
             type: String,
-            required: true,
+            default: 'N/A',
             trim: true
+        },
+
+        stock: {
+            type: Number,
+            default: 0
         },
 
         category: {

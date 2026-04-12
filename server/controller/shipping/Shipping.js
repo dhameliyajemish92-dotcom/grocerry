@@ -85,6 +85,19 @@ export const updateShipments = async (req, res) => {
 
         const shipmentResponse = await Shipments.findOneAndUpdate({ order_id }, { status });
 
+        // --- SYNC WITH ORDERS ---
+        try {
+            if (['SHIPPED', 'DELIVERED'].includes(status)) {
+                await Order.findOneAndUpdate(
+                    { order_id: order_id },
+                    { status: status }
+                );
+                console.log(`Order ${order_id} synced to ${status} via Shipment update`);
+            }
+        } catch (syncErr) {
+            console.warn("Order sync failed (non-critical):", syncErr.message);
+        }
+
         return res.status(200).json(shipmentResponse);
     } catch (e) {
         return res.status(400).json({ message: e.message });
