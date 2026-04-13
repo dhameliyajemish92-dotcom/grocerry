@@ -27,7 +27,7 @@ const Cart = ({ cart, cartCount, updateQuantity }) => {
         if (!cart || cart.length === 0) return;
         setEmailLoading(true);
         setEmailMessage('');
-        
+
         // Create a temporary order object from cart for the email
         const tempOrder = {
             order_id: 'CART-' + Date.now(),
@@ -40,7 +40,7 @@ const Cart = ({ cart, cartCount, updateQuantity }) => {
             total: getTotal(),
             ordered_at: Date.now()
         };
-        
+
         sendReceiptEmail(tempOrder.order_id)
             .then(() => {
                 setEmailMessage('Cart invoice sent to your email!');
@@ -92,22 +92,6 @@ const Cart = ({ cart, cartCount, updateQuantity }) => {
             {error && <Error error={error} setError={setError} />}
             <div className={'heading'}>
                 <h1>Shopping Cart</h1>
-            </div>
-            <div className={styles['button-wrapper']}>
-                <button 
-                    onClick={handleDownloadPDF} 
-                    className={`btn2 ${styles['pdf-btn']}`}
-                    disabled={!cart || !cart.length}
-                >
-                    Download Cart PDF
-                </button>
-                <button 
-                    onClick={handleSendEmail} 
-                    className={`btn2 ${styles['email-btn']}`}
-                    disabled={emailLoading || !cart || !cart.length}
-                >
-                    {emailLoading ? 'Sending...' : 'Send Email'}
-                </button>
             </div>
             {emailMessage && <div className={styles['email-message']}>{emailMessage}</div>}
             <div className={styles['products-wrapper']}>

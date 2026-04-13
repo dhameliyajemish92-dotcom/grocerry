@@ -8,8 +8,10 @@ import authentication from "./reducers/authentication";
 import orders from "./reducers/orders";
 import shipping from "./reducers/shipping";
 import admin from "./reducers/admin";
+import cart from "./reducers/cart";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './shared/css/master.css';
 
 const renderApp = () => {

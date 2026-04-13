@@ -59,10 +59,12 @@ const Home = ({ addProductToCart, cart }) => {
                             </div>
                             <div className={styles['products-wrapper']}>
                                 {item.products.map((product, j) => {
-                                    const cartItem = cart?.find(c => c.product_id === (product.product_id || product.id));
+                                    const productId = product.product_id || product.id;
+                                    const isInCart = cart?.some(c => (c.product_id || c.id) === productId);
+                                    const cartItem = cart?.find(c => (c.product_id || c.id) === productId);
                                     return <ProductCard addProductToCart={addProductToCart}
                                         product={product} key={`${i}${j}`} 
-                                        isInCart={!!cartItem}
+                                        isInCart={isInCart}
                                         cartQuantity={cartItem?.quantity || 0}
                                     />;
                                 })}

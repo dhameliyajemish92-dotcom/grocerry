@@ -1,6 +1,7 @@
 import styles from './contact.module.css';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Container, Row, Col, Form, Button, Card } from 'react-bootstrap';
 
 const Contact = () => {
     const [formData, setFormData] = useState({
@@ -21,10 +22,8 @@ const Contact = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Simulate form submission
         console.log('Contact form submitted:', formData);
         setSubmitted(true);
-        // Reset form after 3 seconds
         setTimeout(() => {
             setSubmitted(false);
             setFormData({
@@ -38,101 +37,118 @@ const Contact = () => {
     };
 
     return (
-        <div className={styles['wrapper']}>
-            <div className={styles['container']}>
-                <div className={styles['header']}>
-                    <h1>Contact Us</h1>
-                    <p>Have questions? We'd love to hear from you.</p>
-                </div>
+        <Container className={`py-5 ${styles['wrapper']}`}>
+            <div className={`${styles['header']} text-center mb-5`}>
+                <h1>Contact Us</h1>
+                <p className="text-muted">Have questions? We'd love to hear from you.</p>
+            </div>
 
-                <div className={styles['content']}>
-                    <div className={styles['contact-info']}>
-                        <div className={styles['info-card']}>
-                            <div className={styles['info-icon']}>📱</div>
-                            <h3>WhatsApp</h3>
-                            <p>Chat with us directly</p>
-                            <a href="https://wa.me/9313683554" target="_blank" rel="noreferrer">
-                                9313683554
-                            </a>
-                        </div>
+            <Row className="mb-5">
+                <Col lg={4} className="mb-4 mb-lg-0">
+                    <Row>
+                        <Col md={6} lg={12} className="mb-4">
+                            <Card className="h-100 text-center shadow-sm">
+                                <Card.Body>
+                                    <h3 className="fs-1 mb-3">📱</h3>
+                                    <Card.Title>WhatsApp</Card.Title>
+                                    <Card.Text className="text-muted mb-2">Chat with us directly</Card.Text>
+                                    <a href="https://wa.me/9313683554" target="_blank" rel="noreferrer" className="text-decoration-none fw-bold">
+                                        9313683554
+                                    </a>
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                        <Col md={6} lg={12} className="mb-4">
+                            <Card className="h-100 text-center shadow-sm">
+                                <Card.Body>
+                                    <h3 className="fs-1 mb-3">📧</h3>
+                                    <Card.Title>Email</Card.Title>
+                                    <Card.Text className="text-muted mb-2">Send us an email</Card.Text>
+                                    <a href="mailto:dhameliyajemish92@gmail.com" className="text-decoration-none fw-bold">
+                                        dhameliyajemish92@gmail.com
+                                    </a>
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                        <Col md={6} lg={12} className="mb-4">
+                            <Card className="h-100 text-center shadow-sm">
+                                <Card.Body>
+                                    <h3 className="fs-1 mb-3">🕐</h3>
+                                    <Card.Title>Business Hours</Card.Title>
+                                    <Card.Text className="text-muted mb-2">We're available</Card.Text>
+                                    <span className="fw-bold">Mon - Sat: 9AM - 9PM</span>
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                        <Col md={6} lg={12} className="mb-4">
+                            <Card className="h-100 text-center shadow-sm">
+                                <Card.Body>
+                                    <h3 className="fs-1 mb-3">📍</h3>
+                                    <Card.Title>Location</Card.Title>
+                                    <Card.Text className="text-muted mb-2">Visit our store</Card.Text>
+                                    <div className="ratio ratio-16x9">
+                                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3719.467135275085!2d72.88133607454674!3d21.21331698141555!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x63bda34bdc66ea7b%3A0x73a6ba289aca9c91!2sPicode%20Digital%20agency!5e0!3m2!1sen!2sin!4v1776062961775!5m2!1sen!2sin" style={{ border: 0 }} allowFullScreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade" title="Map"></iframe>
+                                    </div>
+                                </Card.Body>
+                            </Card>
+                        </Col>
+                    </Row>
+                </Col>
 
-                        <div className={styles['info-card']}>
-                            <div className={styles['info-icon']}>📧</div>
-                            <h3>Email</h3>
-                            <p>Send us an email</p>
-                            <a href="mailto:dhameliyajemish92@gmail.com">
-                                dhameliyajemish92@gmail.com
-                            </a>
-                        </div>
-
-                        <div className={styles['info-card']}>
-                            <div className={styles['info-icon']}>🕐</div>
-                            <h3>Business Hours</h3>
-                            <p>We're available</p>
-                            <span>Mon - Sat: 9AM - 9PM</span>
-                        </div>
-
-                        <div className={styles['info-card']}>
-                            <div className={styles['info-icon']}>📍</div>
-                            <h3>Location</h3>
-                            <p>Visit our store</p>
-                            <span>jakatnaka,surat, India</span>
-                        </div>
-                    </div>
-
-                    <div className={styles['form-section']}>
-                        <h2>Send us a Message</h2>
+                <Col lg={8}>
+                    <Card className={`p-4 p-md-5 shadow-sm h-100 ${styles['form-section']}`}>
+                        <h2 className="mb-4">Send us a Message</h2>
                         {submitted ? (
-                            <div className={styles['success-message']}>
-                                <span className={styles['success-icon']}>✓</span>
+                            <div className="text-center py-5">
+                                <div className="display-1 text-success mb-3">✓</div>
                                 <h3>Message Sent!</h3>
-                                <p>Thank you for contacting us. We'll get back to you soon.</p>
+                                <p className="text-muted">Thank you for contacting us. We'll get back to you soon.</p>
                             </div>
                         ) : (
-                            <form onSubmit={handleSubmit} className={styles['contact-form']}>
-                                <div className={styles['form-row']}>
-                                    <div className={styles['form-group']}>
-                                        <label htmlFor="name">Your Name *</label>
-                                        <input
-                                            type="text"
-                                            id="name"
-                                            name="name"
-                                            value={formData.name}
-                                            onChange={handleChange}
-                                            required
-                                            placeholder="John Doe"
-                                        />
-                                    </div>
-                                    <div className={styles['form-group']}>
-                                        <label htmlFor="phone">Phone Number</label>
-                                        <input
-                                            type="tel"
-                                            id="phone"
-                                            name="phone"
-                                            value={formData.phone}
-                                            onChange={handleChange}
-                                            placeholder="+91 98765 43210"
-                                        />
-                                    </div>
-                                </div>
+                            <Form onSubmit={handleSubmit}>
+                                <Row>
+                                    <Col md={6}>
+                                        <Form.Group className="mb-4" controlId="name">
+                                            <Form.Label>Your Name <span className="text-danger">*</span></Form.Label>
+                                            <Form.Control
+                                                type="text"
+                                                name="name"
+                                                value={formData.name}
+                                                onChange={handleChange}
+                                                required
+                                                placeholder="John Doe"
+                                            />
+                                        </Form.Group>
+                                    </Col>
+                                    <Col md={6}>
+                                        <Form.Group className="mb-4" controlId="phone">
+                                            <Form.Label>Phone Number</Form.Label>
+                                            <Form.Control
+                                                type="tel"
+                                                name="phone"
+                                                value={formData.phone}
+                                                onChange={handleChange}
+                                                placeholder="+91 98765 43210"
+                                            />
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
 
-                                <div className={styles['form-group']}>
-                                    <label htmlFor="email">Email Address *</label>
-                                    <input
+                                <Form.Group className="mb-4" controlId="email">
+                                    <Form.Label>Email Address <span className="text-danger">*</span></Form.Label>
+                                    <Form.Control
                                         type="email"
-                                        id="email"
                                         name="email"
                                         value={formData.email}
                                         onChange={handleChange}
                                         required
                                         placeholder="john@example.com"
                                     />
-                                </div>
+                                </Form.Group>
 
-                                <div className={styles['form-group']}>
-                                    <label htmlFor="subject">Subject *</label>
-                                    <select
-                                        id="subject"
+                                <Form.Group className="mb-4" controlId="subject">
+                                    <Form.Label>Subject <span className="text-danger">*</span></Form.Label>
+                                    <Form.Select
                                         name="subject"
                                         value={formData.subject}
                                         onChange={handleChange}
@@ -145,53 +161,69 @@ const Contact = () => {
                                         <option value="refund">Refund Request</option>
                                         <option value="feedback">Feedback</option>
                                         <option value="other">Other</option>
-                                    </select>
-                                </div>
+                                    </Form.Select>
+                                </Form.Group>
 
-                                <div className={styles['form-group']}>
-                                    <label htmlFor="message">Your Message *</label>
-                                    <textarea
-                                        id="message"
+                                <Form.Group className="mb-4" controlId="message">
+                                    <Form.Label>Your Message <span className="text-danger">*</span></Form.Label>
+                                    <Form.Control
+                                        as="textarea"
                                         name="message"
                                         value={formData.message}
                                         onChange={handleChange}
                                         required
-                                        rows="5"
+                                        rows={6}
                                         placeholder="How can we help you?"
-                                    ></textarea>
-                                </div>
+                                    />
+                                </Form.Group>
 
-                                <button type="submit" className={styles['submit-btn']}>
+                                <Button variant="primary" type="submit" size="lg" className="w-100 mt-2">
                                     Send Message
-                                </button>
-                            </form>
+                                </Button>
+                            </Form>
                         )}
-                    </div>
-                </div>
+                    </Card>
+                </Col>
+            </Row>
 
-                <div className={styles['faq-section']}>
-                    <h2>Frequently Asked Questions</h2>
-                    <div className={styles['faq-grid']}>
-                        <div className={styles['faq-item']}>
-                            <h4>How do I track my order?</h4>
-                            <p>You can track your order by visiting the <Link to="/shipping">Track Shipping</Link> page and entering your order ID.</p>
-                        </div>
-                        <div className={styles['faq-item']}>
-                            <h4>What is the delivery timeframe?</h4>
-                            <p>We typically deliver within 20 minutes depending on your location.</p>
-                        </div>
-                        <div className={styles['faq-item']}>
-                            <h4>How can I return a product?</h4>
-                            <p>Contact us via WhatsApp or email within 2 days of delivery for return instructions.</p>
-                        </div>
-                        <div className={styles['faq-item']}>
-                            <h4>Do you deliver to my area?</h4>
-                            <p>We currently deliver across surat. Contact us to check delivery availability in your area.</p>
-                        </div>
-                    </div>
-                </div>
+            <div className={`mt-5 text-center ${styles['faq-section']}`}>
+                <h2 className="mb-4">Frequently Asked Questions</h2>
+                <Row>
+                    <Col md={6} className="mb-4 text-start">
+                        <Card className="h-100 shadow-sm border-0 bg-light">
+                            <Card.Body>
+                                <h4>How do I track my order?</h4>
+                                <p className="text-muted">You can track your order by visiting the <Link to="/shipping" className="text-decoration-none">Track Shipping</Link> page and entering your order ID.</p>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                    <Col md={6} className="mb-4 text-start">
+                        <Card className="h-100 shadow-sm border-0 bg-light">
+                            <Card.Body>
+                                <h4>What is the delivery timeframe?</h4>
+                                <p className="text-muted">We typically deliver within 20 minutes depending on your location.</p>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                    <Col md={6} className="mb-4 text-start">
+                        <Card className="h-100 shadow-sm border-0 bg-light">
+                            <Card.Body>
+                                <h4>How can I return a product?</h4>
+                                <p className="text-muted">Contact us via WhatsApp or email within 2 days of delivery for return instructions.</p>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                    <Col md={6} className="mb-4 text-start">
+                        <Card className="h-100 shadow-sm border-0 bg-light">
+                            <Card.Body>
+                                <h4>Do you deliver to my area?</h4>
+                                <p className="text-muted">We currently deliver across surat. Contact us to check delivery availability in your area.</p>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                </Row>
             </div>
-        </div>
+        </Container>
     );
 }
 

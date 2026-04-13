@@ -43,10 +43,12 @@ const Wishlist = ({addProductToCart, cart}) => {
                 </div> :
                 <div className={styles['products-wrapper']}>
                     {products.map((product, i) => {
-                        const cartItem = cart?.find(c => c.product_id === (product.product_id || product.id));
+                        const productId = product.product_id || product.id;
+                        const isInCart = cart?.some(c => (c.product_id || c.id) === productId);
+                        const cartItem = cart?.find(c => (c.product_id || c.id) === productId);
                         return <ProductCard product={product} addProductToCart={addProductToCart}
                                            key={i}
-                                           isInCart={!!cartItem}
+                                           isInCart={isInCart}
                                            cartQuantity={cartItem?.quantity || 0}
                         />;
                     })}

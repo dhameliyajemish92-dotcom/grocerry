@@ -1,14 +1,14 @@
 import styles from './products.module.css';
-import {useState, useEffect} from "react";
-import {useLocation, useNavigate} from "react-router-dom";
-import {useDispatch} from "react-redux";
-import {getProductsPerPage, productsSearch} from "../../actions/products";
+import { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { getProductsPerPage, productsSearch } from "../../actions/products";
 import ProductCard from "../../components/product-card/ProductCard";
 import Pages from "../../components/pages/Pages";
 import Categories from "../../components/categories/Categories";
 import Loading from "../../components/loading/Loading";
 
-const Products = ({addProductToCart, cart}) => {
+const Products = ({ addProductToCart, cart }) => {
     const [page, setPage] = useState(1);
     const [products, setProducts] = useState([]);
     const [totalPages, setTotalPages] = useState(1);
@@ -71,20 +71,22 @@ const Products = ({addProductToCart, cart}) => {
             <div className={'heading'}>
                 <h1>Products</h1>
             </div>
-            <Categories/>
-            {loading ? <Loading/> :
+            <Categories />
+            {loading ? <Loading /> :
                 <>
                     <div className={styles['products-wrapper']}>
                         {products.map(((product, i) => {
-                            const cartItem = cart?.find(c => c.product_id === (product.product_id || product.id));
+                            const productId = product.product_id || product.id;
+                            const isInCart = cart?.some(c => (c.product_id || c.id) === productId);
+                            const cartItem = cart?.find(c => (c.product_id || c.id) === productId);
                             return <ProductCard addProductToCart={addProductToCart} key={i}
                                 product={product} productsPage={true}
-                                isInCart={!!cartItem}
-                                cartQuantity={cartItem?.quantity || 0}
+                            // isInCart={isInCart}
+                            // cartQuantity={cartItem?.quantity || 0}
                             />;
                         }))}
                     </div>
-                    <Pages max={totalPages} current={page} onPageClick={handleClick}/>
+                    <Pages max={totalPages} current={page} onPageClick={handleClick} />
                 </>
             }
         </div>

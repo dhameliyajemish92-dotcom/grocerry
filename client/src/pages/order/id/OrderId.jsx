@@ -70,7 +70,7 @@ const OrderId = () => {
                 setEmailLoading(false);
             })
             .catch(() => {
-                setEmailMessage('Failed to send email');
+                setEmailMessage('Failed to il');
                 setEmailLoading(false);
             });
     }
@@ -103,7 +103,7 @@ const OrderId = () => {
                     disabled={emailLoading}
                     style={{ marginLeft: '10px' }}
                 >
-                    {emailLoading ? 'Sending...' : 'Send Email'}
+                    {emailLoading ? 'Sending...' : 'il'}
                 </button>
             </div>
             {emailMessage && <div className={styles['email-message']}>{emailMessage}</div>}

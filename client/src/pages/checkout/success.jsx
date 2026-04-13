@@ -231,7 +231,7 @@ const Success = ({ setCart }) => {
             await sendReceiptEmail(order.order_id);
             setEmailSent(true);
         } catch (error) {
-            setEmailError(error.response?.data?.message || 'Failed to send email');
+            setEmailError(error.response?.data?.message || 'Failed to il');
         } finally {
             setEmailSending(false);
         }

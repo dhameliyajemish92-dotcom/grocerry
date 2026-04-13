@@ -7,10 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const ProductCard = ({ product, addProductToCart, productsPage = false, isInCart = false, cartQuantity = 0 }) => {
-
-    const [addToCart, setAddToCart] = useState(false);
     const [quantity, setQuantity] = useState(1);
-    console.log("ProductCard Image:", product.name, product.image);
     const wrapperRef = useRef();
     const wishlist = useSelector(state => state.authentication.user?.wishlist) || [];
     const dispatch = useDispatch();
@@ -19,62 +16,55 @@ const ProductCard = ({ product, addProductToCart, productsPage = false, isInCart
     const handleWishlist = () => {
         const onError = () => {
             navigate('/login');
-        }
-
+        };
         dispatch(updateWishlist(product.product_id || product.id, onError));
-    }
+    };
 
     const handleAddToCart = () => {
-        if (addToCart) return;
-        setAddToCart(true);
-
         const productWithQuantity = {
             ...product,
-            quantity: quantity
+            quantity
         };
-
-        setTimeout(() => {
-            addProductToCart(productWithQuantity);
-            toast.success(`${product.name} x${quantity} added to cart!`);
-            setQuantity(1);
-            setTimeout(() => setAddToCart(false), 100);
-        }, 600)
-    }
+        addProductToCart(productWithQuantity);
+        toast.success(`${product.name} x${quantity} added to cart!`);
+        setQuantity(1);
+    };
 
     const handleIncrement = () => {
         const maxStock = product.availability?.in_stock ?? product.stock ?? 99;
         if (quantity < maxStock) {
             setQuantity(quantity + 1);
         }
-    }
+    };
 
     const handleDecrement = () => {
         if (quantity > 1) {
             setQuantity(quantity - 1);
         }
-    }
+    };
 
     const getXi = () => {
         const elementData = wrapperRef.current.getBoundingClientRect();
         return elementData.x;
-    }
+    };
 
     const getXf = () => {
         const windowWidth = window.innerWidth;
         if (windowWidth > 1024)
             return windowWidth - 11 * 16;
-        return windowWidth - 5 * 16
-    }
+        return windowWidth - 5 * 16;
+    };
 
     const getYi = () => {
         const elementData = wrapperRef.current.getBoundingClientRect();
         return elementData.y;
-    }
+    };
 
     return (
         <div ref={wrapperRef}
             className={`${styles['wrapper']} ${productsPage ? styles['products-page'] : ''} ${!(product.availability?.in_stock ?? product.stock) && styles['out-of-stock']}`}>
-            {addToCart &&
+
+            {isInCart &&
                 <motion.img initial={{
                     x: getXi(),
                     y: getYi(),
@@ -95,20 +85,26 @@ const ProductCard = ({ product, addProductToCart, productsPage = false, isInCart
                     src={product.image}
                     onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/600x400?text=No+Image'; }}
                     alt={product.name} />}
+
             <div className={styles['image-wrapper']}>
-                <img src={product.image} alt={product.name} onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/600x400?text=No+Image'; }} />
+                <img src={product.image} alt={product.name}
+                    onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/600x400?text=No+Image'; }} />
                 <span onClick={handleWishlist}
                     className={`material-symbols-outlined ${styles['wishlist']} ${wishlist.includes(product.product_id || product.id) && styles['wishlisted']}`}>favorite</span>
             </div>
+
             <div className={styles['content']}>
                 <p className={styles['name']}>{product.name}</p>
                 <div className={styles['footer']}>
                     <div className={styles['details']}>
-                        <p className={styles['weight']}>{product.packaging ? `${product.packaging.quantity}${product.packaging.unit}` : `${product.weight}${product.measurement}`}</p>
+                        <p className={styles['weight']}>
+                            {product.packaging ? `${product.packaging.quantity}${product.packaging.unit}` : `${product.weight}${product.measurement}`}
+                        </p>
                         <p className={styles['price']}>
                             {product.pricing ? Number(product.pricing.selling_price).toFixed(2) : (product.price ? Number(product.price).toFixed(2) : '0.00')} ₹
                         </p>
                     </div>
+
                     {(product.availability?.in_stock ?? product.stock) ?
                         isInCart ? (
                             <div className={styles['add-section']}>
@@ -125,22 +121,16 @@ const ProductCard = ({ product, addProductToCart, productsPage = false, isInCart
                                 </div>
                             </div>
                         ) : (
-                            <div className={styles['add-section']}>
-                                <div className={styles['quantity-controls']}>
-                                    <button onClick={handleDecrement} className={styles['qty-btn']} disabled={quantity <= 1}>-</button>
-                                    <span className={styles['qty-value']}>{quantity}</span>
-                                    <button onClick={handleIncrement} className={styles['qty-btn']}>+</button>
-                                </div>
-                                <div onClick={handleAddToCart} className={styles['add-to-cart']} style={{ opacity: addToCart ? 0.7 : 1, pointerEvents: addToCart ? 'none' : 'auto' }}>
-                                    {addToCart ? 'Adding...' : 'Add to Cart'}
-                                </div>
+
+                            <div onClick={handleAddToCart} className={styles['add-to-cart']}>
+                                Add to Cart
                             </div>
                         ) :
                         <div className={styles['unavailable']}>Out of Stock</div>}
                 </div>
             </div>
-        </div>
+        </div >
     );
-}
+};
 
 export default ProductCard;

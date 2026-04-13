@@ -45,12 +45,11 @@ const App = () => {
     useEffect(() => {
         const syncCart = async () => {
             if (user?.token) {
-                // Use action wrapper to handle 401s
                 const backendCart = await cartActions.getCart();
                 setCart(backendCart || []);
             } else {
-                localStorage.removeItem('cart'); // Clear stale data
-                setCart([]);
+                const localCart = JSON.parse(localStorage.getItem('cart') || '[]');
+                setCart(localCart);
             }
         }
         syncCart();
