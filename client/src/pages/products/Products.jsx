@@ -76,9 +76,9 @@ const Products = ({ addProductToCart, cart }) => {
                 <>
                     <div className={styles['products-wrapper']}>
                         {products.map(((product, i) => {
-                            const productId = product.product_id || product.id;
-                            const isInCart = cart?.some(c => (c.product_id || c.id) === productId);
-                            const cartItem = cart?.find(c => (c.product_id || c.id) === productId);
+
+                            // const isInCart = cart?.some(c => (c.product_id || c.id) === productId);
+                            // const cartItem = cart?.find(c => (c.product_id || c.id) === productId);
                             return <ProductCard addProductToCart={addProductToCart} key={i}
                                 product={product} productsPage={true}
                             // isInCart={isInCart}

@@ -31,7 +31,8 @@ const renderApp = () => {
             authentication,
             orders,
             shipping,
-            admin
+            admin,
+            cart
         }
     });
 

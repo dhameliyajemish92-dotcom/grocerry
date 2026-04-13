@@ -1,13 +1,14 @@
 import styles from './wishlist.module.css';
 import {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {getWishlist} from "../../actions/auth";
 import Loading from "../../components/loading/Loading";
 import ProductCard from "../../components/product-card/ProductCard";
 import Error from "../../components/feedback/error/Error";
 
-const Wishlist = ({addProductToCart, cart}) => {
+const Wishlist = () => {
+    const cart = useSelector(state => state.cart.cart) || [];
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');

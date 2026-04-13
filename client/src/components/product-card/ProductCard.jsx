@@ -3,13 +3,16 @@ import { useRef, useState } from "react";
 import { motion } from 'framer-motion';
 import { useDispatch, useSelector } from "react-redux";
 import { updateWishlist } from "../../actions/auth";
+import * as cartActions from "../../actions/cart";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-const ProductCard = ({ product, addProductToCart, productsPage = false, isInCart = false, cartQuantity = 0 }) => {
+const ProductCard = ({ product, productsPage = false, isInCart = false, cartQuantity = 0 }) => {
     const [quantity, setQuantity] = useState(1);
     const wrapperRef = useRef();
     const wishlist = useSelector(state => state.authentication.user?.wishlist) || [];
+    const cart = useSelector(state => state.cart.cart) || [];
+    const user = useSelector(state => state.authentication.user);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -20,28 +23,32 @@ const ProductCard = ({ product, addProductToCart, productsPage = false, isInCart
         dispatch(updateWishlist(product.product_id || product.id, onError));
     };
 
-    const handleAddToCart = () => {
-        const productWithQuantity = {
-            ...product,
-            quantity
-        };
-        addProductToCart(productWithQuantity);
+    const handleAddToCart = async () => {
+        const productId = product.product_id || product.id;
+        const qty = quantity;
+        
+        if (user?.token) {
+            await dispatch(cartActions.addToCartAsync(productId, qty));
+        } else {
+            const productIndex = cart.findIndex((cartProduct) => cartProduct.product_id === productId);
+            let newCart;
+            if (productIndex >= 0) {
+                const updatedData = { ...cart[productIndex], quantity: cart[productIndex].quantity + qty };
+                const newArray = [...cart];
+                newArray[productIndex] = updatedData;
+                newCart = newArray;
+            } else {
+                newCart = [...cart, { ...product, product_id: productId, quantity: qty }];
+            }
+            dispatch(cartActions.setCart(newCart));
+            localStorage.setItem('cart', JSON.stringify(newCart));
+        }
+        
         toast.success(`${product.name} x${quantity} added to cart!`);
         setQuantity(1);
     };
 
-    const handleIncrement = () => {
-        const maxStock = product.availability?.in_stock ?? product.stock ?? 99;
-        if (quantity < maxStock) {
-            setQuantity(quantity + 1);
-        }
-    };
 
-    const handleDecrement = () => {
-        if (quantity > 1) {
-            setQuantity(quantity - 1);
-        }
-    };
 
     const getXi = () => {
         const elementData = wrapperRef.current.getBoundingClientRect();
@@ -109,15 +116,45 @@ const ProductCard = ({ product, addProductToCart, productsPage = false, isInCart
                         isInCart ? (
                             <div className={styles['add-section']}>
                                 <div className={styles['quantity-controls']}>
-                                    <button onClick={() => {
+                                    <button onClick={async () => {
+                                        const productId = product.product_id || product.id;
                                         if (cartQuantity > 1) {
-                                            addProductToCart({ ...product, quantity: -1 });
+                                            if (user?.token) {
+                                                await dispatch(cartActions.updateCartItemAsync(productId, cartQuantity - 1));
+                                            } else {
+                                                const newCart = cart.map(item => 
+                                                    item.product_id === productId 
+                                                        ? { ...item, quantity: item.quantity - 1 }
+                                                        : item
+                                                );
+                                                dispatch(cartActions.setCart(newCart));
+                                                localStorage.setItem('cart', JSON.stringify(newCart));
+                                            }
                                         } else {
-                                            addProductToCart({ ...product, quantity: 0, remove: true });
+                                            if (user?.token) {
+                                                await dispatch(cartActions.removeFromCartAsync(productId));
+                                            } else {
+                                                const newCart = cart.filter((cartItem) => cartItem.product_id !== productId);
+                                                dispatch(cartActions.setCart(newCart));
+                                                localStorage.setItem('cart', JSON.stringify(newCart));
+                                            }
                                         }
                                     }} className={styles['qty-btn']} disabled={cartQuantity <= 0}>-</button>
                                     <span className={styles['qty-value']}>{cartQuantity}</span>
-                                    <button onClick={() => addProductToCart({ ...product, quantity: 1 })} className={styles['qty-btn']}>+</button>
+                                    <button onClick={async () => {
+                                        const productId = product.product_id || product.id;
+                                        if (user?.token) {
+                                            await dispatch(cartActions.updateCartItemAsync(productId, cartQuantity + 1));
+                                        } else {
+                                            const newCart = cart.map(item => 
+                                                item.product_id === productId 
+                                                    ? { ...item, quantity: item.quantity + 1 }
+                                                    : item
+                                            );
+                                            dispatch(cartActions.setCart(newCart));
+                                            localStorage.setItem('cart', JSON.stringify(newCart));
+                                        }
+                                    }} className={styles['qty-btn']}>+</button>
                                 </div>
                             </div>
                         ) : (

@@ -12,8 +12,9 @@ import { useEffect, useState } from "react";
 import Loading from "../../components/loading/Loading";
 import { getRecommendations } from "../../actions/products";
 
-const Home = ({ addProductToCart, cart }) => {
+const Home = () => {
     const products = useSelector(state => state.products.recommendations) || [];
+    const cart = useSelector(state => state.cart.cart) || [];
     const [loading, setLoading] = useState(true);
     const dispatch = useDispatch()
 
@@ -62,7 +63,7 @@ const Home = ({ addProductToCart, cart }) => {
                                     const productId = product.product_id || product.id;
                                     const isInCart = cart?.some(c => (c.product_id || c.id) === productId);
                                     const cartItem = cart?.find(c => (c.product_id || c.id) === productId);
-                                    return <ProductCard addProductToCart={addProductToCart}
+                                    return <ProductCard
                                         product={product} key={`${i}${j}`} 
                                         isInCart={isInCart}
                                         cartQuantity={cartItem?.quantity || 0}

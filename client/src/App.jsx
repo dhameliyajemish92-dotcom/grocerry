@@ -1,12 +1,13 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import * as cartActions from "./actions/cart"; // Import cart actions for error handling
+import * as cartActions from "./actions/cart";
 import Home from "./pages/home/Home";
 import './shared/css/master.css';
 import Navigation from "./components/navigation/Navigation";
 import Footer from "./components/footer/Footer";
 import CartPage from "./pages/cart/Cart";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Order from "./pages/order/Order";
 import ForgotPassword from "./pages/authentication/forgot-password/ForgotPassword";
 import ResetPassword from "./pages/authentication/forgot-password/ResetPassword";
@@ -38,22 +39,21 @@ import Invoice from "./components/invoice/Invoice";
 import Contact from "./pages/contact/Contact";
 
 const App = () => {
-
-    const [cart, setCart] = useState([]); // Initialize empty, will sync
+    const dispatch = useDispatch();
+    const cart = useSelector(state => state.cart.cart) || [];
     const [user] = useState(JSON.parse(localStorage.getItem('profile')));
 
     useEffect(() => {
         const syncCart = async () => {
             if (user?.token) {
-                const backendCart = await cartActions.getCart();
-                setCart(backendCart || []);
+                await dispatch(cartActions.getCartAsync());
             } else {
                 const localCart = JSON.parse(localStorage.getItem('cart') || '[]');
-                setCart(localCart);
+                dispatch(cartActions.setCart(localCart));
             }
         }
         syncCart();
-    }, [user]);
+    }, [user, dispatch]);
 
     const addProductToCart = async (product) => {
         const productId = product.product_id || product.id;
@@ -61,11 +61,10 @@ const App = () => {
         
         if (product.remove) {
             if (user?.token) {
-                const updatedCart = await cartActions.removeFromCart(productId);
-                if (updatedCart) setCart(updatedCart);
+                await dispatch(cartActions.removeFromCartAsync(productId));
             } else {
                 const newCart = cart.filter((cartItem) => cartItem.product_id !== productId);
-                setCart(newCart);
+                dispatch(cartActions.setCart(newCart));
                 localStorage.setItem('cart', JSON.stringify(newCart));
             }
             return;
@@ -77,24 +76,22 @@ const App = () => {
             
             if (productInCart.quantity + qty <= 0) {
                 if (user?.token) {
-                    const updatedCart = await cartActions.removeFromCart(productId);
-                    if (updatedCart) setCart(updatedCart);
+                    await dispatch(cartActions.removeFromCartAsync(productId));
                 } else {
                     const newCart = cart.filter((cartItem) => cartItem.product_id !== productId);
-                    setCart(newCart);
+                    dispatch(cartActions.setCart(newCart));
                     localStorage.setItem('cart', JSON.stringify(newCart));
                 }
             } else {
                 if (user?.token) {
-                    const updatedCart = await cartActions.updateCartItem(productId, productInCart.quantity + qty);
-                    if (updatedCart) setCart(updatedCart);
+                    await dispatch(cartActions.updateCartItemAsync(productId, productInCart.quantity + qty));
                 } else {
                     const newCart = cart.map(item => 
                         item.product_id === productId 
                             ? { ...item, quantity: item.quantity + qty }
                             : item
                     );
-                    setCart(newCart);
+                    dispatch(cartActions.setCart(newCart));
                     localStorage.setItem('cart', JSON.stringify(newCart));
                 }
             }
@@ -102,8 +99,7 @@ const App = () => {
         }
 
         if (user?.token) {
-            const updatedCart = await cartActions.addToCart(productId, qty);
-            if (updatedCart) setCart(updatedCart);
+            await dispatch(cartActions.addToCartAsync(productId, qty));
         } else {
             const productIndex = cart.findIndex((cartProduct) => cartProduct.product_id === productId);
             let newCart;
@@ -115,7 +111,7 @@ const App = () => {
             } else {
                 newCart = [...cart, { ...product, product_id: productId, quantity: qty }];
             }
-            setCart(newCart);
+            dispatch(cartActions.setCart(newCart));
             localStorage.setItem('cart', JSON.stringify(newCart));
         }
     }
@@ -123,16 +119,11 @@ const App = () => {
     const removeProductFromCart = async (product) => {
         const productId = product.product_id || product.id;
         if (user?.token) {
-            // Logic for remove/decrement needs to be handled.
-            // My backend /cart delete removes the item entirely.
-            // My backend /cart patch updates quantity.
             const productInCart = cart.find(p => p.product_id === productId);
             if (productInCart && productInCart.quantity > 1) {
-                const updatedCart = await cartActions.updateCartItem(productId, productInCart.quantity - 1);
-                if (updatedCart) setCart(updatedCart);
+                await dispatch(cartActions.updateCartItemAsync(productId, productInCart.quantity - 1));
             } else {
-                const updatedCart = await cartActions.removeFromCart(productId);
-                if (updatedCart) setCart(updatedCart);
+                await dispatch(cartActions.removeFromCartAsync(productId));
             }
         } else {
             const productIndex = cart.findIndex((cartProduct) => cartProduct.product_id === productId);
@@ -148,7 +139,7 @@ const App = () => {
                 newArray[productIndex] = updatedData;
                 newCart = newArray;
             }
-            setCart(newCart);
+            dispatch(cartActions.setCart(newCart));
             localStorage.setItem('cart', JSON.stringify(newCart));
         }
     }
@@ -161,28 +152,21 @@ const App = () => {
             return removeProductFromCart(product)
     }
 
-    const [cartCount, setCartCount] = useState(0);
-
-    useEffect(() => {
-        let products = 0;
-        for (const cartElement of cart) {
-            products += cartElement.quantity;
-        }
-
-        setCartCount(products);
-    }, [cart])
+    const cartCount = useMemo(() => {
+        return cart.reduce((total, cartElement) => total + cartElement.quantity, 0);
+    }, [cart]);
 
     return (
         <BrowserRouter>
             <ScrollToTop />
             <Navigation cartCount={cartCount} />
             <Routes>
-                <Route path={'/'} element={<Home addProductToCart={addProductToCart} cart={cart} />} />
-                <Route path={'/products'} element={<Products addProductToCart={addProductToCart} cart={cart} />} />
+                <Route path={'/'} element={<Home />} />
+                <Route path={'/products'} element={<Products addProductToCart={addProductToCart} />} />
                 <Route path={'/cart'}
-                    element={<CartPage cart={cart} cartCount={cartCount} updateQuantity={updateQuantity} />} />
+                    element={<CartPage cartCount={cartCount} updateQuantity={updateQuantity} />} />
                 <Route path={'/checkout'} element={<PrivateRoute component={<Checkout />} />} />
-                <Route path={'/checkout/success'} element={<Success setCart={setCart} />} />
+                <Route path={'/checkout/success'} element={<Success />} />
                 <Route path={'/signup'} element={<Signup />} />
                 <Route path={'/contact'} element={<Contact />} />
                 <Route path={'/shipping'} element={<Shipment />} />
@@ -193,7 +177,7 @@ const App = () => {
                 <Route path={'/orders'} element={<Order />} />
                 <Route path={'/orders/:id'} element={<OrderId />} />
                 <Route path={'/orders/:id/invoice'} element={<Invoice />} />
-                <Route path={'/wishlist'} element={<PrivateRoute component={<Wishlist addProductToCart={addProductToCart} cart={cart} />} />} />
+                <Route path={'/wishlist'} element={<PrivateRoute component={<Wishlist addProductToCart={addProductToCart} />} />} />
                 <Route path={'/admin'} element={<PrivateRoute role={'ADMIN'} component={<Admin />} />} />
                 <Route path={'/admin/orders'}
                     element={<PrivateRoute role={'ADMIN'} component={<AdminOrders />} />} />
