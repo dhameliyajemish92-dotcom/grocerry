@@ -3,7 +3,7 @@ import Logo from '../../shared/assets/logo.png';
 import { Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { SEARCH_HIDDEN, SEARCH_VISIBLE } from "./constants/search";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../actions/auth";
 
@@ -15,6 +15,7 @@ const Navigation = ({ cartCount }) => {
     const [searchInput, setSearchInput] = useState("");
     const searchElement = useRef();
     const navigate = useNavigate();
+    const location = useLocation();
     const user = useSelector(state => state.authentication.user);
     const auth = !!user;
     const admin = auth && user.role === 'ADMIN';
@@ -89,7 +90,7 @@ const Navigation = ({ cartCount }) => {
                         <Link onClick={closeMenu} className={styles['account']} to={'/orders'}>Previous Orders</Link>}
                     <Link onClick={closeMenu} to={'/shipping'}>Track Shipping</Link>
                     <Link onClick={closeMenu} to={'/contact'}>Contact Us</Link>
-                    {admin && <Link onClick={closeMenu} className={styles['account']} to={'/admin'}>Admin Panel</Link>}
+                    {admin && location.pathname !== '/admin' && <Link onClick={closeMenu} className={styles['account']} to={'/admin'}>Admin Panel</Link>}
                     {auth && <div className={styles['account']} onClick={() => {
                         handleLogout();
                         closeMenu();
@@ -130,7 +131,7 @@ const Navigation = ({ cartCount }) => {
                     <Link
                         to={'/wishlist'}>Wishlist {user.wishlist?.length > 0 ? `(${user.wishlist?.length})` : ''}</Link>
                     <Link to={'/orders'}>Orders</Link>
-                    {admin && <Link to={'/admin'}>Admin Panel</Link>}
+                    {admin && location.pathname !== '/admin' && <Link to={'/admin'}>Admin Panel</Link>}
                     <div onClick={handleLogout}>Logout</div>
                 </div>}
                 <div

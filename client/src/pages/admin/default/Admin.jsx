@@ -207,7 +207,7 @@ const Admin = () => {
                             <h3>Authentication Required</h3>
                             <p>{error.message}</p>
                             <div className={styles['error-actions']}>
-                                <button onClick={handleLogin} className={styles['btn-primary']}>
+                                <button onClick={handleLogin} className={styles['btn-primary']} aria-label="Login as Admin">
                                     Login as Admin
                                 </button>
                             </div>
@@ -225,10 +225,10 @@ const Admin = () => {
                                 </p>
                             )}
                             <div className={styles['error-actions']}>
-                                <button onClick={handleRetry} className={styles['btn-secondary']}>
+                                <button onClick={handleRetry} className={styles['btn-secondary']} aria-label="Try Again">
                                     Try Again
                                 </button>
-                                <Link to="/" className={styles['btn-link']}>
+                                <Link to="/" className={styles['btn-link']} aria-label="Go to Home">
                                     Go to Home
                                 </Link>
                             </div>
@@ -241,7 +241,7 @@ const Admin = () => {
                             <h3>Unable to Load Dashboard</h3>
                             <p>{error.message}</p>
                             <div className={styles['error-actions']}>
-                                <button onClick={handleRetry} className={styles['btn-primary']}>
+                                <button onClick={handleRetry} className={styles['btn-primary']} aria-label="Retry">
                                     Retry
                                 </button>
                             </div>
@@ -261,6 +261,9 @@ const Admin = () => {
             {loading ? <Loading /> : (
                 <>
                     {/* Stats Section */}
+                    <div className={'heading'}>
+                        <h2>Dashboard Overview</h2>
+                    </div>
                     <div className={styles['stats-grid']}>
                         <div className={styles['stat-card']}>
                             <div className={styles['stat-value']}>{stats.totalProducts || 0}</div>
@@ -297,13 +300,13 @@ const Admin = () => {
                         <h2>Quick Actions</h2>
                     </div>
                     <div className={styles['actions']}>
-                        <Link to={'/admin/products/new'} className={styles['action']}>Add New Product</Link>
-                        <Link to={'/admin/products/update'} className={styles['action']}>Update Products</Link>
-                        <Link to={'/admin/orders'} className={styles['action']}>Track Orders</Link>
-                        <Link to={'/admin/orders/new'} className={styles['action']}>Create New Order</Link>
-                        <Link to={'/admin/orders/update'} className={styles['action']}>Update Order Status</Link>
-                        <Link to={'/admin/shipping'} className={styles['action']}>Track Shipping</Link>
-                        <Link to={'/admin/shipping/update'} className={styles['action']}>Update Shipping Status</Link>
+                        <Link to={'/admin/products/new'} className={styles['action']} aria-label="Add new product">Add New Product</Link>
+                        <Link to={'/admin/products/update'} className={styles['action']} aria-label="Update products">Update Products</Link>
+                        <Link to={'/admin/orders'} className={styles['action']} aria-label="Track orders">Track Orders</Link>
+                        <Link to={'/admin/orders/new'} className={styles['action']} aria-label="Create new order">Create New Order</Link>
+                        <Link to={'/admin/orders/update'} className={styles['action']} aria-label="Update order status">Update Order Status</Link>
+                        <Link to={'/admin/shipping'} className={styles['action']} aria-label="Track shipping">Track Shipping</Link>
+                        <Link to={'/admin/shipping/update'} className={styles['action']} aria-label="Update shipping status">Update Shipping Status</Link>
                     </div>
 
                     {/* Recent Orders */}
@@ -354,7 +357,7 @@ const Admin = () => {
                                             <span className={styles['alert-name']}>{product.name}</span>
                                             <span className={styles['alert-stock']}>Stock: {product.stock}</span>
                                         </div>
-                                        <Link to={`/admin/products/update`} className={styles['alert-link']}>
+                                        <Link to={`/admin/products/update`} className={styles['alert-link']} aria-label={`Update stock for ${product.name}`}>
                                             Update
                                         </Link>
                                     </div>
@@ -363,8 +366,9 @@ const Admin = () => {
                         </div>
                     )}
                 </>
-            )}
-        </div>
+            )
+            }
+        </div >
     );
 }
 
