@@ -47,7 +47,7 @@ const Wishlist = () => {
                         const productId = product.product_id || product.id;
                         const isInCart = cart?.some(c => (c.product_id || c.id) === productId);
                         const cartItem = cart?.find(c => (c.product_id || c.id) === productId);
-                        return <ProductCard product={product} addProductToCart={addProductToCart}
+                        return <ProductCard product={product}
                                            key={i}
                                            isInCart={isInCart}
                                            cartQuantity={cartItem?.quantity || 0}

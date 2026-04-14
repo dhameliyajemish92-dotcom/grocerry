@@ -164,7 +164,7 @@ const App = () => {
                 <Route path={'/'} element={<Home />} />
                 <Route path={'/products'} element={<Products addProductToCart={addProductToCart} />} />
                 <Route path={'/cart'}
-                    element={<CartPage cartCount={cartCount} updateQuantity={updateQuantity} />} />
+                    element={<CartPage cart={cart} cartCount={cartCount} updateQuantity={updateQuantity} />} />
                 <Route path={'/checkout'} element={<PrivateRoute component={<Checkout />} />} />
                 <Route path={'/checkout/success'} element={<Success />} />
                 <Route path={'/signup'} element={<Signup />} />

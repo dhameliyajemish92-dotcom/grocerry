@@ -46,3 +46,48 @@
 [2026-04-13T03:41:31.473Z] Payments.js module loaded with Direct Axios Implementation 
 [2026-04-13T06:48:28.546Z] Payments.js module loaded with Direct Axios Implementation 
 [2026-04-13T06:59:26.392Z] Payments.js module loaded with Direct Axios Implementation 
+[2026-04-13T11:53:31.834Z] Payments.js module loaded with Direct Axios Implementation 
+[2026-04-13T14:44:30.487Z] Payments.js module loaded with Direct Axios Implementation 
+[2026-04-13T15:18:13.833Z] Payments.js module loaded with Direct Axios Implementation 
+[2026-04-14T03:31:06.417Z] Payments.js module loaded with Direct Axios Implementation 
+[2026-04-14T04:14:12.559Z] createCheckoutSession started {
+  "body": {
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9kdWN0cyI6W3sicHJvZHVjdF9pZCI6IkhPTUVfMDA5IiwibmFtZSI6IkhhaXIgR2VsIiwicHJpY2UiOjEzNSwicXVhbnRpdHkiOjEsImltYWdlIjoiL2ltYWdlcy9ncm9jZXJ5L1BlcnNvbmFsQ2FyZS9oYWlyX2dlbF90dWJlXzAwOC5qcGciLCJicmFuZCI6IkdlbmVyaWMiLCJwYWNrYWdpbmciOnsicXVhbnRpdHkiOiIxIiwidW5pdCI6InR1YmUifX1dLCJ0b3RhbCI6IjEzNS4wMCIsImlhdCI6MTc3NjEzOTk5NCwiZXhwIjoxNzc2MTQzNTk0fQ.Z5u2175K2oQ560-xrtj7Wgj0nMyEjIhgx5PruzA8yxQ",
+    "data": {
+      "name": {
+        "first": "utsav",
+        "last": "vaddodariya"
+      },
+      "email": "utsavvvadodariya4@gmail.com",
+      "phone_number": "9313683554",
+      "address": {
+        "country": "India",
+        "street": "817",
+        "area": "pragti",
+        "city": "surat",
+        "state": "gujrat",
+        "pincode": "394004"
+      },
+      "payment_method": "UPI"
+    }
+  }
+}
+[2026-04-14T04:14:12.560Z] Creating Razorpay order via Axios {
+  "options": {
+    "amount": 13500,
+    "currency": "INR",
+    "receipt": "ZCR888"
+  },
+  "key_id": "dummy_razorpay_key_id"
+}
+[2026-04-14T04:14:12.901Z] RAZORPAY API ERROR (AXIOS) {
+  "message": "Request failed with status code 401",
+  "response": {
+    "error": {
+      "description": "Authentication failed",
+      "code": "BAD_REQUEST_ERROR"
+    }
+  }
+}
+[2026-04-14T05:21:18.132Z] Payments.js module loaded with Direct Axios Implementation 
+[2026-04-14T05:47:28.583Z] Payments.js module loaded with Direct Axios Implementation 

@@ -39,7 +39,7 @@ const renderApp = () => {
     root.render(
         <React.StrictMode>
             <Provider store={store}>
-                <ToastContainer position="bottom-right" autoClose={3000} />
+                <ToastContainer position="top-right" autoClose={3000} />
                 <App />
             </Provider>
         </React.StrictMode>

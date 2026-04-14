@@ -3,7 +3,6 @@ import Loading from "../../components/loading/Loading";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchOrder } from "../../actions/orders";
-import { sendReceiptEmail } from "../../api";
 import { jsPDF } from "jspdf";
 import styles from './checkout.module.css';
 
@@ -15,9 +14,6 @@ const Success = ({ setCart }) => {
     const dispatch = useDispatch();
     const order = useSelector(state => state.orders.fetched);
     const [loading, setLoading] = useState(true);
-    const [emailSending, setEmailSending] = useState(false);
-    const [emailSent, setEmailSent] = useState(false);
-    const [emailError, setEmailError] = useState('');
 
 
     useEffect(() => {
@@ -221,22 +217,6 @@ const Success = ({ setCart }) => {
         doc.save(`Invoice_${order.order_id}.pdf`);
     };
 
-    const handleSendEmail = async () => {
-        if (!order || emailSending) return;
-
-        setEmailSending(true);
-        setEmailError('');
-
-        try {
-            await sendReceiptEmail(order.order_id);
-            setEmailSent(true);
-        } catch (error) {
-            setEmailError(error.response?.data?.message || 'Failed to il');
-        } finally {
-            setEmailSending(false);
-        }
-    };
-
     if (loading) return <Loading text={'Processing Order...'} />
 
     if (!order) return <div className={styles['wrapper']}><h1>Order not found</h1></div>
@@ -294,25 +274,7 @@ const Success = ({ setCart }) => {
                         >
                             📥 Download Invoice (PDF)
                         </button>
-                        <button
-                            className={'btn2'}
-                            onClick={handleSendEmail}
-                            disabled={emailSending || emailSent}
-                            style={{ display: 'flex', alignItems: 'center', gap: '5px' }}
-                        >
-                            {emailSending ? '⏳ Sending...' : emailSent ? '✅ Email Sent!' : '📧 Send Receipt to Email'}
-                        </button>
                     </div>
-                    {emailSent && (
-                        <p style={{ marginTop: '8px', color: 'green', fontSize: '14px' }}>
-                            ✅ Receipt has been sent to {order.email}
-                        </p>
-                    )}
-                    {emailError && (
-                        <p style={{ marginTop: '8px', color: 'red', fontSize: '14px' }}>
-                            ❌ {emailError}
-                        </p>
-                    )}
                 </div>
 
                 <button className={'btn1'} onClick={() => navigate('/products')} style={{ marginTop: '30px' }}>

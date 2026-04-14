@@ -1,6 +1,6 @@
 import express from "express";
 
-import { createOrder, createOrderCOD, getOrder, getAllOrders, updateOrder, getOrderHistory, createOrderAdmin, sendReceiptEmail } from "../controller/orders/Orders.js";
+import { createOrder, createOrderCOD, getOrder, getAllOrders, updateOrder, getOrderHistory, createOrderAdmin, sendInvoiceEmail, downloadInvoice } from "../controller/orders/Orders.js";
 import auth from "../middleware/auth.js";
 import adminAuth from "../middleware/adminAuth.js";
 
@@ -17,7 +17,8 @@ router.post('/cod', auth, (req, res, next) => {
     next();
 }, createOrderCOD);
 router.get('/history', auth, getOrderHistory);
-router.post('/:id/send-receipt', auth, sendReceiptEmail);
+router.post('/:id/send-invoice', auth, sendInvoiceEmail);
+router.get('/:id/invoice', auth, downloadInvoice);
 router.get('/:id', getOrder);
 router.get('/', adminAuth, getAllOrders);
 router.patch('/:id', adminAuth, updateOrder);

@@ -27,34 +27,12 @@ const Invoice = () => {
         }
     }, [dispatch, id, navigate, order]);
 
-    const handlePrint = () => {
-        window.print();
-    };
-
-    const shareOnWhatsApp = () => {
-        const message = `📦 Order Invoice #${order.order_id}\n\n` +
-            `Items: ${order.products?.length || 0}\n` +
-            `Total: ₹${order.total}\n\n` +
-            `Track: ${window.location.origin}/shipping/${order.order_id}`;
-        
-        window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
-    };
-
-    const sendEmail = () => {
-        const subject = `Order Invoice #${order.order_id}`;
-        const body = `Please find the invoice attached for order #${order.order_id}.\n\n` +
-            `Total: ₹${order.total}\n\n` +
-            `Track your shipment: ${window.location.origin}/shipping/${order.order_id}`;
-        
-        window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    };
-
     if (loading) return <Loading />;
     if (!order) return <div>Order not found</div>;
 
     const products = order.products || [];
 
-    const taxRate = 0.05; // 5% total tax (inclusive)
+    const taxRate = 0.05;
     const grandTotal = order.total || products.reduce((acc, p) => acc + (p.price * (p.quantity || 1)), 0);
     const subtotal = grandTotal / (1 + taxRate);
     const totalTax = grandTotal - subtotal;
@@ -65,47 +43,17 @@ const Invoice = () => {
         <div className={styles.container}>
             <div className={styles.actions}>
                 <button onClick={() => navigate(-1)} className="btn2">Back</button>
-                <button onClick={handlePrint} className="btn1">Print Invoice</button>
-                <button 
-                    onClick={shareOnWhatsApp} 
-                    style={{ 
-                        backgroundColor: '#25D366', 
-                        color: 'white',
-                        border: 'none',
-                        padding: '10px 15px',
-                        borderRadius: '5px',
-                        cursor: 'pointer',
-                        marginLeft: '10px'
-                    }}
-                >
-                    📱 WhatsApp
-                </button>
-                <button 
-                    onClick={sendEmail} 
-                    style={{ 
-                        backgroundColor: '#EA4335', 
-                        color: 'white',
-                        border: 'none',
-                        padding: '10px 15px',
-                        borderRadius: '5px',
-                        cursor: 'pointer',
-                        marginLeft: '10px'
-                    }}
-                >
-                    ✉️ Email
-                </button>
             </div>
 
             <div className={styles.invoiceWrapper}>
-                {/* Header */}
                 <header className={styles.header}>
                     <div className={styles.brand}>
                         <img src={Logo} alt="Grocery Logo" className={styles.logo} />
                         <div className={styles.storeInfo}>
                             <h1>Grocery</h1>
                             <p>Fresh Groceries Delivered</p>
-                            <p>123 Green Street, Market District</p>
-                            <p>Mumbai, Maharashtra 400001</p>
+                            <p>817,pragti it world</p>
+                            <p>surat,gujrat:395006</p>
                             <p><strong>GSTIN:</strong> 27AAPCR1234F1Z5</p>
                         </div>
                     </div>
@@ -114,7 +62,6 @@ const Invoice = () => {
                     </div>
                 </header>
 
-                {/* Info Section */}
                 <section className={styles.infoSection}>
                     <div className={styles.billTo}>
                         <h3>Bill To:</h3>
@@ -131,8 +78,6 @@ const Invoice = () => {
                         <p><strong>Payment:</strong> {order.payment_method || 'PAID'}</p>
                     </div>
                 </section>
-
-                {/* Table */}
                 <table className={styles.table}>
                     <thead>
                         <tr>
@@ -176,7 +121,6 @@ const Invoice = () => {
                     </tbody>
                 </table>
 
-                {/* Summary */}
                 <div className={styles.summaryContainer}>
                     <div className={styles.summaryBox}>
                         <div className={styles.summaryRow}>
@@ -198,7 +142,6 @@ const Invoice = () => {
                     </div>
                 </div>
 
-                {/* Footer */}
                 <footer className={styles.footer}>
                     <p>Thank you for choosing Grocery!</p>
                     <p>Computer Generated Invoice - No Signature Required</p>

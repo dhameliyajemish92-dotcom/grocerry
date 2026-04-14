@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import styles from '../form.module.css';
 import { Link, useNavigate } from "react-router-dom";
 import Authentication from "../Authentication";
@@ -41,11 +42,13 @@ const Login = () => {
         setIsLoading(true);
 
         const onSuccess = () => {
+            toast.success("Login successful!");
             navigate('/');
         }
 
         const onError = (e) => {
             setIsLoading(false);
+            toast.error(e.message || "Login failed");
             if (e?.message && e.message.trim().toLowerCase().includes("please verify your email first")) {
                 console.warn("Login Error (Silenced in UI):", e.message);
                 return;

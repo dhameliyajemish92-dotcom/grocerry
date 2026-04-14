@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import styles from '../form.module.css';
 import Authentication from "../Authentication";
 import { Link, useNavigate } from "react-router-dom";
@@ -34,11 +35,13 @@ const Signup = () => {
         dispatch(authSignup(formData, (data) => {
             console.log("Signup success response:", data);
             setIsLoading(false);
+            toast.success(data.message || "Registration successful! Please verify your email.");
             setMessage(data.message || "User registered. Please check your email.");
             setStep('verify');
         }, (err) => {
             console.error("Signup error response:", err);
             setIsLoading(false);
+            toast.error(err.message || "Signup failed. Please check your connection.");
             setError(err.message || "Signup failed. Please check your connection.");
         }));
     }
@@ -52,10 +55,12 @@ const Signup = () => {
         dispatch(verifyOtp(formData.email, otp, () => {
             console.log("Verification successful");
             setIsLoading(false);
+            toast.success("Email verified successfully!");
             navigate('/');
         }, (err) => {
             console.error("Verification error:", err);
             setIsLoading(false);
+            toast.error(err.message || "Verification failed. Incorrect OTP.");
             setError(err.message || "Verification failed. Incorrect OTP.");
         }));
     }

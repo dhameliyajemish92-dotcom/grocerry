@@ -157,8 +157,11 @@ export const updateOrder = (id, status) =>
 export const createOrderAdmin = (data) =>
     API.post(`${ORDERS_BASEURL}/admin`, data);
 
-export const sendReceiptEmail = (orderId) =>
-    API.post(`${ORDERS_BASEURL}/${orderId}/send-receipt`);
+export const downloadInvoice = (orderId) =>
+    API.get(`${ORDERS_BASEURL}/${orderId}/invoice`, { responseType: 'blob' });
+
+export const sendInvoiceEmail = (orderId) =>
+    API.post(`${ORDERS_BASEURL}/${orderId}/send-invoice`);
 
 /* ========================= PAYMENTS ========================= */
 // Razorpay / Payment token JWT nathi
